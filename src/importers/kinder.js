@@ -43,7 +43,7 @@ export function knownColumns() {
  * @param {{checkedAt:string, sourceUrl:string, readMode:string, areas?:string[]}} opt
  */
 export function normalizeKinder(row, opt) {
-  const source = { kind: SOURCE_KIND.OFFICIAL_DISCLOSURE, name: '유치원알리미 기본현황', url: opt.sourceUrl, readMode: opt.readMode };
+  const source = { kind: SOURCE_KIND.OFFICIAL_DISCLOSURE, name: opt.sourceName ?? '유치원알리미 기본현황', url: opt.sourceUrl, readMode: opt.readMode };
   const asOf = clean(pick(row, 'pbnttmng'));
   const m = (v, extra = {}) => fact(v, { source, asOf, checkedAt: opt.checkedAt, status: STATUS.CONFIRMED, ...extra });
 
@@ -81,6 +81,7 @@ export function normalizeKinder(row, opt) {
     idBasis: code ? '유치원코드' : '이름+주소 (일괄 다운로드에 코드 없음)',
     kind: '유치원',
     name,
+    sourceNames: [opt.sourceName].filter(Boolean),
     officialType: m(establish), // 예: 공립(단설), 공립(병설), 사립(사인), 사립(법인)
     isPublic: establish ? /공립|국립/.test(establish) : null,
     operatingStatus: m(st.status ?? null),

@@ -13,6 +13,7 @@ import { buildRoster } from '../src/importers/roster.js';
 import { describeChildClass } from '../src/lib/age.js';
 import { loadBoundaries } from '../src/lib/geo.js';
 import { attachKinderExtras, compareRounds } from '../src/importers/kinder-extras.js';
+import { attachKinderApiExtras, API_EXTRA_ENDPOINTS } from '../src/importers/kinder-api-extras.js';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const today = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Seoul' }).format(new Date());
@@ -52,20 +53,29 @@ export function parseCsv(text) {
   return body.map((r) => Object.fromEntries(header.map((h, i) => [h.trim(), r[i]])));
 }
 
-async function fetchKinder(env) {
+/**
+ * 유치원알리미 Open API 한 항목 조회 (인증키 필요)
+ * 응답 원문은 data/raw/api_kinder/<항목>.json 에 저장(인증키 문자열은 지움, 공개 저장소 제외 폴더)
+ */
+async function fetchKinder(env, ep = 'basicInfo2') {
   const key = env.KINDER_API_KEY;
   if (!key) return { skipped: 'KINDER_API_KEY 없음' };
   const sido = env.KINDER_SIDO_CODE ?? '44'; // 충청남도
-  const sgg = env.KINDER_SGG_CODE ?? '44200'; // 아산시 (첫 실행 때 응답 건수로 확인)
-  const base = 'https://e-childschoolinfo.moe.go.kr/api/notice/basicInfo2.do';
+  const sgg = env.KINDER_SGG_CODE ?? '44200'; // 아산시 (2026-10-26 확인: 최신 공시 60곳 + 예전 공시에만 남은 7곳)
+  const base = `https://e-childschoolinfo.moe.go.kr/api/notice/${ep}.do`;
   const url = `${base}?${new URLSearchParams({ key, sidoCode: sido, sggCode: sgg })}`;
+  const publicUrl = `${base}?sidoCode=${sido}&sggCode=${sgg}`;
   try {
     const res = await fetch(url, { headers: { 'User-Agent': 'kinder-app/0.1' } });
-    const data = await res.json();
+    const text = (await res.text()).split(key).join('***');
+    const data = JSON.parse(text);
     if (data.status !== 'SUCCESS') return { error: `응답 상태 ${data.status}: ${data.message ?? ''}` };
-    return { rows: data.kinderInfo ?? [], url: `${base}?sidoCode=${sido}&sggCode=${sgg}` };
+    const dir = path.join(ROOT, 'data', 'raw', 'api_kinder');
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, `${ep}.json`), text);
+    return { rows: data.kinderInfo ?? [], url: publicUrl };
   } catch (e) {
-    return { error: `조회 실패: ${e.message}` };
+    return { error: `조회 실패: ${String(e.message).split(key).join('***')}` };
   }
 }
 
@@ -198,6 +208,19 @@ async function main() {
     roster.disclosureChanges = compareRounds(kinderBulk.prev?.rows ?? null, kinderBulk.rows, kinderBulk.prev?.timing, kinderBulk.timing);
     for (const [item, x] of Object.entries(kinderBulk.extras)) log.push({ source: `유치원알리미 ${BULK_ITEMS[item]}`, error: x.error, rows: x.rows?.length });
   }
+  // 인증키로만 받는 추가 공시 항목 (유치원코드로 연결). 실패한 항목은 붙이지 않아 확인일도 바뀌지 않는다
+  if (!offline && env.KINDER_API_KEY) {
+    const apiExtras = {};
+    for (const [ep, label] of Object.entries(API_EXTRA_ENDPOINTS)) {
+      const x = await fetchKinder(env, ep);
+      apiExtras[ep] = x;
+      log.push({ source: `유치원알리미 API ${label}`, error: x.error, skipped: x.skipped, rows: x.rows?.length });
+    }
+    const inArea = [...roster.included, ...roster.needsCheck].filter((r) => r.kind === '유치원');
+    const tally = Object.fromEntries(Object.keys(API_EXTRA_ENDPOINTS).map((ep) => [ep, 0]));
+    for (const r of inArea) for (const ep of attachKinderApiExtras(r, apiExtras, { checkedAt: today })) tally[ep]++;
+    roster.apiExtras = { inArea: inArea.length, attached: tally, noCode: inArea.filter((r) => !r.officialId).map((r) => r.name) };
+  }
   roster.child = child;
   roster.rosterComplete = sources.some((s) => s.kind === '유치원') && sources.some((s) => s.kind === '어린이집');
   roster.rosterNote = roster.rosterComplete
@@ -213,6 +236,7 @@ async function main() {
   for (const l of log) console.log(`- ${l.source}: ${l.skipped ?? l.error ?? `${l.rows}건`}`);
   for (const s of roster.perSource) console.log(`- ${s.source}: ${s.rows}건${s.unmappedColumns.length ? ` (처리하지 않은 열 ${s.unmappedColumns.length}개)` : ''}`);
   console.log(roster.counts);
+  if (roster.apiExtras) console.log('키 전용 항목 붙임(배방·탕정', roster.apiExtras.inArea, '곳 중):', roster.apiExtras.attached, roster.apiExtras.noCode.length ? `코드 없음: ${roster.apiExtras.noCode.join(', ')}` : '');
   console.log(roster.rosterNote);
   console.log(`저장: ${path.relative(ROOT, out)}`);
 }

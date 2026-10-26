@@ -74,6 +74,7 @@ export function normalizeDaycare(row, opt) {
     idBasis: code ? '어린이집코드' : '이름+주소',
     kind: '어린이집',
     name: clean(pick(row, 'name')),
+    sourceNames: [opt.sourceName].filter(Boolean),
     officialType: m(type.officialType),
     isPublic: type.officialType ? /국공립/.test(type.officialType) : null,
     operatingStatus: m(st.status ?? null),
