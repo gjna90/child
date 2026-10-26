@@ -1,0 +1,1537 @@
+{
+  "source": {
+    "name": "충청남도교육청_학원 및 교습소 현황",
+    "url": "https://www.data.go.kr/data/15015298/fileData.do",
+    "asOf": "2026-06-30",
+    "kind": "공식 등록 자료",
+    "readMode": "공식 다운로드 원문"
+  },
+  "checkedAt": "2026-10-26",
+  "scope": "아산시 배방읍·탕정면 주소의 학원·교습소 중 영어 과정이 있고 과목명에 유아·유치 등이 있는 곳",
+  "academies": [
+    {
+      "name": "에밀리앤글로우학원",
+      "kind": "학원",
+      "area": "탕정면",
+      "address": "충청남도 아산시 탕정면 선문로254번길 78-28 , 1층 (탕정면)",
+      "phone": "041-427-4277",
+      "teachers": 10.0,
+      "courses": null,
+      "group": "유아 종일 영어반 (영어유치원 형태)",
+      "note": null,
+      "englishCourses": [
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치부A(외국인)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 6600.0,
+          "tuition": 1524000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "방과후A(내국인)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1800.0,
+          "tuition": 250000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "방과후B(내국인)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 900.0,
+          "tuition": 125000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "초등부A(외국인)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 2100.0,
+          "tuition": 487900.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "초등부B(외국인)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1575.0,
+          "tuition": 350000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "일일방학특강(외국인)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 330.0,
+          "tuition": 70000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        }
+      ],
+      "preschoolCourses": [
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치부A(외국인)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 6600.0,
+          "tuition": 1524000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        }
+      ]
+    },
+    {
+      "name": "하이엔드엘리아어학원",
+      "kind": "학원",
+      "area": "탕정면",
+      "address": "충청남도 아산시 탕정면 한들물빛5로 33 , 606, 607호",
+      "phone": "041-547-1605",
+      "teachers": 4.0,
+      "courses": null,
+      "group": "유아 종일 영어반 (영어유치원 형태)",
+      "note": null,
+      "englishCourses": [
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치부(종일반)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 7000.0,
+          "tuition": 1590000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치부, 초등부(주5회)1",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 2400.0,
+          "tuition": 550000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치부, 초등부(주3회)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1440.0,
+          "tuition": 330000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치부, 초등부(주2회)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 960.0,
+          "tuition": 220000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치부, 초등부(1회)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 350.0,
+          "tuition": 74500.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "캠프(유치부, 초등부)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 5250.0,
+          "tuition": 1190000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치부, 초등부(주5회)2",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 4200.0,
+          "tuition": 950000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "음악",
+          "name": "음악(피아노 초급)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 720.0,
+          "tuition": 80000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "음악",
+          "name": "음악(피아노 중급)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 720.0,
+          "tuition": 90000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "음악",
+          "name": "바이올린",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 480.0,
+          "tuition": 80000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        }
+      ],
+      "preschoolCourses": [
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치부(종일반)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 7000.0,
+          "tuition": 1590000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치부, 초등부(주5회)1",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 2400.0,
+          "tuition": 550000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치부, 초등부(주3회)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1440.0,
+          "tuition": 330000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치부, 초등부(주2회)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 960.0,
+          "tuition": 220000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치부, 초등부(1회)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 350.0,
+          "tuition": 74500.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "캠프(유치부, 초등부)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 5250.0,
+          "tuition": 1190000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치부, 초등부(주5회)2",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 4200.0,
+          "tuition": 950000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        }
+      ]
+    },
+    {
+      "name": "힐사이드컬리지잇천안아산학원",
+      "kind": "학원",
+      "area": "배방읍",
+      "address": "충청남도 아산시 배방읍 용연로 8-6 , 5층",
+      "phone": null,
+      "teachers": 13.0,
+      "courses": null,
+      "group": "유아 전문 여부 확인 필요",
+      "note": "학원 안내 사이트에 '유치부 전문'으로 표기(제3자 자료). 등록 과목명에는 대상 연령 없음",
+      "englishCourses": [
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "내국인영어B",
+          "capacity": 12.0,
+          "period": "1개월0일",
+          "minutesTotal": 800.0,
+          "tuition": 149000.0,
+          "otherFees": 150000.0,
+          "vehicleFee": 0.0,
+          "mealFee": 150000.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "내국인영어C",
+          "capacity": 12.0,
+          "period": "1개월0일",
+          "minutesTotal": 800.0,
+          "tuition": 147000.0,
+          "otherFees": 150000.0,
+          "vehicleFee": 0.0,
+          "mealFee": 150000.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "내국인영어D",
+          "capacity": 12.0,
+          "period": "1개월0일",
+          "minutesTotal": 800.0,
+          "tuition": 135000.0,
+          "otherFees": 150000.0,
+          "vehicleFee": 0.0,
+          "mealFee": 150000.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "외국인영어B",
+          "capacity": 12.0,
+          "period": "1개월0일",
+          "minutesTotal": 3500.0,
+          "tuition": 801000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "외국인영어C",
+          "capacity": 12.0,
+          "period": "1개월0일",
+          "minutesTotal": 3500.0,
+          "tuition": 803000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "외국인영어D",
+          "capacity": 12.0,
+          "period": "1개월0일",
+          "minutesTotal": 3500.0,
+          "tuition": 815000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        }
+      ],
+      "preschoolCourses": []
+    },
+    {
+      "name": "EIE고려대학교국제어학원강의하는아이들수학학원",
+      "kind": "학원",
+      "area": "배방읍",
+      "address": "충청남도 아산시 배방읍 모산로 52 , 108호, 204호 (배방읍, 배방5차한성필하우스아파트)",
+      "phone": "041-542-0533",
+      "teachers": 4.0,
+      "courses": null,
+      "group": "유치부 단과반 (유치원·어린이집 하원 후)",
+      "note": "과목명의 'Early'·'PRE'가 유아반인지 단계 이름인지 등록 자료로는 알 수 없음 — 확인 필요",
+      "englishCourses": [
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "PHONICS(내국인)",
+          "capacity": 22.0,
+          "period": "1개월0일",
+          "minutesTotal": 1920.0,
+          "tuition": 210000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "PHONICS(외국인)",
+          "capacity": 22.0,
+          "period": "1개월0일",
+          "minutesTotal": 160.0,
+          "tuition": 20000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "PARODY TALES(내국인)",
+          "capacity": 22.0,
+          "period": "1개월0일",
+          "minutesTotal": 1920.0,
+          "tuition": 220000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "PARODY TALES(외국인)",
+          "capacity": 22.0,
+          "period": "1개월0일",
+          "minutesTotal": 160.0,
+          "tuition": 20000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "PRE LET'S(내국인)",
+          "capacity": 22.0,
+          "period": "1개월0일",
+          "minutesTotal": 1920.0,
+          "tuition": 220000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "PRE LET'S(외국인)",
+          "capacity": 22.0,
+          "period": "1개월0일",
+          "minutesTotal": 160.0,
+          "tuition": 20000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "FACT PREP(내국인)",
+          "capacity": 22.0,
+          "period": "1개월0일",
+          "minutesTotal": 1920.0,
+          "tuition": 220000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "FACT PREP(외국인)",
+          "capacity": 22.0,
+          "period": "1개월0일",
+          "minutesTotal": 160.0,
+          "tuition": 20000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "LET'S TALK(내국인)",
+          "capacity": 22.0,
+          "period": "1개월0일",
+          "minutesTotal": 1920.0,
+          "tuition": 240000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "LET'S TALK(외국인)",
+          "capacity": 22.0,
+          "period": "1개월0일",
+          "minutesTotal": 160.0,
+          "tuition": 30000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "LET'S SPEAK(내국인)",
+          "capacity": 22.0,
+          "period": "1개월0일",
+          "minutesTotal": 1920.0,
+          "tuition": 240000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "LET'S SPEAK(외국인)",
+          "capacity": 22.0,
+          "period": "1개월0일",
+          "minutesTotal": 160.0,
+          "tuition": 30000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "LET'S EXPRESS(내국인)",
+          "capacity": 23.0,
+          "period": "1개월0일",
+          "minutesTotal": 1920.0,
+          "tuition": 240000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "LET'S EXPRESS(외국인)",
+          "capacity": 23.0,
+          "period": "1개월0일",
+          "minutesTotal": 160.0,
+          "tuition": 30000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "KOPI WANG(내국인)",
+          "capacity": 23.0,
+          "period": "1개월0일",
+          "minutesTotal": 1920.0,
+          "tuition": 240000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "KOPI WANG(외국인)",
+          "capacity": 23.0,
+          "period": "1개월0일",
+          "minutesTotal": 160.0,
+          "tuition": 30000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "PRE JUNIOR(내국인)",
+          "capacity": 23.0,
+          "period": "1개월0일",
+          "minutesTotal": 2240.0,
+          "tuition": 294000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "PRE JUNIOR(외국인)",
+          "capacity": 23.0,
+          "period": "1개월0일",
+          "minutesTotal": 120.0,
+          "tuition": 26000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "JUNIOR(내국인)",
+          "capacity": 23.0,
+          "period": "1개월0일",
+          "minutesTotal": 2240.0,
+          "tuition": 294000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "JUNIOR(외국인)",
+          "capacity": 23.0,
+          "period": "1개월0일",
+          "minutesTotal": 120.0,
+          "tuition": 26000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "SENIOR(내국인)",
+          "capacity": 23.0,
+          "period": "1개월0일",
+          "minutesTotal": 2240.0,
+          "tuition": 294000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "SENIOR(외국인)",
+          "capacity": 23.0,
+          "period": "1개월0일",
+          "minutesTotal": 120.0,
+          "tuition": 26000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "MASTER(내국인)",
+          "capacity": 23.0,
+          "period": "1개월0일",
+          "minutesTotal": 2400.0,
+          "tuition": 324000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "MASTER(외국인)",
+          "capacity": 23.0,
+          "period": "0개월0일",
+          "minutesTotal": 120.0,
+          "tuition": 26000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "MEC(내국인)",
+          "capacity": 23.0,
+          "period": "1개월0일",
+          "minutesTotal": 2880.0,
+          "tuition": 350000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보습",
+          "name": "수학(초)1",
+          "capacity": 23.0,
+          "period": "1개월0일",
+          "minutesTotal": 1280.0,
+          "tuition": 150000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보습",
+          "name": "수학(초)2",
+          "capacity": 23.0,
+          "period": "1개월0일",
+          "minutesTotal": 1920.0,
+          "tuition": 190000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보습",
+          "name": "수학(중)",
+          "capacity": 23.0,
+          "period": "1개월0일",
+          "minutesTotal": 2400.0,
+          "tuition": 320000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보습",
+          "name": "수학(고)",
+          "capacity": 23.0,
+          "period": "1개월0일",
+          "minutesTotal": 2880.0,
+          "tuition": 400000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보습",
+          "name": "국,사,과",
+          "capacity": 23.0,
+          "period": "1개월0일",
+          "minutesTotal": 720.0,
+          "tuition": 60000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        }
+      ],
+      "preschoolCourses": [
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "PRE LET'S(내국인)",
+          "capacity": 22.0,
+          "period": "1개월0일",
+          "minutesTotal": 1920.0,
+          "tuition": 220000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "PRE LET'S(외국인)",
+          "capacity": 22.0,
+          "period": "1개월0일",
+          "minutesTotal": 160.0,
+          "tuition": 20000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "PRE JUNIOR(내국인)",
+          "capacity": 23.0,
+          "period": "1개월0일",
+          "minutesTotal": 2240.0,
+          "tuition": 294000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "PRE JUNIOR(외국인)",
+          "capacity": 23.0,
+          "period": "1개월0일",
+          "minutesTotal": 120.0,
+          "tuition": 26000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        }
+      ]
+    },
+    {
+      "name": "더플러스학원",
+      "kind": "학원",
+      "area": "배방읍",
+      "address": "충청남도 아산시 배방읍 모산로 38-11 , 509호 (배방읍)",
+      "phone": "041-547-1009",
+      "teachers": 3.0,
+      "courses": null,
+      "group": "유치부 단과반 (유치원·어린이집 하원 후)",
+      "note": null,
+      "englishCourses": [
+        {
+          "field": "보습",
+          "name": "유치부영어",
+          "capacity": 30.0,
+          "period": "1개월0일",
+          "minutesTotal": 1200.0,
+          "tuition": 170000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보습",
+          "name": "초등영어1",
+          "capacity": 30.0,
+          "period": "1개월0일",
+          "minutesTotal": 1080.0,
+          "tuition": 150000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보습",
+          "name": "초등영어2",
+          "capacity": 30.0,
+          "period": "1개월0일",
+          "minutesTotal": 1200.0,
+          "tuition": 170000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보습",
+          "name": "초등영어3",
+          "capacity": 30.0,
+          "period": "1개월0일",
+          "minutesTotal": 1400.0,
+          "tuition": 190000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보습",
+          "name": "초등영어어휘",
+          "capacity": 30.0,
+          "period": "1개월0일",
+          "minutesTotal": 200.0,
+          "tuition": 15000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보습",
+          "name": "중등영어1",
+          "capacity": 30.0,
+          "period": "1개월0일",
+          "minutesTotal": 1280.0,
+          "tuition": 210000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보습",
+          "name": "중등영어2",
+          "capacity": 30.0,
+          "period": "1개월0일",
+          "minutesTotal": 1400.0,
+          "tuition": 230000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보습",
+          "name": "중등영어3",
+          "capacity": 30.0,
+          "period": "1개월0일",
+          "minutesTotal": 1500.0,
+          "tuition": 250000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보습",
+          "name": "중등영어어휘",
+          "capacity": 30.0,
+          "period": "1개월0일",
+          "minutesTotal": 200.0,
+          "tuition": 18000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보습",
+          "name": "고등영어",
+          "capacity": 30.0,
+          "period": "1개월0일",
+          "minutesTotal": 1440.0,
+          "tuition": 270000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        }
+      ],
+      "preschoolCourses": [
+        {
+          "field": "보습",
+          "name": "유치부영어",
+          "capacity": 30.0,
+          "period": "1개월0일",
+          "minutesTotal": 1200.0,
+          "tuition": 170000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        }
+      ]
+    },
+    {
+      "name": "잉글리시브레인영어학원",
+      "kind": "학원",
+      "area": "배방읍",
+      "address": "충청남도 아산시 배방읍 세교중앙로 32 , 403호",
+      "phone": "041-425-1206",
+      "teachers": 2.0,
+      "courses": null,
+      "group": "유치부 단과반 (유치원·어린이집 하원 후)",
+      "note": null,
+      "englishCourses": [
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치(주2회)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 960.0,
+          "tuition": 180000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "초등(주2회)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1040.0,
+          "tuition": 195000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "초등(주3회)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1200.0,
+          "tuition": 225000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "초등(주1회)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 160.0,
+          "tuition": 30000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        }
+      ],
+      "preschoolCourses": [
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치(주2회)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 960.0,
+          "tuition": 180000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        }
+      ]
+    },
+    {
+      "name": "노부영영어드림아산탕정학원",
+      "kind": "학원",
+      "area": "탕정면",
+      "address": "충청남도 아산시 탕정면 탕정면로 54-14 , 3층",
+      "phone": null,
+      "teachers": 5.0,
+      "courses": null,
+      "group": "유치부 단과반 (유치원·어린이집 하원 후)",
+      "note": "과목명의 'Early'·'PRE'가 유아반인지 단계 이름인지 등록 자료로는 알 수 없음 — 확인 필요",
+      "englishCourses": [
+        {
+          "field": "보통교과",
+          "name": "Reader",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 640.0,
+          "tuition": 90000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "Vreader2",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 920.0,
+          "tuition": 130000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "Vreader3",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1380.0,
+          "tuition": 170000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "Vreader4",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1840.0,
+          "tuition": 210000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "Sprout",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1620.0,
+          "tuition": 230000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "Spark",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1800.0,
+          "tuition": 250000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "Readers&",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 260.0,
+          "tuition": 25000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "Early5",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 960.0,
+          "tuition": 90000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "Early8",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 960.0,
+          "tuition": 130000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "Early12",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1920.0,
+          "tuition": 195000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "Early15",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 2400.0,
+          "tuition": 240000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "Early20",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 2400.0,
+          "tuition": 320000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "Early30",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 3400.0,
+          "tuition": 480000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "Early온",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1080.0,
+          "tuition": 150000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "다독1",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 960.0,
+          "tuition": 130000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "다독2",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1200.0,
+          "tuition": 160000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "다독3",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1600.0,
+          "tuition": 200000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "그래머온",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 560.0,
+          "tuition": 80000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "초등하마",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1520.0,
+          "tuition": 210000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "하마+",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1040.0,
+          "tuition": 40000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "하마온",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1080.0,
+          "tuition": 150000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        }
+      ],
+      "preschoolCourses": [
+        {
+          "field": "보통교과",
+          "name": "Early5",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 960.0,
+          "tuition": 90000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "Early8",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 960.0,
+          "tuition": 130000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "Early12",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1920.0,
+          "tuition": 195000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "Early15",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 2400.0,
+          "tuition": 240000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "Early20",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 2400.0,
+          "tuition": 320000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "Early30",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 3400.0,
+          "tuition": 480000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "보통교과",
+          "name": "Early온",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1080.0,
+          "tuition": 150000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        }
+      ]
+    },
+    {
+      "name": "삼성영어셀레나ARA어학원",
+      "kind": "학원",
+      "area": "탕정면",
+      "address": "충청남도 아산시 탕정면 한들물빛도시로 70  C동 2층 213, 214호 (한들물빛도시지웰시티센트럴푸르지오2단지)",
+      "phone": null,
+      "teachers": 2.0,
+      "courses": null,
+      "group": "유치부 단과반 (유치원·어린이집 하원 후)",
+      "note": null,
+      "englishCourses": [
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치부1(내국인)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 880.0,
+          "tuition": 160000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치부2(내국인)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1400.0,
+          "tuition": 230000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "초등부(내국인)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1400.0,
+          "tuition": 230000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "중등부(내국인)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1440.0,
+          "tuition": 260000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        }
+      ],
+      "preschoolCourses": [
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치부1(내국인)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 880.0,
+          "tuition": 160000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치부2(내국인)",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1400.0,
+          "tuition": 230000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        }
+      ]
+    },
+    {
+      "name": "정철어학원",
+      "kind": "학원",
+      "area": "탕정면",
+      "address": "충청남도 아산시 탕정면 한들물빛5로 36 , G동 201~202호(한들물빛도시지웰시티센트럴푸르지오3단지)",
+      "phone": null,
+      "teachers": 5.0,
+      "courses": null,
+      "group": "유치부 단과반 (유치원·어린이집 하원 후)",
+      "note": null,
+      "englishCourses": [
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "초등영어1",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1600.0,
+          "tuition": 280000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "초등영어2",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 1440.0,
+          "tuition": 260000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치부1",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 680.0,
+          "tuition": 150000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        }
+      ],
+      "preschoolCourses": [
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치부1",
+          "capacity": 15.0,
+          "period": "1개월0일",
+          "minutesTotal": 680.0,
+          "tuition": 150000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        }
+      ]
+    },
+    {
+      "name": "한들물빛조이지앤비어학원",
+      "kind": "학원",
+      "area": "탕정면",
+      "address": "충청남도 아산시 탕정면 한들물빛도시로 70 , B동 203~204호 (한들물빛도시지웰시티센트럴푸르지오2단지)",
+      "phone": "041-910-9899",
+      "teachers": 3.0,
+      "courses": null,
+      "group": "유치부 단과반 (유치원·어린이집 하원 후)",
+      "note": null,
+      "englishCourses": [
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "특강",
+          "capacity": 25.0,
+          "period": "1개월0일",
+          "minutesTotal": 560.0,
+          "tuition": 100000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "파닉스반",
+          "capacity": 30.0,
+          "period": "1개월0일",
+          "minutesTotal": 1280.0,
+          "tuition": 210000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "베이직기초반",
+          "capacity": 30.0,
+          "period": "1개월0일",
+          "minutesTotal": 1440.0,
+          "tuition": 230000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "고급(집중)반",
+          "capacity": 30.0,
+          "period": "1개월0일",
+          "minutesTotal": 1560.0,
+          "tuition": 270000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "중등집중반",
+          "capacity": 30.0,
+          "period": "1개월0일",
+          "minutesTotal": 1800.0,
+          "tuition": 290000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        },
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치파닉스반",
+          "capacity": 30.0,
+          "period": "1개월0일",
+          "minutesTotal": 1200.0,
+          "tuition": 210000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        }
+      ],
+      "preschoolCourses": [
+        {
+          "field": "실용외국어(유아/초·중·고)",
+          "name": "유치파닉스반",
+          "capacity": 30.0,
+          "period": "1개월0일",
+          "minutesTotal": 1200.0,
+          "tuition": 210000.0,
+          "otherFees": 0.0,
+          "vehicleFee": 0.0,
+          "mealFee": 0.0
+        }
+      ]
+    }
+  ]
+}

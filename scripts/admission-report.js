@@ -113,6 +113,38 @@ for (const area of ['배방읍', '탕정면']) {
   }
 }
 
+// ── 영어유치원(유아 대상 영어학원) ───────────────────────────
+const adir = path.join(ROOT, 'data', 'academies');
+const afile = fs.existsSync(adir) ? fs.readdirSync(adir).filter((f) => f.endsWith('.json')).sort().pop() : null;
+if (afile) {
+  const A = JSON.parse(fs.readFileSync(path.join(adir, afile), 'utf8'));
+  const won = (x) => (x === null || x === undefined ? U : `${Math.round(x).toLocaleString('ko-KR')}원`);
+  const mins = (x) => (x === null || x === undefined ? U : `월 ${Math.round(x).toLocaleString('ko-KR')}분`);
+  L.push('# 영어유치원 (유아 대상 영어학원)', '');
+  L.push('- **영어유치원은 법적으로 유치원이 아니라 학원입니다.** 유치원알리미 공시·유보통합포털 모집 대상이 아니고, 유아학비(누리과정) 지원도 받지 않습니다. 모집은 학원이 직접 합니다.');
+  L.push(`- 출처: ${A.source.name} (교육청 등록 자료, **${A.source.asOf} 기준**) ${A.source.url}`);
+  L.push('- 교습비는 학원이 교육청에 **등록한 금액**입니다. 실제 청구액, 교재비, 차량비, 입학금은 학원에 확인하세요. "월 ○분"은 등록된 한 달 총 교습시간입니다.');
+  L.push('- 대상 연령은 등록된 과목(반) 이름으로만 판단했습니다. 이름에 유아·유치가 없으면 "대상 연령 미표기"입니다.');
+  L.push('- 이 목록은 배방·탕정 주소만 포함합니다. 천안 불당 등 인근 지역은 포함하지 않았습니다. 웹에서 2027 모집·설명회 공지는 찾지 못했습니다(→ 전화 확인).', '');
+  for (const g of ['유아 종일 영어반 (영어유치원 형태)', '유아 전문 여부 확인 필요', '유치부 단과반 (유치원·어린이집 하원 후)']) {
+    const list = A.academies.filter((x) => x.group === g);
+    if (!list.length) continue;
+    L.push(`## ${g} — ${list.length}곳`, '');
+    if (/종일/.test(g)) L.push('유아반 이름이 있고 한 달 교습시간이 4,000분(월 20일 기준 하루 약 3시간 20분) 이상인 과정이 있는 곳', '');
+    if (/단과/.test(g)) L.push('유치원·어린이집을 다니면서 하원 후 주 1~5회 다니는 짧은 유아 영어반', '');
+    for (const a of list) {
+      L.push(`### ${a.name}`, '');
+      L.push(`- 구분: ${a.kind} · ${a.area} · 주소 ${String(a.address).replace('충청남도 아산시 ', '')} · 전화 ${a.phone ?? U} · 등록 강사 ${a.teachers ?? U}명 (학원 전체)`);
+      if (a.note) L.push(`- 참고: ${a.note}`);
+      const cs = a.preschoolCourses.length ? a.preschoolCourses : a.englishCourses;
+      L.push(`- ${a.preschoolCourses.length ? '유아 관련 과정' : '영어 과정(대상 연령 미표기)'}:`, '');
+      L.push('| 과목(반) | 정원 | 한 달 교습시간 | 등록 교습비(월) |', '|---|---|---|---|');
+      for (const c of cs) L.push(`| ${c.name} | ${c.capacity ?? U} | ${mins(c.minutesTotal)} | ${won(c.tuition)} |`);
+      L.push('', '- 아직 모르는 것: 2027 모집 일정·설명회, 대상 출생연도(반 이름의 "5세"·"7세"가 만 나이인지), 원어민·한국인 교사 배치, 하루 일과·바깥놀이, 급식·차량, 방학', '');
+    }
+  }
+}
+
 L.push('# 어린이집', '');
 L.push('- **아직 수집하지 못했습니다.** 어린이집정보공개포털·아이사랑이 이 작업 환경(해외 서버)의 접속을 막습니다.');
 L.push('- 어린이집 입소는 유치원과 달리 아이사랑 입소대기 신청으로 진행되며, 기관별 2027 모집 일정은 확인하지 못했습니다.');
@@ -120,6 +152,7 @@ L.push('- 자료가 들어오면 같은 구조(기관마다 한 섹션)로 이 �
 
 L.push('## 원문 파일', '');
 L.push('- 내려받은 요강 원문: `data/raw/notices/<유치원>/` (공개 저장소 제외) · 글 목록: `data/notices/` · 정리값: `data/admissions/2027_kinder.js`');
+L.push('- 영어유치원: `python3 -I scripts/academy-extract.py <충남 학원 현황 xlsx> <기준일>` → `data/academies/`');
 L.push('- 다시 수집: `npm run notices` → 새 요강을 읽고 `data/admissions/2027_kinder.js`에 옮긴 뒤 `node scripts/admission-report.js`');
 
 const out = path.join(ROOT, 'docs', `04_2027_모집요강_기관별_${CHECKED_AT}.md`);

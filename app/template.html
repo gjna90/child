@@ -1,0 +1,563 @@
+<title>배방·탕정 유치원 지도</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* 레이아웃: 왼쪽 지도·조건, 오른쪽 목록 (좁은 화면은 위→아래로 쌓음). 동네 지도 색감: 논·하천 초록 바탕에 기관 점 */
+:root {
+  --bg: #f4f6f2;
+  --surface: #ffffff;
+  --ink: #1d2925;
+  --muted: #5d6b65;
+  --line: #d6ddd7;
+  --land: #e6ece4;
+  --land-focus: #d5e6d8;
+  --accent: #0e6a62;
+  --accent-ink: #ffffff;
+  --public: #0e6a62;
+  --private: #b8681a;
+  --academy: #6650a8;
+  --warn-bg: #fff4dc;
+  --warn-ink: #7a4b00;
+  --ok-bg: #e2f2ea;
+  --ok-ink: #135c3a;
+  --unk-bg: #eceee9;
+  --unk-ink: #5d6b65;
+  --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --font-display: "Gowun Dodum", "IBM Plex Sans KR", "Apple SD Gothic Neo", sans-serif;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121816; --surface: #1a2220; --ink: #e5ece8; --muted: #9aa9a2; --line: #2e3a36;
+    --land: #1e2724; --land-focus: #223a31; --accent: #4fb8a9; --accent-ink: #0b1513;
+    --public: #4fb8a9; --private: #e09a4e; --academy: #a291e0;
+    --warn-bg: #3a2e14; --warn-ink: #f2cc80; --ok-bg: #173527; --ok-ink: #8fd9b2; --unk-bg: #252d2a; --unk-ink: #9aa9a2;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121816; --surface: #1a2220; --ink: #e5ece8; --muted: #9aa9a2; --line: #2e3a36;
+  --land: #1e2724; --land-focus: #223a31; --accent: #4fb8a9; --accent-ink: #0b1513;
+  --public: #4fb8a9; --private: #e09a4e; --academy: #a291e0;
+  --warn-bg: #3a2e14; --warn-ink: #f2cc80; --ok-bg: #173527; --ok-ink: #8fd9b2; --unk-bg: #252d2a; --unk-ink: #9aa9a2;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.55; }
+.wrap { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 16px 96px; max-width: 1280px; margin: 0 auto; }
+h1 { font-family: var(--font-display); font-weight: 400; font-size: 1.7rem; margin: 0; text-wrap: balance; }
+h2 { font-size: 1.05rem; margin: 0; text-wrap: balance; }
+h3 { font-size: .95rem; margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: .82rem; }
+.num { font-variant-numeric: tabular-nums; }
+header.top { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: end; justify-content: space-between; margin-bottom: 14px; }
+.child { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 8px 12px; }
+.child label { font-weight: 600; font-size: .85rem; }
+select, input[type="range"] { font: inherit; }
+select { padding: 4px 8px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+.notice { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .82rem; color: var(--muted); margin-bottom: 14px; }
+.notice b { color: var(--ink); font-weight: 600; }
+.layout { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 18px; align-items: start; }
+@media (max-width: 860px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px; min-width: 0; }
+.stack { display: grid; gap: 14px; min-width: 0; }
+.mapbox svg { width: 100%; height: auto; display: block; touch-action: manipulation; cursor: crosshair; border-radius: 8px; background: var(--bg); }
+.maphead { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; font-size: .8rem; color: var(--muted); }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: -1px; }
+.btn { font: inherit; font-size: .85rem; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 5px 12px; cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.btn:focus-visible, .chip:focus-visible, select:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn[disabled] { opacity: .5; cursor: default; }
+.filters { display: grid; gap: 10px; }
+.fgroup { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.fgroup > .glabel { font-size: .78rem; color: var(--muted); width: 3.6rem; flex: none; letter-spacing: .02em; }
+.chip { font: inherit; font-size: .84rem; padding: 4px 11px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.rule { font-size: .8rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 8px; }
+.listhead { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.cards { display: grid; gap: 10px; }
+.card { border: 1px solid var(--line); border-radius: var(--r); padding: 12px; background: var(--surface); display: grid; gap: 6px; }
+.card.sel { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+.card .row1 { display: flex; gap: 8px; align-items: baseline; justify-content: space-between; flex-wrap: wrap; }
+.card .name { font-weight: 600; font-size: 1rem; background: none; border: 0; padding: 0; color: var(--ink); cursor: pointer; text-align: left; font-family: inherit; }
+.card .name:hover { text-decoration: underline; }
+.tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.tag { font-size: .74rem; padding: 1px 7px; border-radius: 4px; background: var(--unk-bg); color: var(--unk-ink); white-space: nowrap; }
+.tag.pub { background: color-mix(in srgb, var(--public) 16%, transparent); color: var(--public); }
+.tag.pri { background: color-mix(in srgb, var(--private) 18%, transparent); color: var(--private); }
+.tag.aca { background: color-mix(in srgb, var(--academy) 18%, transparent); color: var(--academy); }
+.state { font-size: .84rem; padding: 2px 8px; border-radius: 6px; display: inline-block; }
+.state.ok { background: var(--ok-bg); color: var(--ok-ink); }
+.state.warn { background: var(--warn-bg); color: var(--warn-ink); }
+.state.unk { background: var(--unk-bg); color: var(--unk-ink); }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 4px 14px; font-size: .84rem; }
+.facts div { min-width: 0; }
+.facts dt { color: var(--muted); font-size: .74rem; }
+.facts dd { margin: 0; }
+.card .acts { display: flex; gap: 6px; flex-wrap: wrap; }
+.empty { padding: 16px; border: 1px dashed var(--line); border-radius: var(--r); display: grid; gap: 8px; }
+.detail { display: grid; gap: 12px; }
+.detail section { display: grid; gap: 6px; border-top: 1px solid var(--line); padding-top: 10px; }
+.detail ul { margin: 0; padding-left: 1.1rem; }
+.src { font-size: .76rem; color: var(--muted); }
+.copyrow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: .86rem; }
+.copyrow code { font-family: inherit; background: var(--unk-bg); padding: 1px 6px; border-radius: 4px; word-break: break-all; user-select: all; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: .84rem; }
+th, td { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
+th { color: var(--muted); font-weight: 500; white-space: nowrap; }
+.cmpbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; background: var(--surface); border-top: 1px solid var(--line);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-top: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.cmpbar .items { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; min-width: 0; }
+.overlay { position: fixed; inset: 0; z-index: 20; background: color-mix(in srgb, var(--ink) 40%, transparent); display: grid; place-items: start center; overflow-y: auto;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) max(12px, env(safe-area-inset-right, 0px)) 24px max(12px, env(safe-area-inset-left, 0px)); }
+.sheet { background: var(--surface); color: var(--ink); border-radius: 14px; width: min(1000px, 100%); padding: 16px; display: grid; gap: 12px; min-width: 0; }
+.sheet .bar { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+footer { margin-top: 24px; font-size: .8rem; color: var(--muted); display: grid; gap: 4px; }
+svg text { font-family: var(--font-body); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>배방·탕정 유치원 지도</h1>
+      <div class="muted small">유치원 공식 공시와 2027학년도 모집요강, 영어유치원(학원) 등록 자료를 한곳에서 비교합니다</div>
+    </div>
+    <div class="child">
+      <label for="birth">우리 아이 출생연도</label>
+      <select id="birth"></select>
+      <span id="childLabel" class="small"></span>
+    </div>
+  </header>
+
+  <div class="notice" id="notice"></div>
+
+  <div class="layout">
+    <div class="stack">
+      <div class="panel mapbox">
+        <div class="maphead">
+          <h2>지도</h2>
+          <div class="fgroup">
+            <button class="btn" id="geoBtn" type="button">현재 위치로 출발지</button>
+            <button class="btn" id="clearOrigin" type="button" hidden>출발지 지우기</button>
+          </div>
+        </div>
+        <div id="map"></div>
+        <div class="legend" style="margin-top:8px">
+          <span><span class="dot" style="background:var(--public)"></span>공립 유치원</span>
+          <span><span class="dot" style="background:var(--private)"></span>사립 유치원</span>
+          <span><span class="dot" style="background:var(--ink)"></span>출발지</span>
+        </div>
+        <p class="small muted" id="mapNote" style="margin:6px 0 0"></p>
+      </div>
+
+      <div class="panel filters" id="filters" aria-label="조건"></div>
+    </div>
+
+    <div class="stack">
+      <div class="panel">
+        <div class="listhead">
+          <h2 id="count"></h2>
+          <div class="fgroup">
+            <label for="sort" class="small muted">정렬</label>
+            <select id="sort">
+              <option value="dist">직선거리 가까운 순</option>
+              <option value="recruit">2027 모집인원 많은 순</option>
+              <option value="name">이름순</option>
+            </select>
+          </div>
+        </div>
+        <div class="small muted" id="activeRule" style="margin-bottom:10px"></div>
+        <div class="cards" id="cards"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer id="foot"></footer>
+</div>
+
+<div class="cmpbar" id="cmpbar" hidden>
+  <strong class="small">비교함</strong>
+  <div class="items" id="cmpItems"></div>
+  <button class="btn primary" id="cmpOpen" type="button">나란히 비교</button>
+</div>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="bar"><h2 id="sheetTitle"></h2><button class="btn" id="sheetClose" type="button">닫기</button></div>
+    <div id="sheetBody"></div>
+  </div>
+</div>
+
+<script>
+const DATA = /*__DATA__*/null;
+const U = '미확인';
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('bt-' + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem('bt-' + k, JSON.stringify(v)); } catch { /* 저장 안 돼도 화면은 동작 */ } },
+};
+
+const SY = DATA.schoolYear;
+const state = {
+  birth: store.get('birth', SY - 4),
+  origin: store.get('origin', null),
+  compare: store.get('compare', []),
+  sel: null,
+  sort: store.get('sort', 'dist'),
+  f: store.get('filters', { kind: [], est: [], area: [], cond: [], radius: 3, unknown: true }),
+};
+const manAge = () => SY - state.birth - 1;
+
+// ── 계산 ──────────────────────────────────────────────
+function haversine(a, b) {
+  const R = 6371000, r = (x) => (x * Math.PI) / 180;
+  const dLat = r(b.lat - a.lat), dLng = r(b.lng - a.lng);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(r(a.lat)) * Math.cos(r(b.lat)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+function dist(it) { return state.origin && it.lat ? haversine(state.origin, it) : null; }
+const km = (m) => (m === null ? null : m < 1000 ? `${Math.round(m / 10) * 10}m` : `${(m / 1000).toFixed(1)}km`);
+
+/** 우리 아이 반: {status:'ok'|'warn'|'unk'|'no', text, known} */
+function childClass(it) {
+  const a = manAge();
+  if (it.kind !== '유치원') {
+    return it.preschoolNamed ? { status: 'unk', text: '유아반 이름 있음 · 대상 출생연도 미표기', known: null } : { status: 'unk', text: '대상 연령 미표기', known: null };
+  }
+  if (a < 3 || a > 5) return { status: 'no', text: `만${a}세는 유치원 대상 연령(만3~5세)이 아님`, known: false };
+  const rec = it.admission?.recruit;
+  if (rec) {
+    const row = rec.find((x) => {
+      const ys = [...String(x.birth).matchAll(/20\d\d/g)].map((m) => +m[0]);
+      return ys.length === 1 ? ys[0] === state.birth : ys.length === 2 && state.birth >= ys[0] && state.birth <= ys[1];
+    });
+    if (row) return { status: 'ok', text: `2027 모집 ${String(row.recruit).replace(/^(\d+)(.*)$/, '$1명$2')} · 요강 표기 ${row.age}`, known: true, recruit: parseInt(row.recruit, 10) };
+    return { status: 'no', text: '2027 요강에 해당 출생연도 반 없음', known: false };
+  }
+  const c = it.classes.find((x) => x.manAge === a && !x.mixed);
+  if (c && c.count > 0) return { status: 'warn', text: `올해 만${a}세반 ${c.count}반 운영(공시) · 2027 모집은 요강 확인`, known: true };
+  if (it.classes.some((x) => x.mixed && x.count > 0)) return { status: 'warn', text: '혼합연령반만 있음 · 포함 연령 확인 필요', known: null };
+  if (c && c.count === 0) return { status: 'no', text: `올해 만${a}세반 없음(공시)`, known: false };
+  return { status: 'unk', text: U, known: null };
+}
+function busKnown(it) {
+  if (it.kind !== '유치원') return null;
+  const t = it.admission?.bus?.text;
+  if (t) return !/^(없음|미운행)/.test(t);
+  if (it.busPub) return it.busPub.operating === '운영';
+  return null;
+}
+function lateEnd(it) {
+  if (it.kind !== '유치원') return null;
+  const ends = [it.hoursPubEnd];
+  const care = it.admission?.care?.text ?? it.admission?.hours?.text;
+  if (care) ends.push(...[...care.matchAll(/(\d{2}):(\d{2})/g)].map((m) => m[0]));
+  const e = ends.filter(Boolean).sort().pop();
+  return e ?? null;
+}
+
+// ── 조건 ──────────────────────────────────────────────
+const GROUPS = [
+  { key: 'kind', label: '종류', opts: [['유치원', '유치원'], ['영어유치원(학원)', '영어유치원·유아 영어학원']], test: (it, v) => it.kind === v },
+  { key: 'est', label: '설립', opts: [['pub', '공립'], ['pri', '사립·학원']], test: (it, v) => (v === 'pub' ? it.isPublic === true : it.isPublic === false) },
+  { key: 'area', label: '지역', opts: [['배방읍', '배방읍'], ['탕정면', '탕정면']], test: (it, v) => it.area === v },
+];
+const CONDS = [
+  { key: 'child', label: '우리 아이 반 있음', val: (it) => childClass(it).known },
+  { key: 'yogang', label: '2027 요강 확인됨', val: (it) => (it.kind === '유치원' ? !!it.admission?.read : false) },
+  { key: 'bus', label: '통학버스 운영', val: busKnown },
+  { key: 'late', label: '18:30 이후까지 돌봄·운영', val: (it) => { const e = lateEnd(it); return e === null ? null : e >= '18:30'; } },
+  { key: 'radius', label: '출발지 반경 안', val: (it) => { if (!state.origin) return null; const d = dist(it); return d === null ? null : d <= state.f.radius * 1000; } },
+];
+
+function passes(it, skip) {
+  for (const g of GROUPS) {
+    if (skip === g.key) continue;
+    const sel = state.f[g.key];
+    if (sel.length && !sel.some((v) => g.test(it, v))) return false; // 같은 범주: OR
+  }
+  for (const c of CONDS) {
+    if (skip === c.key || !state.f.cond.includes(c.key)) continue; // 다른 범주: AND
+    const v = c.val(it);
+    if (v === false) return false;
+    if (v === null && !state.f.unknown) return false;
+  }
+  return true;
+}
+
+// ── 지도 ──────────────────────────────────────────────
+const MAP = (() => {
+  const focus = DATA.map.areas.filter((a) => a.focus);
+  let minX = 180, maxX = -180, minY = 90, maxY = -90;
+  for (const a of focus) for (const ring of a.rings) for (const [x, y] of ring) { minX = Math.min(minX, x); maxX = Math.max(maxX, x); minY = Math.min(minY, y); maxY = Math.max(maxY, y); }
+  const padX = (maxX - minX) * 0.06, padY = (maxY - minY) * 0.06;
+  minX -= padX; maxX += padX; minY -= padY; maxY += padY;
+  const kx = Math.cos(((minY + maxY) / 2) * Math.PI / 180);
+  const W = 1000, H = Math.round((W * (maxY - minY)) / ((maxX - minX) * kx));
+  const px = (lng) => ((lng - minX) / (maxX - minX)) * W;
+  const py = (lat) => ((maxY - lat) / (maxY - minY)) * H;
+  const inv = (x, y) => ({ lng: minX + (x / W) * (maxX - minX), lat: maxY - (y / H) * (maxY - minY) });
+  return { W, H, px, py, inv };
+})();
+
+function centroid(ring) { let x = 0, y = 0; for (const p of ring) { x += p[0]; y += p[1]; } return [x / ring.length, y / ring.length]; }
+
+function drawMap(list) {
+  const { W, H, px, py } = MAP;
+  const path = (ring) => 'M' + ring.map(([x, y]) => `${px(x).toFixed(1)},${py(y).toFixed(1)}`).join('L') + 'Z';
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="배방읍·탕정면 지도. 지도를 누르면 출발지가 정해집니다" id="svgmap">`;
+  s += `<rect x="0" y="0" width="${W}" height="${H}" fill="var(--bg)"/>`;
+  for (const a of DATA.map.areas) {
+    for (const r of a.rings) s += `<path d="${path(r)}" fill="${a.focus ? 'var(--land-focus)' : 'var(--land)'}" stroke="var(--line)" stroke-width="${a.focus ? 2 : 1}"/>`;
+  }
+  for (const a of DATA.map.areas) {
+    const big = a.rings.reduce((m, r) => (r.length > m.length ? r : m), a.rings[0]);
+    const [cx, cy] = centroid(big);
+    const x = px(cx), y = py(cy);
+    if (x < 20 || x > W - 20 || y < 20 || y > H - 20) continue;
+    s += `<text x="${x.toFixed(0)}" y="${y.toFixed(0)}" text-anchor="middle" font-size="${a.focus ? 30 : 20}" fill="var(--muted)" opacity="${a.focus ? .75 : .5}" pointer-events="none">${esc(a.name)}</text>`;
+  }
+  const shown = new Set(list.map((x) => x.id));
+  const pts = DATA.institutions.filter((it) => it.lat);
+  for (const it of pts) {
+    const x = px(it.lng), y = py(it.lat);
+    if (x < 0 || x > W || y < 0 || y > H) continue;
+    const col = it.kind !== '유치원' ? 'var(--academy)' : it.isPublic ? 'var(--public)' : 'var(--private)';
+    const on = shown.has(it.id), sel = state.sel === it.id;
+    s += `<g class="pin" data-id="${esc(it.id)}" tabindex="0" role="button" aria-label="${esc(it.name)}" style="cursor:pointer" opacity="${on ? 1 : .25}">`
+      + `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${sel ? 15 : 10}" fill="${col}" stroke="var(--surface)" stroke-width="3"/>`
+      + (sel ? `<text x="${x.toFixed(1)}" y="${(y - 22).toFixed(1)}" text-anchor="middle" font-size="24" font-weight="600" fill="var(--ink)" stroke="var(--surface)" stroke-width="6" paint-order="stroke">${esc(it.name.replace('초등학교병설유치원', '초 병설'))}</text>` : '')
+      + `<title>${esc(it.name)}</title></g>`;
+  }
+  if (state.origin) {
+    const x = px(state.origin.lng), y = py(state.origin.lat);
+    s += `<g pointer-events="none"><circle cx="${x}" cy="${y}" r="13" fill="none" stroke="var(--ink)" stroke-width="4"/><circle cx="${x}" cy="${y}" r="4" fill="var(--ink)"/></g>`;
+  }
+  s += '</svg>';
+  $('#map').innerHTML = s;
+  const svg = $('#svgmap');
+  svg.addEventListener('click', (e) => {
+    const pin = e.target.closest('.pin');
+    if (pin) { select(pin.dataset.id, true); return; }
+    const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+    const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+    setOrigin({ ...MAP.inv(p.x, p.y), how: '지도에서 지정' });
+  });
+  svg.addEventListener('keydown', (e) => { const pin = e.target.closest('.pin'); if (pin && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); select(pin.dataset.id, true); } });
+  const noLoc = DATA.institutions.filter((it) => !it.lat);
+  $('#mapNote').textContent = `점은 유치원알리미 공시 좌표입니다. 지도를 누르면 그곳이 출발지가 되고 직선거리를 계산합니다(정확한 집 주소는 필요 없습니다). 위치 정보가 없어 지도에 없는 곳 ${noLoc.length}곳: 영어유치원·학원(주소만 있음)과 ${noLoc.filter((x) => x.kind === '유치원').map((x) => x.name).join(', ') || '없음'}.`;
+}
+
+function setOrigin(o) { state.origin = o; store.set('origin', o); if (state.sort !== 'dist') {} render(); }
+
+// ── 목록·카드 ──────────────────────────────────────────
+const typeTag = (it) => (it.kind !== '유치원' ? '<span class="tag aca">영어유치원·학원</span>' : it.isPublic ? `<span class="tag pub">${esc(it.type)}</span>` : `<span class="tag pri">${esc(it.type)}</span>`);
+
+function hoursText(it) {
+  if (it.kind !== '유치원') return U;
+  return it.hoursPub ? `${it.hoursPub} (공시, 방과후 포함)` : U;
+}
+function careText(it) {
+  const c = it.admission?.care?.text;
+  if (!c) { const h = it.admission?.hours?.text; return h && /07:30~19:30/.test(h) ? '운영시간 안에 포함(요강)' : U; }
+  const t = [...c.matchAll(/(\d{2}:\d{2})~(\d{2}:\d{2})/g)].map((m) => m[0]);
+  return t.length ? t.join(', ') : c.slice(0, 30);
+}
+function busText(it) {
+  if (it.kind !== '유치원') return U;
+  const t = it.admission?.bus?.text;
+  if (t) return /^(없음|미운행)/.test(t) ? t.split(' ')[0] : '운행 (노선은 상세)';
+  if (it.busPub) return `${it.busPub.operating}${it.busPub.count ? ` ${it.busPub.count}대` : ''} (공시)`;
+  return U;
+}
+
+function card(it) {
+  const cc = childClass(it);
+  const d = dist(it);
+  const inCmp = state.compare.includes(it.id);
+  const facts = it.kind === '유치원'
+    ? [['직선거리', d === null ? (state.origin ? '위치 없음' : '출발지 미정') : km(d)], ['운영시간', hoursText(it)], ['돌봄(요강)', careText(it)], ['통학버스', busText(it)]]
+    : [['직선거리', '위치 미확인'], ['구분', it.group], ['유아 과정', `${it.courses.length}개`], ['전화', it.phone ?? U]];
+  return `<article class="card${state.sel === it.id ? ' sel' : ''}" id="c-${esc(it.id)}">
+    <div class="row1"><button class="name" type="button" data-open="${esc(it.id)}">${esc(it.name)}</button><div class="tags">${typeTag(it)}<span class="tag">${esc(it.area)}</span></div></div>
+    <div><span class="state ${cc.status === 'no' ? 'unk' : cc.status}">${cc.status === 'no' ? '해당 반 없음 · ' : ''}${esc(cc.text)}</span></div>
+    <dl class="facts">${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+    <div class="acts"><button class="btn" type="button" data-open="${esc(it.id)}">상세 보기</button>
+      <button class="btn" type="button" data-cmp="${esc(it.id)}" ${!inCmp && state.compare.length >= 4 ? 'disabled' : ''}>${inCmp ? '비교함에서 빼기' : '비교함에 담기'}</button></div>
+  </article>`;
+}
+
+function emptyHelp() {
+  const active = [...GROUPS.filter((g) => state.f[g.key].length).map((g) => ({ key: g.key, label: g.label })), ...CONDS.filter((c) => state.f.cond.includes(c.key)).map((c) => ({ key: c.key, label: c.label }))];
+  const tips = active.map((a) => ({ ...a, n: DATA.institutions.filter((it) => passes(it, a.key)).length })).filter((a) => a.n > 0).sort((a, b) => b.n - a.n);
+  return `<div class="empty"><strong>조건에 맞는 곳이 없습니다.</strong>
+    ${tips.length ? `<span class="small">이 조건을 풀면 결과가 생깁니다:</span><div class="fgroup">${tips.map((t) => `<button class="btn" type="button" data-relax="${t.key}">${esc(t.label)} 풀기 → ${t.n}곳</button>`).join('')}</div>` : ''}
+    ${!state.f.unknown ? '<span class="small">"미확인도 보기"를 켜면 아직 확인 못 한 곳도 함께 보입니다.</span>' : ''}</div>`;
+}
+
+function sortList(list) {
+  const by = state.sort;
+  return list.sort((a, b) => {
+    if (by === 'dist' && state.origin) { const da = dist(a), db = dist(b); if (da !== db) return (da ?? Infinity) - (db ?? Infinity); }
+    if (by === 'recruit') { const ra = childClass(a).recruit ?? -1, rb = childClass(b).recruit ?? -1; if (ra !== rb) return rb - ra; }
+    if (a.kind !== b.kind) return a.kind === '유치원' ? -1 : 1;
+    return a.name.localeCompare(b.name, 'ko');
+  });
+}
+
+// ── 조건 화면 ──────────────────────────────────────────
+function drawFilters() {
+  const g = GROUPS.map((gr) => `<div class="fgroup" role="group" aria-label="${gr.label}"><span class="glabel">${gr.label}</span>${gr.opts.map(([v, l]) => `<button class="chip" type="button" data-g="${gr.key}" data-v="${esc(v)}" aria-pressed="${state.f[gr.key].includes(v)}">${esc(l)}</button>`).join('')}</div>`).join('');
+  const c = `<div class="fgroup" role="group" aria-label="조건"><span class="glabel">조건</span>${CONDS.map((cd) => `<button class="chip" type="button" data-c="${cd.key}" aria-pressed="${state.f.cond.includes(cd.key)}">${esc(cd.label)}</button>`).join('')}</div>`;
+  const r = `<div class="fgroup"><span class="glabel">반경</span><input type="range" id="radius" min="0.5" max="8" step="0.5" value="${state.f.radius}" aria-label="반경 km" ${state.origin ? '' : 'disabled'}><span class="small num" id="radiusVal">${state.f.radius}km</span>${state.origin ? '' : '<span class="small muted">출발지를 정하면 쓸 수 있습니다</span>'}</div>`;
+  const u = `<div class="fgroup"><span class="glabel">미확인</span><button class="chip" type="button" id="unk" aria-pressed="${state.f.unknown}">미확인도 보기</button><button class="btn" type="button" id="reset">조건 모두 지우기</button></div>`;
+  $('#filters').innerHTML = `<h2>조건</h2>${g}${c}${r}${u}<div class="rule">같은 줄에서 여러 개를 고르면 하나라도 맞으면 보이고(또는), 줄이 다르면 모두 맞아야 보입니다(그리고). '미확인도 보기'를 켜면 조건을 확인하지 못한 곳도 빼지 않고 '미확인'으로 보여 줍니다.</div>`;
+}
+function activeRule() {
+  const parts = [];
+  for (const g of GROUPS) if (state.f[g.key].length) parts.push(`${g.label}: ${state.f[g.key].map((v) => g.opts.find((o) => o[0] === v)[1]).join(' 또는 ')}`);
+  for (const c of CONDS) if (state.f.cond.includes(c.key)) parts.push(c.key === 'radius' ? `반경 ${state.f.radius}km 안` : c.label);
+  return parts.length ? `적용 중: ${parts.join(' · 그리고 · ')}${state.f.unknown ? ' (미확인 포함)' : ''}` : '조건 없음 — 전체 보기';
+}
+
+// ── 상세 ──────────────────────────────────────────────
+function copyRow(label, value, link) {
+  if (!value) return `<div class="copyrow"><span class="muted">${label}</span> ${U}</div>`;
+  return `<div class="copyrow"><span class="muted">${label}</span> ${link ? `<a href="${esc(value)}" target="_blank" rel="noopener">${esc(value)}</a>` : `<code>${esc(value)}</code>`} <button class="btn" type="button" data-copy="${esc(value)}">복사</button></div>`;
+}
+const srcLine = (s) => (s ? `<div class="src">출처: ${esc(s.title)}${s.posted ? ` (${esc(s.posted)} 게시)` : ''} · ${esc(s.url)}</div>` : '');
+const item = (label, x) => `<div><strong class="small">${label}</strong><div>${x ? esc(x.text) : U}</div>${x ? srcLine(x.src) : ''}</div>`;
+
+function detail(it) {
+  const cc = childClass(it);
+  let h = `<div class="detail"><div class="tags">${typeTag(it)}<span class="tag">${esc(it.area)}</span></div>
+    <div><span class="state ${cc.status === 'no' ? 'unk' : cc.status}">${esc(cc.text)}</span> <span class="small muted">기준: ${state.birth}년생 → ${SY}학년도 만${manAge()}세(요강 표기 ${manAge()}세반, 옛 표기 ${manAge() + 2}세반)</span></div>
+    <section><h3>기본정보</h3>${copyRow('주소', it.address)}${copyRow('전화', it.phone)}${copyRow('홈페이지', it.homepage, true)}`;
+  if (it.kind === '유치원') {
+    const cls = it.classes.map((c) => `${c.mixed ? '혼합' : `만${c.manAge}세`} ${c.count ?? U}반/${c.enrolled ?? U}명`).join(' · ');
+    h += `<div class="small">올해 반 구성(공시): ${esc(cls)}</div>
+      <div class="small">교사 ${it.teacherTotal ?? U}명 — 기관 전체 인원이며 반별 배치가 아닙니다 · 체육장 면적 ${it.playground ?? U}㎡(공시, 실내·실외 구분 없음)</div>
+      <div class="src">출처: 유치원알리미 공시 (${esc(it.pubAsOf ?? '')}) · 확인일 ${esc(DATA.roster.checkedAt)}</div></section>`;
+    const a = it.admission;
+    if (a && a.read) {
+      h += `<section><h3>${SY}학년도 모집 (요강)</h3>${a.classNames ? item('기관이 쓰는 반 이름', a.classNames) : ''}
+        <div class="tablewrap"><table><thead><tr><th>반(요강 표기)</th><th>대상 출생</th><th>학급</th><th>정원</th><th>재학 예정</th><th>모집</th></tr></thead><tbody>
+        ${a.recruit.map((r) => `<tr><td>${esc(r.age)}</td><td>${esc(r.birth)}</td><td class="num">${esc(r.classes ?? U)}</td><td class="num">${esc(r.capacity ?? U)}</td><td class="num">${esc(r.staying ?? U)}</td><td class="num"><b>${esc(r.recruit ?? U)}</b></td></tr>`).join('')}
+        </tbody></table></div>
+        <div><strong class="small">우선모집 순위 (3세반 기준 비율)</strong><ul>${(a.priority ?? []).map((p) => `<li>${esc(p)}</li>`).join('')}</ul></div>
+        ${a.twins ? `<div class="small"><strong>쌍생아</strong> ${esc(a.twins)}</div>` : ''}</section>
+        <section><h3>운영·돌봄·통학·비용</h3>${item('하루 운영', a.hours)}${item('아침·저녁 돌봄', a.care)}${item('통학버스', a.bus)}${item('부모 부담 비용', a.cost)}${a.program ? item('교육·프로그램(기관 안내)', a.program) : ''}</section>`;
+    } else {
+      h += `<section><h3>${SY}학년도 모집</h3><div>요강 미확인${it.pending ? ` — ${esc(it.pending)}` : ''}. 10월 28일부터 유보통합포털에서 확인하거나 전화로 문의하세요.</div></section>`;
+    }
+    h += `<section><h3>설명회·공개 행사</h3>${a?.events?.length ? `<ul>${a.events.map((e) => `<li>${esc(e.what)}: ${esc(e.when)}</li>`).join('')}</ul>` : `<div>${U} (찾지 못했다는 뜻이며 "없음"이 아닙니다)</div>`}${(a?.notes ?? []).map((n) => `<div class="small muted">참고: ${esc(n)}</div>`).join('')}</section>`;
+  } else {
+    h += `<div class="small">등록 강사 ${it.teachers ?? U}명 (학원 전체)</div></section>
+      <section><h3>등록된 과정 (교육청 등록 자료)</h3>${it.note ? `<div class="small">참고: ${esc(it.note)}</div>` : ''}
+      <div class="tablewrap"><table><thead><tr><th>과목(반)</th><th>정원</th><th>한 달 교습시간</th><th>등록 교습비(월)</th></tr></thead><tbody>
+      ${it.courses.map((c) => `<tr><td>${esc(c.name)}</td><td class="num">${c.capacity ?? U}</td><td class="num">${c.minutes ? `${Math.round(c.minutes).toLocaleString('ko-KR')}분` : U}</td><td class="num">${c.tuition ? `${Math.round(c.tuition).toLocaleString('ko-KR')}원` : U}</td></tr>`).join('')}
+      </tbody></table></div>
+      <div class="small">영어유치원은 법적으로 학원입니다. 유치원 공시·유보통합포털 모집 대상이 아니고 유아학비 지원을 받지 않습니다. 교습비는 교육청에 등록한 금액이며 실제 청구액·교재비·차량비는 학원에 확인하세요.</div>
+      <div class="src">출처: ${esc(DATA.academySource?.name)} (${esc(DATA.academySource?.asOf)} 기준) · ${esc(DATA.academySource?.url)}</div></section>
+      <section><h3>아직 모르는 것</h3><div>2027 모집 일정·설명회, 대상 출생연도, 원어민·한국인 교사 배치, 하루 일과·바깥놀이, 급식·차량, 방학</div></section>`;
+  }
+  return h + '</div>';
+}
+
+function openSheet(title, body) { $('#sheetTitle').textContent = title; $('#sheetBody').innerHTML = body; $('#overlay').hidden = false; $('#sheetClose').focus(); }
+function closeSheet() { $('#overlay').hidden = true; }
+
+function compareTable() {
+  const list = state.compare.map((id) => DATA.institutions.find((x) => x.id === id)).filter(Boolean);
+  const rows = [
+    ['종류·유형', (it) => (it.kind === '유치원' ? it.type : `학원 (${it.group})`)],
+    ['지역', (it) => it.area],
+    ['직선거리', (it) => { const d = dist(it); return d === null ? (state.origin ? '위치 없음' : '출발지 미정') : km(d); }],
+    [`우리 아이 반 (${state.birth}년생)`, (it) => childClass(it).text],
+    ['운영시간(공시)', hoursText],
+    ['아침·저녁 돌봄(요강)', careText],
+    ['통학버스', busText],
+    ['부모 부담 비용', (it) => (it.kind === '유치원' ? it.admission?.cost?.text ?? U : (it.courses.filter((c) => c.tuition).sort((a, b) => b.minutes - a.minutes)[0] ? `가장 긴 과정 월 ${Math.round(it.courses.sort((a, b) => b.minutes - a.minutes)[0].tuition).toLocaleString('ko-KR')}원(등록 교습비)` : U))],
+    ['교사(기관 전체)', (it) => (it.kind === '유치원' ? `${it.teacherTotal ?? U}명` : `${it.teachers ?? U}명(강사)`)],
+    ['체육장 면적(공시)', (it) => (it.kind === '유치원' ? (it.playground === null ? U : `${it.playground}㎡`) : U)],
+    ['설명회', (it) => (it.admission?.events?.length ? it.admission.events.map((e) => `${e.what}: ${e.when}`).join(' / ') : U)],
+    ['2027 요강', (it) => (it.kind === '유치원' ? (it.admission?.read ? '확인함' : '미확인') : '해당 없음(학원)')],
+  ];
+  return `<div class="tablewrap"><table><thead><tr><th></th>${list.map((it) => `<th>${esc(it.name)}</th>`).join('')}</tr></thead><tbody>
+    ${rows.map(([k, f]) => `<tr><th>${esc(k)}</th>${list.map((it) => `<td>${esc(f(it))}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+    <p class="small muted">직선거리는 실제 도보·자동차 경로가 아닙니다. 교사 수는 기관 전체 인원입니다. 미확인은 '없음'이 아니라 아직 확인하지 못했다는 뜻입니다.</p>`;
+}
+
+// ── 그리기 ────────────────────────────────────────────
+function render() {
+  const list = sortList(DATA.institutions.filter((it) => passes(it)));
+  drawMap(list);
+  drawFilters();
+  $('#count').textContent = `${list.length}곳`;
+  $('#activeRule').textContent = activeRule();
+  $('#cards').innerHTML = list.length ? list.map(card).join('') : emptyHelp();
+  $('#clearOrigin').hidden = !state.origin;
+  const items = state.compare.map((id) => DATA.institutions.find((x) => x.id === id)).filter(Boolean);
+  $('#cmpbar').hidden = items.length === 0;
+  $('#cmpItems').innerHTML = items.map((it) => `<button class="chip" type="button" data-cmp="${esc(it.id)}" aria-pressed="true">${esc(it.name.replace('초등학교병설유치원', '초 병설'))} ✕</button>`).join('');
+  $('#cmpOpen').disabled = items.length < 2;
+  const a = manAge();
+  $('#childLabel').textContent = `→ ${SY}학년도 만${a}세 · 요강 표기 "${a}세반" · 옛 표기 "${a + 2}세반"`;
+}
+
+function select(id, scroll) {
+  state.sel = id; render();
+  if (scroll) document.getElementById('c-' + id)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// ── 이벤트 ────────────────────────────────────────────
+document.addEventListener('click', (e) => {
+  const t = e.target.closest('button'); if (!t) return;
+  if (t.dataset.g) { const arr = state.f[t.dataset.g]; const i = arr.indexOf(t.dataset.v); i >= 0 ? arr.splice(i, 1) : arr.push(t.dataset.v); store.set('filters', state.f); render(); }
+  else if (t.dataset.c) { const arr = state.f.cond; const i = arr.indexOf(t.dataset.c); i >= 0 ? arr.splice(i, 1) : arr.push(t.dataset.c); store.set('filters', state.f); render(); }
+  else if (t.id === 'unk') { state.f.unknown = !state.f.unknown; store.set('filters', state.f); render(); }
+  else if (t.id === 'reset') { state.f = { kind: [], est: [], area: [], cond: [], radius: state.f.radius, unknown: true }; store.set('filters', state.f); render(); }
+  else if (t.dataset.relax) { const k = t.dataset.relax; if (state.f[k] && Array.isArray(state.f[k])) state.f[k] = []; else state.f.cond = state.f.cond.filter((x) => x !== k); store.set('filters', state.f); render(); }
+  else if (t.dataset.open) { const it = DATA.institutions.find((x) => x.id === t.dataset.open); state.sel = it.id; render(); openSheet(it.name, detail(it)); }
+  else if (t.dataset.cmp) { const id = t.dataset.cmp; const i = state.compare.indexOf(id); if (i >= 0) state.compare.splice(i, 1); else if (state.compare.length < 4) state.compare.push(id); store.set('compare', state.compare); render(); }
+  else if (t.id === 'cmpOpen') openSheet(`나란히 비교 (${state.compare.length}곳)`, compareTable());
+  else if (t.id === 'sheetClose') closeSheet();
+  else if (t.id === 'clearOrigin') setOrigin(null);
+  else if (t.dataset.copy) { const v = t.dataset.copy; const done = () => { t.textContent = '복사됨'; setTimeout(() => (t.textContent = '복사'), 1500); }; try { navigator.clipboard.writeText(v).then(done, () => selectText(t)); } catch { selectText(t); } }
+  else if (t.id === 'geoBtn') {
+    const fail = () => { $('#mapNote').textContent = '이 화면에서는 현재 위치를 쓸 수 없습니다. 지도에서 집 근처를 눌러 출발지를 정해 주세요.'; };
+    try { navigator.geolocation.getCurrentPosition((p) => setOrigin({ lat: p.coords.latitude, lng: p.coords.longitude, how: '현재 위치' }), fail, { timeout: 8000 }); } catch { fail(); }
+  }
+});
+function selectText(btn) { const code = btn.parentElement.querySelector('code, a'); if (!code) return; const r = document.createRange(); r.selectNodeContents(code); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = '선택됨 — 복사하세요'; }
+document.addEventListener('input', (e) => { if (e.target.id === 'radius') { state.f.radius = +e.target.value; store.set('filters', state.f); $('#radiusVal').textContent = `${state.f.radius}km`; } });
+document.addEventListener('change', (e) => { if (e.target.id === 'radius') render(); });
+$('#overlay').addEventListener('click', (e) => { if (e.target.id === 'overlay') closeSheet(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('#overlay').hidden) closeSheet(); });
+$('#sort').value = state.sort;
+$('#sort').addEventListener('change', (e) => { state.sort = e.target.value; store.set('sort', state.sort); render(); });
+$('#birth').innerHTML = [SY - 6, SY - 5, SY - 4, SY - 3, SY - 2].map((y) => `<option value="${y}">${y}년생</option>`).join('');
+$('#birth').value = state.birth;
+$('#birth').addEventListener('change', (e) => { state.birth = +e.target.value; store.set('birth', state.birth); render(); });
+
+// 안내·출처
+const nK = DATA.institutions.filter((x) => x.kind === '유치원').length;
+const nA = DATA.institutions.length - nK;
+const nRead = DATA.institutions.filter((x) => x.admission?.read).length;
+$('#notice').innerHTML = `<span><b>${SY}학년도</b> 기준</span><span>유치원 <b>${nK}곳</b>(공식 명부) · 2027 요강 확인 <b>${nRead}곳</b></span><span>영어유치원·유아 영어학원 <b>${nA}곳</b>(교육청 등록 자료)</span><span><b>어린이집은 아직 없음</b> — 공식 사이트 접속이 막혀 수집 전</span><span>우선모집 접수 <b>11월 2일(월) 9시 ~ 4일(수) 18시</b></span>`;
+$('#foot').innerHTML = `<div>유치원: 유치원알리미 공시 (확인일 ${esc(DATA.roster.checkedAt)}) · 모집요강: 각 유치원 홈페이지 원문 (확인일 ${esc(DATA.admissionCheckedAt)})</div>
+  <div>영어유치원: ${esc(DATA.academySource?.name ?? U)} (${esc(DATA.academySource?.asOf ?? U)} 기준)</div>
+  <div>${esc(DATA.map.source)} · 거리는 직선거리이며 도보·자동차 시간은 경로 서비스가 연결되지 않아 '조회 불가'입니다.</div>
+  <div>${esc(DATA.roster.note)} · 화면 자료 생성 ${esc(DATA.builtAt)}</div>`;
+render();
+</script>

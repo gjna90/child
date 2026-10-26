@@ -11,6 +11,12 @@
 | [docs/05_요구사항_대조_2026-10-26.md](docs/05_요구사항_대조_2026-10-26.md) | 통합 요구사항 항목별 반영 현황 |
 | [data/candidates/](data/candidates/) | 웹 검색 요약으로 찾은 후보(공식 명부 아님) |
 
+## 2단계 화면 (지도·검색·비교)
+
+- `app/index.html` — 한 파일짜리 화면. 브라우저로 열면 동작합니다(인터넷은 글꼴에만 사용).
+- 자료를 새로 받은 뒤 `node scripts/build-app.js` 로 다시 만듭니다 (`app/template.html` + 명부·요강·영어유치원 자료).
+- 거리는 직선거리만 계산합니다. 도보·자동차 시간은 경로 API를 연결해야 합니다.
+
 ## 지금 들어 있는 것
 
 - `src/lib/age.js` — 반 이름 해석('5세반' ≠ 만5세반), 출생연도 → 반, 유아반 보유와 '우리 아이 반 있음' 구분
@@ -60,5 +66,7 @@
 npm test                         # 검증 테스트
 npm run collect                  # 공식 자료 수집 → data/roster/<날짜>.json
 node scripts/stage1-report.js    # 명부 문서 → docs/03_기관명부_<날짜>.md
+python3 -I scripts/academy-extract.py <충남 학원 현황 xlsx> <기준일>   # 영어유치원 → data/academies/
+node scripts/build-app.js        # 화면 → app/index.html
 npm run notices                  # 유치원 홈페이지 공지·모집요강 수집 → data/notices/<날짜>.json (HWP 읽기에 olefile 필요)
 ```
