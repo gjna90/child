@@ -1,0 +1,34 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.11 87bfad18",
+  "osm3s": {
+    "timestamp_osm_base": "2026-10-26T01:18:36Z",
+    "timestamp_areas_base": "2026-10-25T22:23:21Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+
+{
+  "type": "relation",
+  "id": 2546883,
+  "tags": {
+    "admin_level": "6",
+    "boundary": "administrative",
+    "name": "아산시",
+    "name:en": "Asan-si",
+    "name:ja": "牙山市",
+    "name:ko": "아산시",
+    "name:ko-Hani": "牙山市",
+    "name:zh": "牙山市",
+    "name:zh-Hant": "牙山市",
+    "ref:KR:mods:kadc": "34040",
+    "ref:KR:mois:admin": "4420000000",
+    "ref:KR:mois:legal": "4420000000",
+    "type": "boundary",
+    "wikidata": "Q42114",
+    "wikipedia": "ko:아산시"
+  }
+}
+
+  ]
+}

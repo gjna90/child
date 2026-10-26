@@ -1,0 +1,13 @@
+{
+  "name": "kinder-app",
+  "version": "0.1.0",
+  "private": true,
+  "description": "아산 배방·탕정 유치원·어린이집 탐색·비교·추천 (1단계: 데이터 확보 검증)",
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "collect": "NODE_USE_ENV_PROXY=1 NODE_NO_WARNINGS=1 node scripts/collect.js",
+    "report": "node scripts/stage1-report.js"
+  },
+  "engines": { "node": ">=20" }
+}
