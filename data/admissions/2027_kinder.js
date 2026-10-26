@@ -197,3 +197,55 @@ export const PENDING = {
   하나유치원: '유치원알리미에 홈페이지 공시 없음, 웹 검색에서도 못 찾음',
   연화초등학교병설유치원: '유치원알리미에 홈페이지 공시 없음',
 };
+
+/**
+ * 우선순위를 화면이 계산할 수 있게 정리한 값 (3세반 기준, 위 priority3 문장과 같은 요강 근거)
+ * pct: 모집인원 대비 선발 비율(요강 표기 그대로). 모르면 null. 합격 가능성을 뜻하지 않음.
+ * 조건 키: low 법정저소득 · vet 국가보훈 · nk 북한이탈 · multi3 3자녀 이상 · multi2 2자녀 · twins 쌍생아 · sibling 재원생 형제자매
+ *         health 건강취약 · social 사회적 배려 · multicultural 다문화 · disabledParent 장애부모 · walk 도보 등하원(차량 미이용)
+ *         together 형제자매 동시입학 · foreign 외국국적 · local_segyo 세교리 주소 · local_handeul 한들물빛도시 거주+차량 미이용 · local_gongsu 공수초 학구
+ */
+export const PRIO = {
+  배방유치원: [
+    { rank: 1, pct: '모집인원 내 100%', keys: ['low'] }, { rank: 2, pct: '1명', keys: ['vet'] }, { rank: 3, pct: '1명', keys: ['nk'] },
+    { rank: 4, pct: '10%', keys: ['sibling'] }, { rank: 5, pct: '20%', keys: ['multi3'] },
+    { rank: 6, pct: '60%', keys: ['health', 'multi2', 'twins', 'social', 'multicultural', 'disabledParent', 'walk'] },
+  ],
+  아산세교유치원: [
+    { rank: 1, pct: '모집인원 내 100%', keys: ['low'] }, { rank: 2, pct: '3%', keys: ['vet'] }, { rank: 3, pct: '3%', keys: ['nk'] },
+    { rank: 4, pct: '7%', keys: ['multi3'] },
+    { rank: 5, pct: '40%', keys: ['multi2', 'twins', 'sibling', 'disabledParent', 'multicultural', 'social'] },
+    { rank: 6, pct: '40%', keys: ['local_segyo'] },
+  ],
+  아산월천유치원: [
+    { rank: 1, pct: '모집인원의 100%', keys: ['low'] }, { rank: 2, pct: '20%', keys: ['vet'] }, { rank: 3, pct: '20%', keys: ['nk'] },
+    { rank: 4, pct: '20%', keys: ['multi3'] },
+    { rank: 5, pct: '30%', keys: ['twins', 'multi2', 'health', 'sibling', 'social', 'multicultural', 'disabledParent', 'walk'] },
+  ],
+  한들물빛유치원: [
+    { rank: 1, pct: '모집인원 내 100%', keys: ['low'] }, { rank: 2, pct: null, keys: ['vet'] }, { rank: 3, pct: null, keys: ['nk'] },
+    { rank: 4, pct: '7%', keys: ['multi3'] },
+    { rank: 5, pct: '33%', keys: ['multi2', 'twins', 'sibling', 'disabledParent', 'multicultural', 'health', 'social'] },
+    { rank: 6, pct: '40%', keys: ['local_handeul'] },
+  ],
+  아산공수초등학교병설유치원: [
+    { rank: 1, pct: '모집인원 내 100%', keys: ['low'] }, { rank: 2, pct: '5%', keys: ['vet'] }, { rank: 3, pct: '5%', keys: ['nk'] },
+    { rank: 4, pct: '50%(7명)', keys: ['multi3', 'sibling', 'walk', 'local_gongsu', 'social'] },
+    { rank: 5, pct: '20%(3명)', keys: ['multi2', 'twins', 'multicultural', 'disabledParent'] },
+  ],
+  탕정미래초등학교병설유치원: [
+    { rank: 1, pct: '모집인원 100%', keys: ['low'] }, { rank: 2, pct: '3%', keys: ['vet'] }, { rank: 3, pct: '3%', keys: ['nk'] },
+    { rank: 4, pct: '40%', keys: ['multi3', 'sibling', 'health', 'social'] },
+    { rank: 5, pct: '40%', keys: ['multi2', 'multicultural', 'disabledParent'], note: '쌍생아 별도 표기 없음 — 2자녀로 해당하는지 원에 확인' },
+  ],
+  금곡초등학교병설유치원: [
+    { rank: 1, pct: '모집인원 내 100%', keys: ['low'] }, { rank: 2, pct: '모집인원 내 100%', keys: ['vet'] }, { rank: 3, pct: '모집인원 내 100%', keys: ['nk'] },
+    { rank: 4, pct: '20%', keys: ['multi3'] },
+    { rank: 5, pct: '70%', keys: ['multi2', 'health', 'twins', 'sibling', 'social', 'multicultural', 'disabledParent'] },
+  ],
+  일심유치원: [
+    { rank: 1, pct: '모집인원 내 100%', keys: ['low'] }, { rank: 2, pct: '최소 3%', keys: ['vet'] }, { rank: 3, pct: '최소 3%', keys: ['nk'] },
+    { rank: 4, pct: '10%', keys: ['sibling'] }, { rank: 5, pct: '5%', keys: ['multi3'] },
+    { rank: 6, pct: '30%', keys: ['twins', 'together', 'multicultural', 'foreign'] },
+  ],
+};

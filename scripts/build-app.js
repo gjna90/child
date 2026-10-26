@@ -4,7 +4,7 @@
 // 화면에서 쓰는 값은 모두 출처·기준일과 함께 넣는다. 모르는 값은 null.
 import fs from 'node:fs';
 import path from 'node:path';
-import { KINDER, PENDING, COMMON_SCHEDULE, CHECKED_AT as ADM_CHECKED } from '../data/admissions/2027_kinder.js';
+import { KINDER, PENDING, PRIO, COMMON_SCHEDULE, CHECKED_AT as ADM_CHECKED } from '../data/admissions/2027_kinder.js';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const latest = (dir) => {
@@ -54,6 +54,7 @@ const kinder = [...R.included, ...R.needsCheck].filter((r) => r.kind === '유치
       recruit2023: c3 ? { label: c3.age, recruit: c3.recruit, capacity: c3.capacity, classes: c3.classes } : null,
       classNames: item(k.classNames),
       priority: k.priority3 ?? null,
+      prio: PRIO[r.name] ?? null,
       twins: k.twins ?? null,
       hours: item(k.hours),
       care: item(k.care),
