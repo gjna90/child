@@ -7,7 +7,10 @@
   "scripts": {
     "test": "node --test test/*.test.js",
     "collect": "NODE_USE_ENV_PROXY=1 NODE_NO_WARNINGS=1 node scripts/collect.js",
-    "report": "node scripts/stage1-report.js"
+    "report": "node scripts/stage1-report.js",
+    "notices": "NODE_USE_ENV_PROXY=1 NODE_NO_WARNINGS=1 node scripts/collect-notices.js"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  }
 }
