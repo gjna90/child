@@ -119,5 +119,7 @@ const data = {
 
 const tpl = fs.readFileSync(path.join(ROOT, 'app', 'template.html'), 'utf8');
 const json = JSON.stringify(data).replace(/</g, '\\u003c');
-fs.writeFileSync(path.join(ROOT, 'app', 'index.html'), tpl.replace('/*__DATA__*/null', json));
+// 추천 계산 규칙(src/lib/recommend.js)을 화면에 그대로 넣는다 — 테스트한 코드와 화면 코드가 같도록
+const reco = fs.readFileSync(path.join(ROOT, 'src', 'lib', 'recommend.js'), 'utf8').replace(/^export /gm, '');
+fs.writeFileSync(path.join(ROOT, 'app', 'index.html'), tpl.replace('/*__DATA__*/null', () => json).replace('/*__RECO__*/', () => reco));
 console.log(`app/index.html: 기관 ${data.institutions.length}곳 (유치원 ${kinder.length}, 영어유치원·유아 영어학원 ${academies.length}), ${(json.length / 1024).toFixed(0)}KB`);
