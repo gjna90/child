@@ -22,6 +22,11 @@ const endTime = (s) => {
   return m.length ? m[m.length - 1] : null;
 };
 
+// 카카오 주소 검색으로 찾은 좌표(공시 좌표가 없는 기관·영어유치원) — data/geo/geocoded.json
+const readOpt = (rel) => { const f = path.join(ROOT, rel); return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : null; };
+const GEO = readOpt('data/geo/geocoded.json');
+const geoOf = (id) => (GEO?.items?.[id]?.lat ? GEO.items[id] : null);
+
 const kinder = [...R.included, ...R.needsCheck].filter((r) => r.kind === '유치원').map((r) => {
   const k = KINDER[r.name] ?? null;
   const c3 = k?.recruit?.find((x) => /2023/.test(x.birth)) ?? null;
@@ -38,9 +43,9 @@ const kinder = [...R.included, ...R.needsCheck].filter((r) => r.kind === '유치
     address: v(r.address),
     phone: v(r.phone),
     homepage: v(r.homepage),
-    lat: r.location?.lat ?? null,
-    lng: r.location?.lng ?? null,
-    locBasis: r.location?.lat ? '공시 좌표' : null,
+    lat: r.location?.lat ?? geoOf(r.id)?.lat ?? null,
+    lng: r.location?.lng ?? geoOf(r.id)?.lng ?? null,
+    locBasis: r.location?.lat ? '공시 좌표' : geoOf(r.id) ? '주소 → 좌표 (카카오 주소 검색)' : null,
     classes: r.ageClasses.map((c) => ({ manAge: c.manAge, mixed: !!c.mixedAges, count: c.classCount, enrolled: c.enrolled, capacity: c.capacity })),
     teacherTotal: v(r.staffWhole?.teacherTotal),
     hoursPub,
@@ -79,8 +84,9 @@ const academies = (A?.academies ?? []).map((a) => ({
   address: a.address,
   phone: a.phone,
   homepage: null,
-  lat: null,
-  lng: null,
+  lat: geoOf(`academy:${a.name}`)?.lat ?? null,
+  lng: geoOf(`academy:${a.name}`)?.lng ?? null,
+  locBasis: geoOf(`academy:${a.name}`) ? '주소 → 좌표 (카카오 주소 검색)' : null,
   group: a.group,
   note: a.note,
   teachers: a.teachers,
@@ -106,6 +112,19 @@ const areas = geo.features
   .filter((f) => FOCUS.includes(f.name) || NEAR.includes(f.name))
   .map((f) => ({ name: f.name, focus: FOCUS.includes(f.name), rings: f.polys.map((p) => shrink(p[0])) }));
 
+// 아파트 단지와 단지→기관 도보·자동차 경로 (미리 계산, data/routes/kakao_routes.json)
+const APT = readOpt('data/geo/apartments.json');
+const RT = readOpt('data/routes/kakao_routes.json');
+const instList = [...kinder, ...academies];
+const idx = new Map(instList.map((x, i) => [x.id, i]));
+const aptRoutes = {};
+for (const [k, p] of Object.entries(RT?.pairs ?? {})) {
+  const [aid, iid] = [k.slice(0, k.indexOf('|')), k.slice(k.indexOf('|') + 1)];
+  if (!idx.has(iid)) continue;
+  (aptRoutes[aid] ??= {})[idx.get(iid)] = [p.walk?.m ?? null, p.walk?.s ?? null, p.car?.m ?? null, p.car?.s ?? null];
+}
+const apartments = (APT?.apartments ?? []).map((a) => ({ id: a.id, name: a.name.replace(/아파트/, '').trim() || a.name, area: a.area, lat: Math.round(a.lat * 1e5) / 1e5, lng: Math.round(a.lng * 1e5) / 1e5, planned: /예정/.test(a.name) }));
+
 const data = {
   builtAt: new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Seoul' }).format(new Date()),
   schoolYear: R.schoolYear,
@@ -113,7 +132,10 @@ const data = {
   admissionCheckedAt: ADM_CHECKED,
   schedule: COMMON_SCHEDULE,
   academySource: A ? A.source : null,
-  institutions: [...kinder, ...academies],
+  institutions: instList,
+  apartments,
+  aptRoutes,
+  routeInfo: RT ? { walk: RT.source?.walk, car: RT.source?.car, rules: RT.rules, checkedAt: RT.log?.at(-1)?.at, remaining: RT.log?.at(-1)?.remaining, aptSource: APT?.source, aptCheckedAt: APT?.checkedAt } : null,
   map: { areas, source: '행정동 경계: vuski/admdongkor ver20261001 (통계청 경계 정리 공개 자료)' },
 };
 
@@ -122,4 +144,4 @@ const json = JSON.stringify(data).replace(/</g, '\\u003c');
 // 추천 계산 규칙(src/lib/recommend.js)을 화면에 그대로 넣는다 — 테스트한 코드와 화면 코드가 같도록
 const reco = fs.readFileSync(path.join(ROOT, 'src', 'lib', 'recommend.js'), 'utf8').replace(/^export /gm, '');
 fs.writeFileSync(path.join(ROOT, 'app', 'index.html'), tpl.replace('/*__DATA__*/null', () => json).replace('/*__RECO__*/', () => reco));
-console.log(`app/index.html: 기관 ${data.institutions.length}곳 (유치원 ${kinder.length}, 영어유치원·유아 영어학원 ${academies.length}), ${(json.length / 1024).toFixed(0)}KB`);
+console.log(`아파트 ${apartments.length}곳 · 경로 ${Object.values(aptRoutes).reduce((a, x) => a + Object.keys(x).length, 0)}쌍 · app/index.html: 기관 ${data.institutions.length}곳 (유치원 ${kinder.length}, 영어유치원·유아 영어학원 ${academies.length}), ${(json.length / 1024).toFixed(0)}KB`);
