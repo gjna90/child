@@ -28,7 +28,8 @@ export function keyFacts(r) {
     classes: (r.ageClasses ?? []).map((c) => `${c.manAge === null ? '혼합' : `만${c.manAge}`}:${c.classCount ?? '?'}반/${c.enrolled ?? '?'}명`).join(' '),
     teachers: v(r.staffWhole?.teacherTotal),
     hours: r.afterSchool?.hours?.value ?? v(r.operatingHours),
-    bus: r.schoolBus?.value ? `${r.schoolBus.value.운영여부}${r.schoolBus.value.운행차량수 ? ` ${r.schoolBus.value.운행차량수}대` : ''}` : null,
+    bus: typeof r.schoolBus?.value === 'string' ? r.schoolBus.value : r.schoolBus?.value ? `${r.schoolBus.value.운영여부}${r.schoolBus.value.운행차량수 ? ` ${r.schoolBus.value.운행차량수}대` : ''}` : null,
+    kind: r.kind,
   };
 }
 
@@ -41,7 +42,7 @@ export function diffSnapshots(prev, cur) {
   const changed = [];
   for (const [k, c] of C) {
     const p = P.get(k); if (!p) continue;
-    for (const f of Object.keys(c)) if (f !== 'id' && JSON.stringify(c[f]) !== JSON.stringify(p[f])) changed.push({ name: c.name, field: f, from: p[f], to: c[f] });
+    for (const f of Object.keys(c)) if (f !== 'id' && f in p && JSON.stringify(c[f]) !== JSON.stringify(p[f])) changed.push({ name: c.name, field: f, from: p[f], to: c[f] });
   }
   const seen = new Set((prev.notices ?? []).map((n) => `${n.who}|${n.title}|${n.date}`));
   const newNotices = (cur.notices ?? []).filter((n) => !seen.has(`${n.who}|${n.title}|${n.date}`));

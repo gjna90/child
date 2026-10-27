@@ -13,7 +13,8 @@ const latest = (dir) => {
   const f = fs.readdirSync(d).filter((x) => x.endsWith('.json')).sort().pop();
   return f ? JSON.parse(fs.readFileSync(path.join(d, f), 'utf8')) : null;
 };
-const R = latest('data/roster');
+// 시험용: ROSTER_FILE·APP_OUT 환경 변수로 다른 명부·출력 파일을 쓸 수 있음(가상 자료는 실제 화면에 넣지 않음)
+const R = process.env.ROSTER_FILE ? JSON.parse(fs.readFileSync(process.env.ROSTER_FILE, 'utf8')) : latest('data/roster');
 const A = latest('data/academies');
 
 const v = (f) => (f && f.value !== undefined ? f.value : null);
@@ -74,6 +75,31 @@ const kinder = [...R.included, ...R.needsCheck].filter((r) => r.kind === '유치
   };
 });
 
+// 어린이집 (어린이집정보공개포털 기본정보). 가정어린이집·폐지는 명부 단계에서 이미 제외됨
+const daycares = [...R.included, ...R.needsCheck].filter((r) => r.kind === '어린이집').map((r) => ({
+  id: r.id,
+  kind: '어린이집',
+  name: r.name,
+  type: v(r.officialType),
+  isPublic: r.isPublic,
+  area: r.area,
+  address: v(r.address),
+  phone: v(r.phone),
+  homepage: v(r.homepage),
+  lat: r.location?.lat || geoOf(r.id)?.lat || null,
+  lng: r.location?.lng || geoOf(r.id)?.lng || null,
+  locBasis: r.location?.lat ? '공시 좌표' : geoOf(r.id) ? '주소 → 좌표 (카카오 주소 검색)' : null,
+  classes: r.ageClasses.map((c) => ({ manAge: c.manAge, mixed: !!c.mixedAges, mixedAges: c.mixedAges ?? null, count: c.classCount, enrolled: c.enrolled, capacity: c.capacity })),
+  capacityTotal: v(r.totalCapacity),
+  enrolledTotal: v(r.totalEnrolled),
+  busPub: v(r.schoolBus) ? { operating: v(r.schoolBus) } : null,
+  status: v(r.operatingStatus),
+  restriction: r.restriction ?? null,
+  flags: r.flags ?? [],
+  pubAsOf: r.officialType?.asOf ?? null,
+  source: r.officialType?.source?.name ?? '어린이집정보공개포털',
+}));
+
 const academies = (A?.academies ?? []).map((a) => ({
   id: `academy:${a.name}`,
   kind: '영어유치원(학원)',
@@ -115,7 +141,7 @@ const areas = geo.features
 // 아파트 단지와 단지→기관 도보·자동차 경로 (미리 계산, data/routes/kakao_routes.json)
 const APT = readOpt('data/geo/apartments.json');
 const RT = readOpt('data/routes/kakao_routes.json');
-const instList = [...kinder, ...academies];
+const instList = [...kinder, ...daycares, ...academies];
 const idx = new Map(instList.map((x, i) => [x.id, i]));
 const aptRoutes = {};
 for (const [k, p] of Object.entries(RT?.pairs ?? {})) {
@@ -143,5 +169,5 @@ const tpl = fs.readFileSync(path.join(ROOT, 'app', 'template.html'), 'utf8');
 const json = JSON.stringify(data).replace(/</g, '\\u003c');
 // 추천 계산 규칙(src/lib/recommend.js)을 화면에 그대로 넣는다 — 테스트한 코드와 화면 코드가 같도록
 const reco = fs.readFileSync(path.join(ROOT, 'src', 'lib', 'recommend.js'), 'utf8').replace(/^export /gm, '');
-fs.writeFileSync(path.join(ROOT, 'app', 'index.html'), tpl.replace('/*__DATA__*/null', () => json).replace('/*__RECO__*/', () => reco));
-console.log(`아파트 ${apartments.length}곳 · 경로 ${Object.values(aptRoutes).reduce((a, x) => a + Object.keys(x).length, 0)}쌍 · app/index.html: 기관 ${data.institutions.length}곳 (유치원 ${kinder.length}, 영어유치원·유아 영어학원 ${academies.length}), ${(json.length / 1024).toFixed(0)}KB`);
+fs.writeFileSync(process.env.APP_OUT ?? path.join(ROOT, 'app', 'index.html'), tpl.replace('/*__DATA__*/null', () => json).replace('/*__RECO__*/', () => reco));
+console.log(`아파트 ${apartments.length}곳 · 경로 ${Object.values(aptRoutes).reduce((a, x) => a + Object.keys(x).length, 0)}쌍 · app/index.html: 기관 ${data.institutions.length}곳 (유치원 ${kinder.length}, 어린이집 ${daycares.length}, 영어유치원·유아 영어학원 ${academies.length}), ${(json.length / 1024).toFixed(0)}KB`);

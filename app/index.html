@@ -18,6 +18,7 @@
   --public: #0e6a62;
   --private: #b8681a;
   --academy: #6650a8;
+  --daycare: #2f6aa8;
   --warn-bg: #fff4dc;
   --warn-ink: #7a4b00;
   --ok-bg: #e2f2ea;
@@ -32,7 +33,7 @@
   :root:not([data-theme="light"]) {
     --bg: #121816; --surface: #1a2220; --ink: #e5ece8; --muted: #9aa9a2; --line: #2e3a36;
     --land: #1e2724; --land-focus: #223a31; --accent: #4fb8a9; --accent-ink: #0b1513;
-    --public: #4fb8a9; --private: #e09a4e; --academy: #a291e0;
+    --public: #4fb8a9; --private: #e09a4e; --academy: #a291e0; --daycare: #7fb0e6;
     --warn-bg: #3a2e14; --warn-ink: #f2cc80; --ok-bg: #173527; --ok-ink: #8fd9b2; --unk-bg: #252d2a; --unk-ink: #9aa9a2;
     color-scheme: dark;
   }
@@ -40,7 +41,7 @@
 :root[data-theme="dark"] {
   --bg: #121816; --surface: #1a2220; --ink: #e5ece8; --muted: #9aa9a2; --line: #2e3a36;
   --land: #1e2724; --land-focus: #223a31; --accent: #4fb8a9; --accent-ink: #0b1513;
-  --public: #4fb8a9; --private: #e09a4e; --academy: #a291e0;
+  --public: #4fb8a9; --private: #e09a4e; --academy: #a291e0; --daycare: #7fb0e6;
   --warn-bg: #3a2e14; --warn-ink: #f2cc80; --ok-bg: #173527; --ok-ink: #8fd9b2; --unk-bg: #252d2a; --unk-ink: #9aa9a2;
   color-scheme: dark;
 }
@@ -91,6 +92,8 @@ select { max-width: 100%; padding: 4px 8px; border-radius: 6px; border: 1px soli
 .tag { font-size: .74rem; padding: 1px 7px; border-radius: 4px; background: var(--unk-bg); color: var(--unk-ink); white-space: nowrap; }
 .tag.pub { background: color-mix(in srgb, var(--public) 16%, transparent); color: var(--public); }
 .tag.pri { background: color-mix(in srgb, var(--private) 18%, transparent); color: var(--private); }
+.tag.dc { background: color-mix(in srgb, var(--daycare) 18%, transparent); color: var(--daycare); }
+.tag.lim { background: var(--warn-bg); color: var(--warn-ink); }
 .tag.aca { background: color-mix(in srgb, var(--academy) 18%, transparent); color: var(--academy); }
 .state { font-size: .84rem; padding: 2px 8px; border-radius: 6px; display: inline-block; }
 .state.ok { background: var(--ok-bg); color: var(--ok-ink); }
@@ -240,6 +243,7 @@ svg text { font-family: var(--font-body); }
         <div class="legend" style="margin-top:8px">
           <span><span class="dot" style="background:var(--public)"></span>공립 유치원</span>
           <span><span class="dot" style="background:var(--private)"></span>사립 유치원</span>
+          <span><span class="dot" style="background:var(--daycare)"></span>어린이집</span>
           <span><span class="dot" style="background:var(--academy)"></span>영어유치원·학원</span>
           <span><span class="dot" style="background:var(--ink)"></span>출발지</span>
         </div>
@@ -375,6 +379,8 @@ function familyStatus(perKid) {
 }
 
 const U = '미확인';
+const isAca = (it) => it.kind === '영어유치원(학원)';
+const isDc = (it) => it.kind === '어린이집';
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const store = {
@@ -413,6 +419,16 @@ const km = (m) => (m === null ? null : m < 1000 ? `${Math.round(m / 10) * 10}m` 
 /** 우리 아이 반: {status:'ok'|'warn'|'unk'|'no', text, known} */
 function childClass(it) {
   const a = manAge();
+  if (isDc(it)) {
+    if (a < 0 || a > 5) return { status: 'no', text: `만${a}세는 어린이집 대상 연령(만0~5세)이 아님`, known: false };
+    const c = it.classes.find((x) => x.manAge === a && !x.mixed);
+    const tail = ' · 2027년 입소는 아이사랑 입소대기 확인';
+    if (c && c.count > 0) return { status: 'warn', text: `올해 만${a}세반 ${c.count}반${c.enrolled !== null ? `·${c.enrolled}명` : ''} 운영(공시)${tail}`, known: true };
+    const mx = it.classes.find((x) => x.mixed && x.count > 0 && (x.mixedAges ?? []).includes(a));
+    if (mx) return { status: 'warn', text: `${a >= 3 ? '유아' : '영아'}혼합반 있음 · 포함 연령 확인 필요${tail}`, known: null };
+    if (c && c.count === 0) return { status: 'no', text: `올해 만${a}세반 없음(공시)`, known: false };
+    return { status: 'unk', text: U, known: null };
+  }
   if (it.kind !== '유치원') {
     return it.preschoolNamed ? { status: 'unk', text: '유아반 이름 있음 · 대상 출생연도 미표기', known: null } : { status: 'unk', text: '대상 연령 미표기', known: null };
   }
@@ -446,6 +462,7 @@ function busKnown(it) {
   return off !== null ? off : cb;
 }
 function busOfficial(it) {
+  if (isDc(it)) { const o = String(it.busPub?.operating ?? ''); return /미운영|없음|^N$/.test(o) ? false : /운영|있음|^Y$/.test(o) ? true : null; }
   if (it.kind !== '유치원') return null;
   const t = it.admission?.bus?.text;
   if (t) return !/^(없음|미운행)/.test(t);
@@ -467,7 +484,7 @@ function lateEndOfficial(it) {
 
 // ── 조건 ──────────────────────────────────────────────
 const GROUPS = [
-  { key: 'kind', label: '종류', opts: [['유치원', '유치원'], ['영어유치원(학원)', '영어유치원·유아 영어학원']], test: (it, v) => it.kind === v },
+  { key: 'kind', label: '종류', opts: [['유치원', '유치원'], ...(DATA.institutions.some((x) => x.kind === '어린이집') ? [['어린이집', '어린이집']] : []), ['영어유치원(학원)', '영어유치원·유아 영어학원']], test: (it, v) => it.kind === v },
   { key: 'est', label: '설립', opts: [['pub', '공립'], ['pri', '사립·학원']], test: (it, v) => (v === 'pub' ? it.isPublic === true : it.isPublic === false) },
   { key: 'area', label: '지역', opts: [['배방읍', '배방읍'], ['탕정면', '탕정면']], test: (it, v) => it.area === v },
 ];
@@ -531,7 +548,7 @@ function drawMap(list) {
   for (const it of pts) {
     const x = px(it.lng), y = py(it.lat);
     if (x < 0 || x > W || y < 0 || y > H) continue;
-    const col = it.kind !== '유치원' ? 'var(--academy)' : it.isPublic ? 'var(--public)' : 'var(--private)';
+    const col = isDc(it) ? 'var(--daycare)' : it.kind !== '유치원' ? 'var(--academy)' : it.isPublic ? 'var(--public)' : 'var(--private)';
     const on = shown.has(it.id), sel = state.sel === it.id;
     s += `<g class="pin" data-id="${esc(it.id)}" tabindex="0" role="button" aria-label="${esc(it.name)}" style="cursor:pointer" opacity="${on ? 1 : .25}">`
       + `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${sel ? 15 : 10}" fill="${col}" stroke="var(--surface)" stroke-width="3"/>`
@@ -575,7 +592,7 @@ function routeText(it) {
 function setOrigin(o) { state.origin = o; store.set('origin', o); if (state.sort !== 'dist') {} render(); }
 
 // ── 목록·카드 ──────────────────────────────────────────
-const typeTag = (it) => (it.kind !== '유치원' ? '<span class="tag aca">영어유치원·학원</span>' : it.isPublic ? `<span class="tag pub">${esc(it.type)}</span>` : `<span class="tag pri">${esc(it.type)}</span>`);
+const typeTag = (it) => (isDc(it) ? `<span class="tag dc">어린이집 · ${esc(it.type ?? U)}</span>${it.restriction ? '<span class="tag lim">이용 자격 제한</span>' : ''}` : it.kind !== '유치원' ? '<span class="tag aca">영어유치원·학원</span>' : it.isPublic ? `<span class="tag pub">${esc(it.type)}</span>` : `<span class="tag pri">${esc(it.type)}</span>`);
 
 function hoursText(it) {
   if (it.kind !== '유치원') return U;
@@ -588,6 +605,7 @@ function careText(it) {
   return t.length ? t.join(', ') : c.slice(0, 30);
 }
 function busText(it) {
+  if (isDc(it)) return it.busPub?.operating ? `${it.busPub.operating} (공시)` : U;
   if (it.kind !== '유치원') return U;
   const t = it.admission?.bus?.text;
   if (t) return /^(없음|미운행)/.test(t) ? t.split(' ')[0] : '운행 (노선은 상세)';
@@ -601,6 +619,7 @@ function card(it) {
   const inCmp = state.compare.includes(it.id);
   const facts = it.kind === '유치원'
     ? [['거리·이동', routeText(it)], ['운영시간', hoursText(it)], ['돌봄(요강)', careText(it)], ['통학버스', busText(it)]]
+    : isDc(it) ? [['거리·이동', routeText(it)], ['정원·현원', `${it.capacityTotal ?? U}·${it.enrolledTotal ?? U}명 (공시)`], ['통학차량', busText(it)], ['운영 상태', it.status ?? U]]
     : [['거리·이동', routeText(it)], ['구분', it.group], ['유아 과정', `${it.courses.length}개`], ['전화', it.phone ?? U]];
   return `<article class="card${state.sel === it.id ? ' sel' : ''}" id="c-${esc(it.id)}">
     <div class="row1"><button class="name" type="button" data-open="${esc(it.id)}">${esc(it.name)}</button><div class="tags">${typeTag(it)}<span class="tag">${esc(it.area)}</span></div></div>
@@ -624,7 +643,7 @@ function sortList(list) {
   return list.sort((a, b) => {
     if (by === 'dist' && state.origin) { const da = dist(a), db = dist(b); if (da !== db) return (da ?? Infinity) - (db ?? Infinity); }
     if (by === 'recruit') { const ra = childClass(a).recruit ?? -1, rb = childClass(b).recruit ?? -1; if (ra !== rb) return rb - ra; }
-    if (a.kind !== b.kind) return a.kind === '유치원' ? -1 : 1;
+    if (a.kind !== b.kind) { const o = { 유치원: 0, 어린이집: 1 }; return (o[a.kind] ?? 2) - (o[b.kind] ?? 2); }
     return a.name.localeCompare(b.name, 'ko');
   });
 }
@@ -675,6 +694,14 @@ function detail(it) {
       h += `<section><h3>${SY}학년도 모집</h3><div>요강 미확인${it.pending ? ` — ${esc(it.pending)}` : ''}. 10월 28일부터 유보통합포털에서 확인하거나 전화로 문의하세요.</div></section>`;
     }
     h += `<section><h3>설명회·공개 행사</h3>${a?.events?.length ? `<ul>${a.events.map((e) => `<li>${esc(e.what)}: ${esc(e.when)}</li>`).join('')}</ul>` : `<div>${U} (찾지 못했다는 뜻이며 "없음"이 아닙니다)</div>`}${(a?.notes ?? []).map((n) => `<div class="small muted">참고: ${esc(n)}</div>`).join('')}</section>`;
+  } else if (isDc(it)) {
+    const cls = it.classes.filter((c) => c.count).map((c) => `${c.mixed ? (c.mixedAges?.[0] >= 3 ? '유아혼합' : '영아혼합') : `만${c.manAge}세`} ${c.count}반${c.enrolled !== null ? `/${c.enrolled}명` : ''}`).join(' · ');
+    h += `<div class="small">올해 반 구성(공시): ${esc(cls || U)}</div>
+      <div class="small">정원 ${it.capacityTotal ?? U}명 · 현원 ${it.enrolledTotal ?? U}명 · 운영 상태 ${esc(it.status ?? U)} · 통학차량 ${esc(it.busPub?.operating ?? U)}</div>
+      ${it.restriction ? `<div class="small"><span class="state warn">${esc(it.restriction)}</span></div>` : ''}
+      <div class="src">출처: ${esc(it.source)} ${it.pubAsOf ? `(기준 ${esc(it.pubAsOf)})` : ''} · 확인일 ${esc(DATA.roster.checkedAt)}</div></section>
+      <section><h3>${SY}년 입소</h3><div>어린이집은 유치원처럼 유보통합포털 우선·일반모집으로 뽑지 않고, <b>아이사랑 포털의 입소대기 신청</b>으로 순번을 받습니다. 반 편성·입소 가능 인원은 어린이집에 확인하세요.</div></section>
+      <section><h3>아직 모르는 것</h3><div>2027년 반 편성과 입소 가능 인원, 운영시간·연장보육, 필요경비(특별활동비 등), 차량 노선·탑승 시각, 반별 교사 배치, 바깥놀이·적응 방식</div></section>`;
   } else {
     h += `<div class="small">등록 강사 ${it.teachers ?? U}명 (학원 전체)</div></section>
       <section><h3>등록된 과정 (교육청 등록 자료)</h3>${it.note ? `<div class="small">참고: ${esc(it.note)}</div>` : ''}
@@ -694,18 +721,18 @@ function closeSheet() { $('#overlay').hidden = true; }
 function compareTable() {
   const list = state.compare.map((id) => DATA.institutions.find((x) => x.id === id)).filter(Boolean);
   const rows = [
-    ['종류·유형', (it) => (it.kind === '유치원' ? it.type : `학원 (${it.group})`)],
+    ['종류·유형', (it) => (it.kind === '유치원' ? it.type : isDc(it) ? `어린이집 · ${it.type ?? U}${it.restriction ? ' (이용 자격 제한)' : ''}` : `학원 (${it.group})`)],
     ['지역', (it) => it.area],
     ['거리·이동', (it) => routeText(it)],
     [`우리 아이 반 (${state.birth}년생)`, (it) => childClass(it).text],
     ['운영시간(공시)', hoursText],
     ['아침·저녁 돌봄(요강)', careText],
     ['통학버스', busText],
-    ['부모 부담 비용', (it) => (it.kind === '유치원' ? it.admission?.cost?.text ?? U : (it.courses.filter((c) => c.tuition).sort((a, b) => b.minutes - a.minutes)[0] ? `가장 긴 과정 월 ${Math.round(it.courses.sort((a, b) => b.minutes - a.minutes)[0].tuition).toLocaleString('ko-KR')}원(등록 교습비)` : U))],
-    ['교사(기관 전체)', (it) => (it.kind === '유치원' ? `${it.teacherTotal ?? U}명` : `${it.teachers ?? U}명(강사)`)],
+    ['부모 부담 비용', (it) => (it.kind === '유치원' ? it.admission?.cost?.text ?? U : isDc(it) ? U : (it.courses.filter((c) => c.tuition).sort((a, b) => b.minutes - a.minutes)[0] ? `가장 긴 과정 월 ${Math.round(it.courses.sort((a, b) => b.minutes - a.minutes)[0].tuition).toLocaleString('ko-KR')}원(등록 교습비)` : U))],
+    ['교사(기관 전체)', (it) => (it.kind === '유치원' ? `${it.teacherTotal ?? U}명` : isDc(it) ? U : `${it.teachers ?? U}명(강사)`)],
     ['체육장 면적(공시)', (it) => (it.kind === '유치원' ? (it.playground === null ? U : `${it.playground}㎡`) : U)],
     ['설명회', (it) => (it.admission?.events?.length ? it.admission.events.map((e) => `${e.what}: ${e.when}`).join(' / ') : U)],
-    ['2027 요강', (it) => (it.kind === '유치원' ? (it.admission?.read ? '확인함' : '미확인') : '해당 없음(학원)')],
+    ['2027 요강', (it) => (it.kind === '유치원' ? (it.admission?.read ? '확인함' : '미확인') : isDc(it) ? '해당 없음(아이사랑 입소대기)' : '해당 없음(학원)')],
   ];
   return `<div class="tablewrap"><table><thead><tr><th></th>${list.map((it) => `<th>${esc(it.name)}</th>`).join('')}</tr></thead><tbody>
     ${rows.map(([k, f]) => `<tr><th>${esc(k)}</th>${list.map((it) => `<td>${esc(f(it))}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
@@ -730,6 +757,7 @@ function monthlyCost(it) {
   return null;
 }
 function monthlyCostOfficial(it) {
+  if (isDc(it)) return null;
   if (it.kind !== '유치원') { const c = [...it.courses].filter((x) => x.tuition).sort((a, b) => (b.minutes ?? 0) - (a.minutes ?? 0))[0]; return c ? { won: c.tuition, text: `월 ${Math.round(c.tuition).toLocaleString('ko-KR')}원 (가장 긴 과정, 등록 교습비)` } : null; }
   const t = it.admission?.cost?.text; if (!t) return null;
   if (/부담금 없음|부담금 0원|무상|수익자 부담금 없음/.test(t)) return { won: 0, text: '부모 부담금 없음 (요강)' };
@@ -739,6 +767,7 @@ function monthlyCostOfficial(it) {
 function mustVal(it, key) {
   if (key === 'budget') { const b = state.reco?.budget; if (!b) return null; const c = monthlyCost(it); return c ? c.won <= b : null; }
   if (key === 'free') {
+    if (isDc(it)) return null;
     if (it.kind !== '유치원') return false;
     const c = it.admission?.cost?.text; if (!c) return null;
     return /부담금 없음|부담금 0원|무상|수익자 부담금 없음/.test(c) ? true : null;
@@ -835,6 +864,17 @@ function questions(it) {
     if (state.fam.includes('twins') || state.fam.includes('together')) add('twinsclass', '쌍둥이·형제를 같은 반에 배정하나요, 다른 반에 배정하나요? 보호자가 고를 수 있나요?', '형제 반 배정 정책');
     const mixed = it.classes.some((c) => c.mixed && c.count > 0);
     if (mixed) add('mixed', '혼합연령반에는 몇 년생이 함께 지내나요? 우리 아이 나이대 친구는 몇 명인가요?', '혼합반 연령 구성');
+  } else if (isDc(it)) {
+    if (it.restriction) add('restrict', '이용 자격(직장 소속 등)이 어떻게 되나요? 지역 주민도 입소할 수 있나요?', '직장어린이집 이용 제한');
+    add('wait', `2027년 3월에 ${state.birth}년생 반에 들어갈 수 있나요? 아이사랑 입소대기 순번은 몇 번쯤인가요?`, '입소 가능 여부 미확인');
+    add('class', `${state.birth}년생 반은 몇 명이고 선생님은 몇 분인가요? (교사 대 아동 비율)`, '반별 배치 미확인');
+    add('hours', '기본 운영시간과 연장보육(저녁) 시간·신청 자격은요?', '운영시간 미확인');
+    add('cost', '매달 내는 필요경비(특별활동비·현장학습비·차량비 등)는 얼마인가요?', '필요경비 미확인');
+    if (busKnown(it) !== false) add('bus', '우리 집 근처 차량 승하차 장소와 탑승 시간은요?', '차량 노선 미확인');
+    add('adapt', '처음 적응 기간은 어떻게 운영하나요?', '적응 방식 미확인');
+    add('outdoor', '바깥놀이는 일주일에 몇 번, 한 번에 얼마나 하나요?', '바깥놀이 미확인');
+    add('daily', '낮잠·식사·배변은 어떻게 도와주시나요?', '생활 지원 미확인');
+    if (manAge() >= 3) add('move', '만5세까지 다닐 수 있나요? 유아반(만3~5세)이 계속 개설되나요?', '진급반 유지 여부');
   } else {
     add('age', '유치부 반의 대상 출생연도는 어떻게 되나요? ("5세반"이 몇 년생인지)', '등록 자료에 출생연도 없음');
     add('recruit', '2027년 3월 입학 모집 일정과 설명회가 있나요?', '모집 공지 못 찾음');
@@ -993,7 +1033,8 @@ function drawAsk() {
       <label for="askSel" class="small muted">희망 목록·비교함에 담은 곳이 위에 나옵니다</label>
       <select id="askSel">${pool.length ? `<optgroup label="희망 목록·비교함">${pool.map((id) => all.find((x) => x.id === id)).filter(Boolean).map((x) => `<option value="${esc(x.id)}">${esc(x.name)}</option>`).join('')}</optgroup>` : ''}
         <optgroup label="유치원">${all.filter((x) => x.kind === '유치원').map((x) => `<option value="${esc(x.id)}">${esc(x.name)}</option>`).join('')}</optgroup>
-        <optgroup label="영어유치원·유아 영어학원">${all.filter((x) => x.kind !== '유치원').map((x) => `<option value="${esc(x.id)}">${esc(x.name)}</option>`).join('')}</optgroup></select>
+        ${all.some(isDc) ? `<optgroup label="어린이집">${all.filter(isDc).map((x) => `<option value="${esc(x.id)}">${esc(x.name)}</option>`).join('')}</optgroup>` : ''}
+        <optgroup label="영어유치원·유아 영어학원">${all.filter(isAca).map((x) => `<option value="${esc(x.id)}">${esc(x.name)}</option>`).join('')}</optgroup></select>
       ${copyRow('전화', it.phone)}
       <p class="small muted" style="margin:0">질문은 아직 확인하지 못한 항목에서 만들었습니다. 답을 들은 질문에 체크하고 메모를 남기세요. 체크와 메모는 이 기기 브라우저에만 저장됩니다.</p>
     </div>
@@ -1220,7 +1261,7 @@ const CRIT = {
     return { value: costValue(c.won, state.reco.budget), text: c.text };
   } },
   size: { label: '해당 연령 반 규모', calc(it) {
-    if (it.kind !== '유치원') { const cs0 = consultOf(it); return cs0?.classSize ? { value: linear(+cs0.classSize, state.reco.classStd, state.reco.classStd * 1.5), text: `반 ${cs0.classSize}명${cTag(cs0)}` } : { value: null, text: '반 규모 미확인', q: '우리 아이 반은 몇 명이고 선생님은 몇 분인가요?' }; }
+    if (isAca(it)) { const cs0 = consultOf(it); return cs0?.classSize ? { value: linear(+cs0.classSize, state.reco.classStd, state.reco.classStd * 1.5), text: `반 ${cs0.classSize}명${cTag(cs0)}` } : { value: null, text: '반 규모 미확인', q: '우리 아이 반은 몇 명이고 선생님은 몇 분인가요?' }; }
     const a = manAge(); const c = it.classes.find((x) => x.manAge === a && !x.mixed);
     const cs = consultOf(it);
     if (cs?.classSize) return { value: linear(+cs.classSize, state.reco.classStd, state.reco.classStd * 1.5), text: `반 ${cs.classSize}명 예정${cTag(cs)}` };
@@ -1279,7 +1320,7 @@ function recoCard(row, rank) {
     ${reasons.length ? `<div><span class="small muted">추천 이유</span><ul class="rlist">${reasons.map((r) => `<li>${esc(r)}</li>`).join('')}</ul></div>` : ''}
     ${worries.length ? `<div><span class="small muted">우려·확인할 점</span><ul class="rlist">${worries.map((r) => `<li>${esc(r)}</li>`).join('')}</ul></div>` : ''}
     ${qs.length ? `<div><span class="small muted">상담 질문</span><ul class="rlist">${qs.slice(0, 3).map((r) => `<li>${esc(r)}</li>`).join('')}</ul></div>` : ''}
-    <div class="src">출처: ${it.kind === '유치원' ? `유치원알리미 공시(${esc(it.pubAsOf ?? '')})${it.admission?.read ? ` · 2027 요강(${it.admission.sources?.[0]?.posted ? esc(it.admission.sources[0].posted) + ' 게시' : '홈페이지 화면'})` : ''}` : `${esc(DATA.academySource?.name)} (${esc(DATA.academySource?.asOf)})`} · 확인일 ${esc(DATA.roster.checkedAt)}</div>
+    <div class="src">출처: ${isDc(it) ? `${esc(it.source)} · ` : ''}${it.kind === '유치원' ? `유치원알리미 공시(${esc(it.pubAsOf ?? '')})${it.admission?.read ? ` · 2027 요강(${it.admission.sources?.[0]?.posted ? esc(it.admission.sources[0].posted) + ' 게시' : '홈페이지 화면'})` : ''}` : isDc(it) ? '' : `${esc(DATA.academySource?.name)} (${esc(DATA.academySource?.asOf)})`} · 확인일 ${esc(DATA.roster.checkedAt)}</div>
     <div class="acts" style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn" type="button" data-open="${esc(it.id)}">상세</button><button class="btn" type="button" data-ask="${esc(it.id)}">질문지</button></div>
   </div>`;
 }
@@ -1289,7 +1330,7 @@ function drawReco() {
   const whos = whoList();
   if (!whos.some((w) => w.id === R.who)) R.who = whos[0].id;
   const who = whos.find((w) => w.id === R.who);
-  const pool = DATA.institutions.filter((it) => it.kind === '유치원' || R.withAcademy);
+  const pool = DATA.institutions.filter((it) => it.kind === '유치원' || (isDc(it) && R.withDaycare !== false) || (isAca(it) && R.withAcademy));
   const rows = pool.map((it) => {
     const evals = who.kids.map((k) => evalFor(it, k));
     const st = familyStatus(evals.map((e) => e.mustSt));
@@ -1330,6 +1371,7 @@ function drawReco() {
           <label>한 달 예산 (원, 선택)<input type="number" id="rp-budget" min="0" step="10000" value="${R.budget ?? ''}" placeholder="예) 300000"></label>
           <label>반 규모 기준 (반당 명)<input type="number" id="rp-std" min="5" max="30" value="${R.classStd}"></label>
           <label style="align-self:end"><span><input type="checkbox" id="rp-aca" ${R.withAcademy ? 'checked' : ''}> 영어유치원(학원)도 포함</span></label>
+          ${DATA.institutions.some(isDc) ? `<label style="align-self:end"><span><input type="checkbox" id="rp-dc" ${R.withDaycare !== false ? 'checked' : ''}> 어린이집도 포함</span></label>` : ''}
         </div>
         <div class="fgroup"><span class="glabel">정렬</span><button class="chip" type="button" data-rmode="composite" aria-pressed="${R.mode === 'composite'}">여러 조건 종합</button><button class="chip" type="button" data-rmode="priority" aria-pressed="${R.mode === 'priority'}">우선순위대로</button></div>
         <p class="small muted" style="margin:0">${R.mode === 'composite' ? '종합: 매우 중요 3 · 중요 2 · 참고 1을 곱해 확인된 기준만으로 평균을 냅니다. 확인 정도가 50% 미만이면 위로 올리지 않고 「정보 부족」에 둡니다.' : '우선순위: 1번 기준으로 먼저 묶고, 같은 묶음 안에서 2번, 3번 순으로 정렬합니다. 그 기준이 미확인이면 그 단계에서 뒤로 갑니다.'}</p>
@@ -1544,7 +1586,7 @@ document.addEventListener('change', (e) => {
     if (el.id === 'rp-pick') R.pickup = v; if (el.id === 'rp-budget') R.budget = v ? Math.max(0, +v) : null;
     if (el.id === 'rp-travel') R.travel = v; if (el.id === 'rp-okw') R.okWalk = Math.max(0, +v || 0); if (el.id === 'rp-maxw') R.maxWalk = Math.max(1, +v || 30); if (el.id === 'rp-okc') R.okCar = Math.max(0, +v || 0); if (el.id === 'rp-maxc') R.maxCar = Math.max(1, +v || 20);
     if (R.maxWalk <= R.okWalk) R.maxWalk = R.okWalk + 5; if (R.maxCar <= R.okCar) R.maxCar = R.okCar + 5;
-    if (el.id === 'rp-std') R.classStd = Math.max(5, +v || 16); if (el.id === 'rp-aca') R.withAcademy = el.checked;
+    if (el.id === 'rp-std') R.classStd = Math.max(5, +v || 16); if (el.id === 'rp-aca') R.withAcademy = el.checked; if (el.id === 'rp-dc') R.withDaycare = el.checked;
     if (R.maxKm <= R.okKm) R.maxKm = R.okKm + 0.5;
     saveReco(); drawReco();
   }
@@ -1586,9 +1628,10 @@ $('#birth').addEventListener('change', (e) => { state.birth = +e.target.value; s
 
 // 안내·출처
 const nK = DATA.institutions.filter((x) => x.kind === '유치원').length;
-const nA = DATA.institutions.length - nK;
+const nD = DATA.institutions.filter(isDc).length;
+const nA = DATA.institutions.filter(isAca).length;
 const nRead = DATA.institutions.filter((x) => x.admission?.read).length;
-$('#notice').innerHTML = `<span><b>${SY}학년도</b> 기준</span><span>유치원 <b>${nK}곳</b>(공식 명부) · 2027 요강 확인 <b>${nRead}곳</b></span><span>영어유치원·유아 영어학원 <b>${nA}곳</b>(교육청 등록 자료)</span><span><b>어린이집은 아직 없음</b> — 공식 사이트 접속이 막혀 수집 전</span><span>우선모집 접수 <b>11월 2일(월) 9시 ~ 4일(수) 18시</b></span>`;
+$('#notice').innerHTML = `<span><b>${SY}학년도</b> 기준</span><span>유치원 <b>${nK}곳</b>(공식 명부) · 2027 요강 확인 <b>${nRead}곳</b></span><span>영어유치원·유아 영어학원 <b>${nA}곳</b>(교육청 등록 자료)</span>${nD ? `<span>어린이집 <b>${nD}곳</b>(어린이집정보공개포털, 가정어린이집 제외)</span>` : '<span><b>어린이집은 아직 없음</b> — 인증키 승인 대기</span>'}<span>우선모집 접수 <b>11월 2일(월) 9시 ~ 4일(수) 18시</b></span>`;
 $('#foot').innerHTML = `<div>유치원: 유치원알리미 공시 (확인일 ${esc(DATA.roster.checkedAt)}) · 모집요강: 각 유치원 홈페이지 원문 (확인일 ${esc(DATA.admissionCheckedAt)})</div>
   <div>영어유치원: ${esc(DATA.academySource?.name ?? U)} (${esc(DATA.academySource?.asOf ?? U)} 기준)</div>
   <div>${esc(DATA.map.source)} · 아파트 단지: ${esc(DATA.routeInfo?.aptSource ?? U)} (${esc(DATA.routeInfo?.aptCheckedAt ?? '')}) · 도보: ${esc(DATA.routeInfo?.walk ?? U)} · 자동차: ${esc(DATA.routeInfo?.car ?? U)}. 도보는 직선 ${(DATA.routeInfo?.rules?.walkMaxStraightM ?? 2500) / 1000}km, 자동차는 ${(DATA.routeInfo?.rules?.carMaxStraightM ?? 7000) / 1000}km 안쪽만 계산. 지도를 눌러 정한 출발지는 직선거리만.</div>
