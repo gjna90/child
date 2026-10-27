@@ -5,6 +5,7 @@
 // 수집이 실패해 명부가 없으면 아무것도 바꾸지 않는다(확인일을 새로 쓰지 않음).
 import fs from 'node:fs';
 import path from 'node:path';
+import { monthlyFor } from './collect-costs.js';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const latestFile = (dir) => {
@@ -49,17 +50,20 @@ export function diffSnapshots(prev, cur) {
   return { added, removed, changed, newNotices };
 }
 
-const LABEL = { name: '이름', type: '유형', area: '지역', address: '주소', phone: '전화', homepage: '홈페이지', disclosure: '공시차수', classes: '반 구성', teachers: '교사 수', hours: '운영시간', bus: '통학차량' };
+const LABEL = { name: '이름', type: '유형', area: '지역', address: '주소', phone: '전화', homepage: '홈페이지', disclosure: '공시차수', classes: '반 구성', teachers: '교사 수', hours: '운영시간', bus: '통학차량', cost3: '만3세 월 부담금(공시)' };
 
 function main() {
   const rf = latestFile('data/roster');
   if (!rf) { console.log('명부 없음 — 수집이 실패했거나 아직 안 함. 아무것도 바꾸지 않음'); return; }
   const R = JSON.parse(fs.readFileSync(rf, 'utf8'));
+  const cf = latestFile('data/costs');
+  const C = cf ? JSON.parse(fs.readFileSync(cf, 'utf8')) : null;
+  const costOf = (id) => { const c = C?.items?.[id]; if (!c?.course) return null; const m = monthlyFor(c, 3); return m.known ? m.total : null; };
   const nf = latestFile('data/notices');
   const N = nf ? JSON.parse(fs.readFileSync(nf, 'utf8')) : null;
   const cur = {
     checkedAt: R.checkedAt,
-    institutions: [...R.included, ...R.needsCheck].map((r) => ({ id: r.id, ...keyFacts(r) })),
+    institutions: [...R.included, ...R.needsCheck].map((r) => ({ id: r.id, ...keyFacts(r), ...(C ? { cost3: costOf(r.id) } : {}) })),
     notices: (N?.kindergartens ?? []).flatMap((k) => (k.found ?? []).map((f) => ({ who: k.name, title: f.title, date: f.date }))),
     noticeStatus: Object.fromEntries((N?.kindergartens ?? []).map((k) => [k.name, k.status])),
   };

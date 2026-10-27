@@ -5,6 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { KINDER, PENDING, PRIO, COMMON_SCHEDULE, CHECKED_AT as ADM_CHECKED } from '../data/admissions/2027_kinder.js';
+import { monthlyFor } from './collect-costs.js';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const latest = (dir) => {
@@ -16,6 +17,19 @@ const latest = (dir) => {
 // 시험용: ROSTER_FILE·APP_OUT 환경 변수로 다른 명부·출력 파일을 쓸 수 있음(가상 자료는 실제 화면에 넣지 않음)
 const R = process.env.ROSTER_FILE ? JSON.parse(fs.readFileSync(process.env.ROSTER_FILE, 'utf8')) : latest('data/roster');
 const A = latest('data/academies');
+// 유치원알리미 '교육·보육 비용' 공시 (scripts/collect-costs.js)
+const COST = latest('data/costs');
+function pubCostOf(id) {
+  const c = COST?.items?.[id];
+  if (!c || !c.course) return null;
+  const rows = (t, kind) => Object.entries(t ?? {}).filter(([k, x]) => !/합계|소계/.test(k) && [x.m3, x.m4, x.m5].some((n) => n)).map(([k, x]) => ({ kind, label: k, m3: x.m3, m4: x.m4, m5: x.m5, cycle: x.cycle }));
+  return {
+    asOf: c.asOf, asOfDate: c.asOfDate, checkedAt: c.checkedAt, status: c.status,
+    byAge: Object.fromEntries([3, 4, 5].map((a) => [a, monthlyFor(c, a)])),
+    lines: [...rows(c.course, '교육과정'), ...rows(c.afterSchool, '방과후')],
+    special: c.special ?? null,
+  };
+}
 
 const v = (f) => (f && f.value !== undefined ? f.value : null);
 const endTime = (s) => {
@@ -54,6 +68,7 @@ const kinder = [...R.included, ...R.needsCheck].filter((r) => r.kind === '유치
     busPub: r.schoolBus?.value ? { operating: r.schoolBus.value.운영여부, count: r.schoolBus.value.운행차량수 } : null,
     playground: r.playgroundArea?.value ?? null,
     pubAsOf: r.disclosureRound,
+    pubCost: pubCostOf(r.id),
     admission: k ? {
       read: !!k.recruit,
       recruit: k.recruit ?? null,

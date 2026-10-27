@@ -1,0 +1,4735 @@
+{
+  "source": "유치원알리미 > 유치원 상세 > 비용·회계 > 교육·보육 비용 (가장 최근 공시)",
+  "url": "https://e-childschoolinfo.moe.go.kr/kinderMt/kinderEducateAndCost.do",
+  "checkedAt": "2026-10-27",
+  "rules": "학부모 부담금 = 지원금 제외 고지 금액(실제와 다를 수 있음). 0 = 운영하지만 부담금 없음, null = 해당 연령 과정 운영 안 함(공시 표기 \"-\")",
+  "items": {
+    "kinder:1ecec08c-f94b-b044-e053-0a32095ab044": {
+      "name": "금곡초등학교병설유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-27",
+      "asOf": "2026년 1학기",
+      "asOfDate": "2026.4.1",
+      "round": "2026년 1차",
+      "course": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "분기"
+        },
+        "간식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "입학금": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "원복비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "afterSchool": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "special": {
+        "3": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "엘리트프로젝트",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "과학창의",
+              "name": "꼬마손과학",
+              "vendor": "자체교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "놀이영어",
+              "vendor": "(주)바른교육사",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        },
+        "4": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "엘리트프로젝트",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "과학창의",
+              "name": "꼬마손과학",
+              "vendor": "자체교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "놀이영어",
+              "vendor": "(주)바른교육사",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        },
+        "5": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "엘리트프로젝트",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "과학창의",
+              "name": "꼬마손과학",
+              "vendor": "자체교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "놀이영어",
+              "vendor": "(주)바른교육사",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        }
+      }
+    },
+    "kinder:1ecec08d-0c5e-b044-e053-0a32095ab044": {
+      "name": "동덕초등학교병설유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-27",
+      "asOf": "2026년 1학기",
+      "asOfDate": "2026.4.1",
+      "round": "2026년 1차",
+      "course": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "입학금": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "원복비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "afterSchool": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "special": {
+        "3": {
+          "count": 2,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "유아음악",
+              "vendor": "위키즈교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "러블리이벤트키즈스포츠",
+              "perWeek": 1,
+              "minutes": 40,
+              "fee": 0
+            }
+          ]
+        },
+        "4": {
+          "count": 2,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "유아음악",
+              "vendor": "위키즈교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "러블리이벤트키즈스포츠",
+              "perWeek": 1,
+              "minutes": 40,
+              "fee": 0
+            }
+          ]
+        },
+        "5": {
+          "count": 2,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "유아음악",
+              "vendor": "위키즈교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "러블리이벤트키즈스포츠",
+              "perWeek": 1,
+              "minutes": 40,
+              "fee": 0
+            }
+          ]
+        }
+      }
+    },
+    "kinder:1ecec08d-02ad-b044-e053-0a32095ab044": {
+      "name": "배방유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-27",
+      "asOf": "2026년 1학기",
+      "asOfDate": "2026.4.1",
+      "round": "2026년 1차",
+      "course": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "입학금": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "원복비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "afterSchool": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "special": {
+        "3": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "유아음악",
+              "vendor": "퍼포몬스터",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "두드림",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "유아영어",
+              "vendor": "오름에듀케이션",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        },
+        "4": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "유아뮤지컬",
+              "vendor": "스토리뮤지컬",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "두드림",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "유아영어",
+              "vendor": "오름에듀케이션",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        },
+        "5": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "유아장구",
+              "vendor": "헤리티지컴퍼니",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "두드림",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "유아영어",
+              "vendor": "오름에듀케이션",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        }
+      }
+    },
+    "kinder:1ecec08c-effe-b044-e053-0a32095ab044": {
+      "name": "삼성샛별유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-27",
+      "asOf": "2026년 1학기",
+      "asOfDate": "2026.4.1",
+      "round": "2026년 1차",
+      "course": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "입학금": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "원복비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "afterSchool": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "special": {
+        "3": {
+          "count": 4,
+          "total": 40000,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "음악",
+              "vendor": "코앤코",
+              "perWeek": 1,
+              "minutes": 25,
+              "fee": 10000
+            },
+            {
+              "area": "문화예술",
+              "name": "미술",
+              "vendor": "창의교육",
+              "perWeek": 1,
+              "minutes": 25,
+              "fee": 10000
+            },
+            {
+              "area": "체육",
+              "name": "체육",
+              "vendor": "우리컴퍼니",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 10000
+            },
+            {
+              "area": "언어",
+              "name": "다문화교육",
+              "vendor": "누리창의교육",
+              "perWeek": 1,
+              "minutes": 20,
+              "fee": 10000
+            }
+          ]
+        },
+        "4": {
+          "count": 4,
+          "total": 40000,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "뮤지컬",
+              "vendor": "아트컬",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 10000
+            },
+            {
+              "area": "문화예술",
+              "name": "클레이",
+              "vendor": "창의교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 10000
+            },
+            {
+              "area": "체육",
+              "name": "체육",
+              "vendor": "우리컴퍼니",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 10000
+            },
+            {
+              "area": "언어",
+              "name": "다문화교육",
+              "vendor": "누리창의교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 10000
+            }
+          ]
+        },
+        "5": {
+          "count": 4,
+          "total": 40000,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "장구",
+              "vendor": "이레교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 10000
+            },
+            {
+              "area": "체육",
+              "name": "체육",
+              "vendor": "우리컴퍼니",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 10000
+            },
+            {
+              "area": "과학창의",
+              "name": "올로",
+              "vendor": "꼬마세상",
+              "perWeek": 1,
+              "minutes": 40,
+              "fee": 10000
+            },
+            {
+              "area": "언어",
+              "name": "다문화교육",
+              "vendor": "누리창의교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 10000
+            }
+          ]
+        }
+      }
+    },
+    "kinder:2ef67bb6-a387-427d-a273-3d101215e9a1": {
+      "name": "세종유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-27",
+      "asOf": "2026년 1학기",
+      "asOfDate": "2026.4.1",
+      "round": "2026년 1차",
+      "course": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "입학금": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "원복비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "afterSchool": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "special": {
+        "3": {
+          "count": 3,
+          "total": 40000,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "음악놀이",
+              "vendor": "위키즈뮤직",
+              "perWeek": 1,
+              "minutes": 25,
+              "fee": 12000
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "플라잉",
+              "perWeek": 1,
+              "minutes": 25,
+              "fee": 3000
+            },
+            {
+              "area": "언어",
+              "name": "놀이영어",
+              "vendor": "바른교육사",
+              "perWeek": 1,
+              "minutes": 20,
+              "fee": 25000
+            }
+          ]
+        },
+        "4": {
+          "count": 4,
+          "total": 40000,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "음악놀이",
+              "vendor": "위키즈뮤직",
+              "perWeek": 1,
+              "minutes": 25,
+              "fee": 12000
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "트리컴퍼니",
+              "perWeek": 1,
+              "minutes": 25,
+              "fee": 3000
+            },
+            {
+              "area": "언어",
+              "name": "놀이영어",
+              "vendor": "바른교육사",
+              "perWeek": 1,
+              "minutes": 20,
+              "fee": 25000
+            },
+            {
+              "area": "언어",
+              "name": "다문화",
+              "vendor": "키즈웰에듀",
+              "perWeek": 1,
+              "minutes": 20,
+              "fee": 0
+            }
+          ]
+        },
+        "5": {
+          "count": 4,
+          "total": 40000,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "바이올린",
+              "vendor": "아인교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 7000
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "아토",
+              "perWeek": 1,
+              "minutes": 25,
+              "fee": 8000
+            },
+            {
+              "area": "언어",
+              "name": "놀이영어",
+              "vendor": "바른교육사",
+              "perWeek": 1,
+              "minutes": 20,
+              "fee": 25000
+            },
+            {
+              "area": "언어",
+              "name": "다문화",
+              "vendor": "키즈웰에듀",
+              "perWeek": 1,
+              "minutes": 20,
+              "fee": 0
+            }
+          ]
+        }
+      }
+    },
+    "kinder:77522a5c-0ff4-4eb4-9648-33ebaf7740af": {
+      "name": "아산갈산초등학교병설유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-27",
+      "asOf": "2026년 1학기",
+      "asOfDate": "2026.4.1",
+      "round": "2026년 1차",
+      "course": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "입학금": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "원복비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "afterSchool": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "special": {
+        "3": {
+          "count": 4,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "유아음악",
+              "vendor": "소리랑",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "엘리트",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "과학창의",
+              "name": "디지털(AI) 놀이",
+              "vendor": "온누리",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "다문화영어",
+              "vendor": "엘엠와이감성교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        },
+        "4": {
+          "count": 4,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "유아음악",
+              "vendor": "소리랑",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "엘리트",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "과학창의",
+              "name": "디지털(AI) 놀이",
+              "vendor": "온누리",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "다문화영어",
+              "vendor": "엘엠와이감성교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        },
+        "5": {
+          "count": 4,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "유아음악",
+              "vendor": "소리랑",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "엘리트",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "과학창의",
+              "name": "디지털(AI) 놀이",
+              "vendor": "온누리",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "다문화영어",
+              "vendor": "엘엠와이감성교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        }
+      }
+    },
+    "kinder:e398a626-69a4-47d8-aac6-b3a1918e5cc0": {
+      "name": "아산공수초등학교병설유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-27",
+      "asOf": "2026년 1학기",
+      "asOfDate": "2026.4.1",
+      "round": "2026년 1차",
+      "course": {
+        "합계": {
+          "m3": 2417,
+          "m4": 2417,
+          "m5": 2417,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "입학금": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "원복비": {
+          "m3": 29000,
+          "m4": 29000,
+          "m5": 29000,
+          "cycle": "연단위"
+        },
+        "현장학습비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 2417,
+          "m4": 2417,
+          "m5": 2417,
+          "cycle": null
+        }
+      },
+      "afterSchool": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "special": {
+        "3": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "음악",
+              "vendor": "코앤코음악",
+              "perWeek": 1,
+              "minutes": 25,
+              "fee": 0
+            },
+            {
+              "area": "문화예술",
+              "name": "미술",
+              "vendor": "포미토미",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "체육",
+              "vendor": "엘리트프로젝트",
+              "perWeek": 1,
+              "minutes": 40,
+              "fee": 0
+            }
+          ]
+        },
+        "4": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "음악",
+              "vendor": "코앤코음악",
+              "perWeek": 1,
+              "minutes": 25,
+              "fee": 0
+            },
+            {
+              "area": "문화예술",
+              "name": "미술",
+              "vendor": "포미토미",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "체육",
+              "vendor": "엘리트프로젝트",
+              "perWeek": 1,
+              "minutes": 40,
+              "fee": 0
+            }
+          ]
+        },
+        "5": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "체육",
+              "name": "체육",
+              "vendor": "엘리트프로젝트",
+              "perWeek": 1,
+              "minutes": 40,
+              "fee": 0
+            },
+            {
+              "area": "과학창의",
+              "name": "과학",
+              "vendor": "더나은교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "영어",
+              "vendor": "더나은교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        }
+      }
+    },
+    "kinder:374b81d9-547b-4c71-b289-13b3c277b753": {
+      "name": "아산세교유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-27",
+      "asOf": "2026년 1학기",
+      "asOfDate": "2026.4.1",
+      "round": "2026년 1차",
+      "course": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "입학금": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "원복비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "afterSchool": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "special": {
+        "3": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "음악",
+              "vendor": "위키즈뮤직",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "체육",
+              "vendor": "엘리트",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "영어",
+              "vendor": "바른교육사",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        },
+        "4": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "전통예술",
+              "vendor": "헤리티지마음(HM) 컴퍼니",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "체육",
+              "vendor": "엘리트",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "영어",
+              "vendor": "바른교육사",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        },
+        "5": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "장구",
+              "vendor": "헤리티지마음(HM) 컴퍼니",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "체육",
+              "vendor": "엘리트",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "영어",
+              "vendor": "바른교육사",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        }
+      }
+    },
+    "kinder:1ecec08d-09f8-b044-e053-0a32095ab044": {
+      "name": "아산용연초등학교병설유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-27",
+      "asOf": "2026년 1학기",
+      "asOfDate": "2026.4.1",
+      "round": "2026년 1차",
+      "course": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "분기"
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "분기"
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "분기"
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "분기"
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "입학금": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "분기"
+        },
+        "원복비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "분기"
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "분기"
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "분기"
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "afterSchool": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "분기"
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "분기"
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "분기"
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "분기"
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "분기"
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "분기"
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "special": {
+        "3": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "유아발레",
+              "vendor": "아이사랑교육원",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "문화예술",
+              "name": "음악동화",
+              "vendor": "뮤지큐음악동화",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "유아놀이영어",
+              "vendor": "레디셋영어",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        },
+        "4": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "유아발레",
+              "vendor": "아이사랑교육원",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "문화예술",
+              "name": "음악동화",
+              "vendor": "뮤지큐음악동화",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "유아놀이영어",
+              "vendor": "레디셋영어",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        },
+        "5": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "음악동화",
+              "vendor": "뮤지큐음악동화",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "문화예술",
+              "name": "유아피아노",
+              "vendor": "코앤코뮤직",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "유아놀이영어",
+              "vendor": "레디셋영어",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        }
+      }
+    },
+    "kinder:4ff533dd-6361-41c3-8e04-456ed82f18ef": {
+      "name": "아산월천유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-27",
+      "asOf": "2026년 1학기",
+      "asOfDate": "2026.4.1",
+      "round": "2026년 1차",
+      "course": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "입학금": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "원복비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "afterSchool": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "special": {
+        "3": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "알록 달록 미술놀이",
+              "vendor": "꼬마세상",
+              "perWeek": 2,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "쑥쑥 체육놀이",
+              "vendor": "천진난만",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "재밌는 영어놀이",
+              "vendor": "오름에듀",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        },
+        "4": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "알록 달록 미술놀이",
+              "vendor": "꼬마세상",
+              "perWeek": 2,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "쑥쑥 체육놀이",
+              "vendor": "천진난만",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "재밌는 영어놀이",
+              "vendor": "오름에듀",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        },
+        "5": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "알록 달록 미술놀이",
+              "vendor": "꼬마세상",
+              "perWeek": 2,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "쑥쑥 체육놀이",
+              "vendor": "천진난만",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "재밌는 영어놀이",
+              "vendor": "오름에듀",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        }
+      }
+    },
+    "kinder:1ecec08d-0b34-b044-e053-0a32095ab044": {
+      "name": "아주나유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-27",
+      "asOf": "2026년 1학기",
+      "asOfDate": "2026.4.1",
+      "round": "2026년 1차",
+      "course": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "월단위"
+        },
+        "간식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "월단위"
+        },
+        "급식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "월단위"
+        },
+        "교재비 및 재료비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "월단위"
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "입학금": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "월단위"
+        },
+        "원복비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "월단위"
+        },
+        "현장학습비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "월단위"
+        },
+        "차량운영비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "월단위"
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "afterSchool": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "월단위"
+        },
+        "간식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "월단위"
+        },
+        "급식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "월단위"
+        },
+        "교재비 및 재료비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "월단위"
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "월단위"
+        },
+        "차량운영비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "월단위"
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "special": {
+        "3": {
+          "count": 3,
+          "total": 40000,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "퍼포몬스터",
+              "vendor": "이레교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 5000
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "스마일키즈",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 5000
+            },
+            {
+              "area": "언어",
+              "name": "쥬쥬잉글리쉬",
+              "vendor": "시사교육",
+              "perWeek": 2,
+              "minutes": 30,
+              "fee": 30000
+            }
+          ]
+        },
+        "4": {
+          "count": 3,
+          "total": 40000,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "6센스뮤지컬",
+              "vendor": "6센스플러스",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 5000
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "스마일키즈",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 5000
+            },
+            {
+              "area": "언어",
+              "name": "쥬쥬잉글리쉬",
+              "vendor": "시사교육",
+              "perWeek": 2,
+              "minutes": 30,
+              "fee": 30000
+            }
+          ]
+        },
+        "5": {
+          "count": 3,
+          "total": 40000,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "6센스뮤지컬",
+              "vendor": "6센스플러스",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 5000
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "스마일키즈",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 5000
+            },
+            {
+              "area": "언어",
+              "name": "쥬쥬잉글리쉬",
+              "vendor": "시사교육",
+              "perWeek": 2,
+              "minutes": 30,
+              "fee": 30000
+            }
+          ]
+        }
+      }
+    },
+    "kinder:1ecec08c-fb37-b044-e053-0a32095ab044": {
+      "name": "연화초등학교병설유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-27",
+      "asOf": "2026년 1학기",
+      "asOfDate": "2026.4.1",
+      "round": "2026년 1차",
+      "course": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "입학금": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "원복비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "afterSchool": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": "연단위"
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "special": {
+        "3": {
+          "count": null,
+          "total": null,
+          "programs": []
+        },
+        "4": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "유아음악놀이",
+              "vendor": "아트컬",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "엘리트프로젝트",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "유아영어놀이",
+              "vendor": "키즈엠",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        },
+        "5": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "유아음악놀이",
+              "vendor": "아트컬",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "엘리트프로젝트",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "유아영어놀이",
+              "vendor": "키즈엠",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        }
+      }
+    },
+    "kinder:ec46de33-c0ff-4a36-809d-978f0354f801": {
+      "name": "이순신초등학교병설유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-27",
+      "asOf": "2026년 1학기",
+      "asOfDate": "2026.4.1",
+      "round": "2026년 1차",
+      "course": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "입학금": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "원복비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "afterSchool": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "special": {
+        "3": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "유아 음악",
+              "vendor": "코앤코",
+              "perWeek": 1,
+              "minutes": 25,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아 체육",
+              "vendor": "초코키즈",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "다문화 영어",
+              "vendor": "1인사업자",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        },
+        "4": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "유아 음악",
+              "vendor": "코앤코",
+              "perWeek": 1,
+              "minutes": 25,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아 체육",
+              "vendor": "초코키즈",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "다문화 영어",
+              "vendor": "1인사업자",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        },
+        "5": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "유아 음악",
+              "vendor": "아트컬",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아 체육",
+              "vendor": "초코키즈",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "다문화 영어",
+              "vendor": "더나은교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        }
+      }
+    },
+    "kinder:fa7e3e5c-5921-4647-9fcc-4ec79c68420b": {
+      "name": "일심유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-27",
+      "asOf": "2026년 1학기",
+      "asOfDate": "2026.4.1",
+      "round": "2026년 1차",
+      "course": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "입학금": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "원복비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "afterSchool": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "special": {
+        "3": {
+          "count": 3,
+          "total": 40000,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "유아음악",
+              "vendor": "위키즈뮤직",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 10000
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "대박드림",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 10000
+            },
+            {
+              "area": "언어",
+              "name": "다문화",
+              "vendor": "자람에듀",
+              "perWeek": 1,
+              "minutes": 20,
+              "fee": 20000
+            }
+          ]
+        },
+        "4": {
+          "count": 3,
+          "total": 40000,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "드럼&방송댄스",
+              "vendor": "바른교육사",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 10000
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "대박드림",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 10000
+            },
+            {
+              "area": "언어",
+              "name": "다문화",
+              "vendor": "자람에듀",
+              "perWeek": 1,
+              "minutes": 20,
+              "fee": 20000
+            }
+          ]
+        },
+        "5": {
+          "count": 3,
+          "total": 40000,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "유아국악",
+              "vendor": "위키즈뮤직",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 10000
+            },
+            {
+              "area": "체육",
+              "name": "발레&태권도",
+              "vendor": "대박드림",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 10000
+            },
+            {
+              "area": "언어",
+              "name": "다문화",
+              "vendor": "자람에듀",
+              "perWeek": 1,
+              "minutes": 20,
+              "fee": 20000
+            }
+          ]
+        }
+      }
+    },
+    "kinder:1ecec08c-f25c-b044-e053-0a32095ab044": {
+      "name": "자연유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-27",
+      "asOf": "2026년 1학기",
+      "asOfDate": "2026.4.1",
+      "round": "2026년 1차",
+      "course": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "입학금": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "원복비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "afterSchool": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "special": {
+        "3": {
+          "count": 3,
+          "total": 40000,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "위키즈",
+              "vendor": "위키즈뮤직",
+              "perWeek": 1,
+              "minutes": 25,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "허니펀스",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 10000
+            },
+            {
+              "area": "언어",
+              "name": "놀이다문화",
+              "vendor": "굿키즈에듀",
+              "perWeek": 1,
+              "minutes": 25,
+              "fee": 30000
+            }
+          ]
+        },
+        "4": {
+          "count": 3,
+          "total": 40000,
+          "programs": [
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "허니펀스",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 10000
+            },
+            {
+              "area": "언어",
+              "name": "그림책 읽는 아이들",
+              "vendor": "자체교육",
+              "perWeek": 1,
+              "minutes": 25,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "놀이다문화",
+              "vendor": "굿키즈에듀",
+              "perWeek": 1,
+              "minutes": 25,
+              "fee": 30000
+            }
+          ]
+        },
+        "5": {
+          "count": 3,
+          "total": 40000,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "국악",
+              "vendor": "떵기떵기",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "허니펀스",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 10000
+            },
+            {
+              "area": "언어",
+              "name": "놀이다문화",
+              "vendor": "굿키즈에듀",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 30000
+            }
+          ]
+        }
+      }
+    },
+    "kinder:1ecec08d-0e59-b044-e053-0a32095ab044": {
+      "name": "탕정미래초등학교병설유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-27",
+      "asOf": "2026년 1학기",
+      "asOfDate": "2026.4.1",
+      "round": "2026년 1차",
+      "course": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "입학금": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "원복비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "afterSchool": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "special": {
+        "3": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "음악뮤지컬",
+              "vendor": "1인사업자",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "1인사업자",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "다문화언어",
+              "vendor": "바른교육사",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        },
+        "4": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "음악뮤지컬",
+              "vendor": "1인사업자",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "1인사업자",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "다문화언어",
+              "vendor": "바른교육사",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        },
+        "5": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "음악뮤지컬",
+              "vendor": "1인사업자",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "1인사업자",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "다문화언어",
+              "vendor": "바른교육사",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        }
+      }
+    },
+    "kinder:1ecec08d-0c5d-b044-e053-0a32095ab044": {
+      "name": "탕정초등학교병설유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-27",
+      "asOf": "2026년 1학기",
+      "asOfDate": "2026.4.1",
+      "round": "2026년 1차",
+      "course": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "입학금": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "원복비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "afterSchool": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "special": {
+        "3": {
+          "count": 2,
+          "total": 0,
+          "programs": [
+            {
+              "area": "체육",
+              "name": "유아 체육",
+              "vendor": "천진난만",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "유아 영어",
+              "vendor": "바른교육사",
+              "perWeek": 1,
+              "minutes": 20,
+              "fee": 0
+            }
+          ]
+        },
+        "4": {
+          "count": 2,
+          "total": 0,
+          "programs": [
+            {
+              "area": "체육",
+              "name": "유아 체육",
+              "vendor": "천진난만",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "유아 영어",
+              "vendor": "바른교육사",
+              "perWeek": 1,
+              "minutes": 20,
+              "fee": 0
+            }
+          ]
+        },
+        "5": {
+          "count": 2,
+          "total": 0,
+          "programs": [
+            {
+              "area": "체육",
+              "name": "유아 체육",
+              "vendor": "천진난만",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "유아 영어",
+              "vendor": "바른교육사",
+              "perWeek": 1,
+              "minutes": 20,
+              "fee": 0
+            }
+          ]
+        }
+      }
+    },
+    "kinder:1ecec08c-f25b-b044-e053-0a32095ab044": {
+      "name": "프라임유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-27",
+      "asOf": "2026년 1학기",
+      "asOfDate": "2026.4.1",
+      "round": "2026년 1차",
+      "course": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "입학금": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "원복비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "afterSchool": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "special": {
+        "3": {
+          "count": 3,
+          "total": 40000,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "유아음악",
+              "vendor": "코코교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "드림DK스포츠",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 10000
+            },
+            {
+              "area": "언어",
+              "name": "영어",
+              "vendor": "굿키즈에듀",
+              "perWeek": 1,
+              "minutes": 25,
+              "fee": 30000
+            }
+          ]
+        },
+        "4": {
+          "count": 3,
+          "total": 40000,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "발레,태권도 중 1선택",
+              "vendor": "드림DK스포츠",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "드림DK스포츠",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 10000
+            },
+            {
+              "area": "언어",
+              "name": "영어",
+              "vendor": "굿키즈에듀",
+              "perWeek": 1,
+              "minutes": 25,
+              "fee": 30000
+            }
+          ]
+        },
+        "5": {
+          "count": 3,
+          "total": 40000,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "발레,태권도 중 1선택",
+              "vendor": "드림DK스포츠",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "드림DK스포츠",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 10000
+            },
+            {
+              "area": "언어",
+              "name": "영어",
+              "vendor": "굿키즈에듀",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 30000
+            }
+          ]
+        }
+      }
+    },
+    "kinder:1ecec08c-fd35-b044-e053-0a32095ab044": {
+      "name": "하나유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-27",
+      "asOf": "2026년 1학기",
+      "asOfDate": "2026.4.1",
+      "round": "2026년 1차",
+      "course": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "입학금": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "원복비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "afterSchool": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "special": {
+        "3": {
+          "count": 4,
+          "total": 40000,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "방송댄스",
+              "vendor": "춤추는아이",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 5400
+            },
+            {
+              "area": "문화예술",
+              "name": "모코미술",
+              "vendor": "온누리교육사",
+              "perWeek": 1,
+              "minutes": 40,
+              "fee": 10000
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "우리아이유아체육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 4600
+            },
+            {
+              "area": "언어",
+              "name": "키즈몬영어",
+              "vendor": "아이키움에듀",
+              "perWeek": 2,
+              "minutes": 20,
+              "fee": 20000
+            }
+          ]
+        },
+        "4": {
+          "count": 4,
+          "total": 40000,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "방송댄스",
+              "vendor": "춤추는아이",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 5400
+            },
+            {
+              "area": "문화예술",
+              "name": "모코미술",
+              "vendor": "온누리교육사",
+              "perWeek": 1,
+              "minutes": 40,
+              "fee": 10000
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "우리아이유아체육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 4600
+            },
+            {
+              "area": "언어",
+              "name": "키즈몬영어",
+              "vendor": "아이키움에듀",
+              "perWeek": 2,
+              "minutes": 20,
+              "fee": 20000
+            }
+          ]
+        },
+        "5": {
+          "count": 4,
+          "total": 40000,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "방송댄스",
+              "vendor": "춤추는아이",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 5400
+            },
+            {
+              "area": "문화예술",
+              "name": "모코미술",
+              "vendor": "온누리교육사",
+              "perWeek": 1,
+              "minutes": 40,
+              "fee": 10000
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "우리아이유아체육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 4600
+            },
+            {
+              "area": "언어",
+              "name": "키즈몬영어",
+              "vendor": "아이키움에듀",
+              "perWeek": 2,
+              "minutes": 20,
+              "fee": 20000
+            }
+          ]
+        }
+      }
+    },
+    "kinder:7bd3563c-ce2b-4161-ae7e-3a43a150bba5": {
+      "name": "한들물빛유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-27",
+      "asOf": "2026년 1학기",
+      "asOfDate": "2026.4.1",
+      "round": "2026년 1차",
+      "course": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "연단위"
+        },
+        "간식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "연단위"
+        },
+        "급식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "연단위"
+        },
+        "교재비 및 재료비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "연단위"
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "입학금": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "연단위"
+        },
+        "원복비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "연단위"
+        },
+        "현장학습비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "연단위"
+        },
+        "차량운영비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "연단위"
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "afterSchool": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "연단위"
+        },
+        "간식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "연단위"
+        },
+        "급식비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "연단위"
+        },
+        "교재비 및 재료비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "연단위"
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "연단위"
+        },
+        "차량운영비": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": "연단위"
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "special": {
+        "3": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "퍼포먼스 음악",
+              "vendor": "이레교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "신나라 몸키두키 교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "놀이영어",
+              "vendor": "오름에듀케이션",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        },
+        "4": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "음악",
+              "vendor": "킨더스필 에듀",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "러블리키즈스포츠",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "놀이영어",
+              "vendor": "키즈웰에듀",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        },
+        "5": {
+          "count": 4,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "음악(장구)",
+              "vendor": "전통예술원 하늘선",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "플라잉",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "과학창의",
+              "name": "AI",
+              "vendor": "바른교육사",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "놀이영어",
+              "vendor": "더나은교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        }
+      }
+    },
+    "kinder:34c99504-a2d5-40bf-ae5d-5aea98593599": {
+      "name": "한들물빛초등학교병설유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-27",
+      "asOf": "2026년 1학기",
+      "asOfDate": "2026.4.1",
+      "round": "2026년 1차",
+      "course": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "입학금": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "원복비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "afterSchool": {
+        "합계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "수업료": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "간식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "급식비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "교재비 및 재료비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "기본경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        },
+        "현장학습비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "차량운영비": {
+          "m3": null,
+          "m4": null,
+          "m5": null,
+          "cycle": null
+        },
+        "선택경비 소계": {
+          "m3": 0,
+          "m4": 0,
+          "m5": 0,
+          "cycle": null
+        }
+      },
+      "special": {
+        "3": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "유아음악",
+              "vendor": "1인사업자",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "주식회사플라잉",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "다문화(영어)",
+              "vendor": "LMY 감성교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        },
+        "4": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "유아음악",
+              "vendor": "1인사업자",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "주식회사플라잉",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "다문화(영어)",
+              "vendor": "LMY 감성교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        },
+        "5": {
+          "count": 3,
+          "total": 0,
+          "programs": [
+            {
+              "area": "문화예술",
+              "name": "유아음악",
+              "vendor": "1인사업자",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "체육",
+              "name": "유아체육",
+              "vendor": "주식회사플라잉",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            },
+            {
+              "area": "언어",
+              "name": "다문화(영어)",
+              "vendor": "LMY 감성교육",
+              "perWeek": 1,
+              "minutes": 30,
+              "fee": 0
+            }
+          ]
+        }
+      }
+    }
+  }
+}

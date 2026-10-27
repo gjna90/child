@@ -5,6 +5,19 @@ import path from 'node:path';
 import { CHECKED_AT, SCHOOL_YEAR, COMMON_SCHEDULE, COMMON_RULES, KINDER, PENDING } from '../data/admissions/2027_kinder.js';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+import { monthlyFor } from './collect-costs.js';
+const cdir = path.join(ROOT, 'data', 'costs');
+const cf = fs.existsSync(cdir) ? fs.readdirSync(cdir).filter((f) => f.endsWith('.json')).sort().pop() : null;
+const COST = cf ? JSON.parse(fs.readFileSync(path.join(cdir, cf), 'utf8')) : null;
+/** 유치원알리미 비용 공시 한 줄 */
+function costLine(r) {
+  const c = COST?.items?.[r.id];
+  if (!c?.course) return `- **부모 부담금 (유치원알리미 비용 공시)**: 미확인`;
+  const won = (x) => (x === null || x === undefined ? '미확인' : `${x.toLocaleString('ko-KR')}원`);
+  const ages = [3, 4, 5].map((a) => { const m = monthlyFor(c, a); return `만${a}세 월 ${m.known ? won(m.total) : '미확인'}`; }).join(' · ');
+  const sp = c.special?.[3]?.programs?.length ? ` — 만3세 특성화: ${c.special[3].programs.map((p) => `${p.name}${p.fee ? ` ${won(p.fee)}` : ''}`).join(', ')}` : '';
+  return `- **부모 부담금 (유치원알리미 비용 공시, ${c.asOf ?? ''})**: ${ages} (교육과정+방과후+특성화, 지원금 뺀 고지액)${sp} 〔유치원알리미 비용·회계, ${c.checkedAt} 확인〕`;
+}
 const rdir = path.join(ROOT, 'data', 'roster');
 const R = JSON.parse(fs.readFileSync(path.join(rdir, fs.readdirSync(rdir).filter((f) => f.endsWith('.json')).sort().pop()), 'utf8'));
 const list = [...R.included, ...R.needsCheck].filter((r) => r.kind === '유치원');
@@ -69,6 +82,7 @@ for (const area of ['배방읍', '탕정면']) {
     const cls = r.ageClasses.map((c) => `${c.label.replace('(공시 구분)', '')} ${n(c.classCount)}반/${n(c.enrolled)}명`).join(' · ');
     L.push(`- 2026 반 구성(공시): ${cls}`);
     L.push(`- 교사(기관 전체, 반별 배치 아님): ${v(r.staffWhole?.teacherTotal)}명 · 운영시간(공시, 방과후 포함): ${r.afterSchool?.hours?.value ?? v(r.operatingHours)}`);
+    L.push(costLine(r));
     L.push(`- 체육장 면적(공시, 실내·실외 구분 없음): ${r.playgroundArea?.value ?? U}㎡ · 통학차량(공시): ${r.schoolBus?.value?.운영여부 ?? U}${r.schoolBus?.value?.운행차량수 ? ` ${r.schoolBus.value.운행차량수}대` : ''}`);
     if (k?.classNames) L.push(line('기관이 쓰는 반 이름', k.classNames, k));
     L.push('');
@@ -107,7 +121,7 @@ for (const area of ['배방읍', '탕정면']) {
     const gaps = ['반별 담임·보조 교사 배치', '자연·바깥놀이 빈도와 시간', '적응 기간·방식', '낮잠·식사·배변 도움', '방학 중 돌봄·급식·차량'];
     if (!k.bus || !/^(없음|미운행)/.test(k.bus.value)) gaps.push('버스 승하차 시각·탑승시간');
     if (!k.care && !/07:30~19:30/.test(k.hours?.value ?? '')) gaps.push('아침·저녁 돌봄');
-    if (!k.cost) gaps.unshift('비용');
+    if (!k.cost && !COST?.items?.[r.id]?.course) gaps.unshift('비용');
     if (!k.classNames) gaps.unshift('기관이 쓰는 반 이름');
     L.push(`**⑤ 아직 모르는 것 → 상담 때 물어볼 것**: ${gaps.join(', ')}`, '');
   }
