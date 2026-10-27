@@ -184,6 +184,7 @@ textarea { font: inherit; width: 100%; min-height: 70px; border: 1px solid var(-
 .cv.b { background: var(--warn-bg); color: var(--warn-ink); }
 .cv.u { background: var(--unk-bg); color: var(--unk-ink); font-style: italic; }
 .rlist { margin: 0; padding-left: 1.1rem; font-size: .86rem; }
+details.panel summary { cursor: pointer; font-weight: 600; }
 footer { margin-top: 24px; font-size: .8rem; color: var(--muted); display: grid; gap: 4px; }
 svg text { font-family: var(--font-body); }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
@@ -210,12 +211,14 @@ svg text { font-family: var(--font-body); }
     <button class="tab" role="tab" id="tab-ask" data-tab="ask" type="button">전화·상담 질문지</button>
     <button class="tab" role="tab" id="tab-kid" data-tab="kid" type="button">우리 아이 성향·생활 알아보기</button>
     <button class="tab" role="tab" id="tab-reco" data-tab="reco" type="button">맞춤 추천</button>
+    <button class="tab" role="tab" id="tab-cal" data-tab="cal" type="button">설명회·모집 달력</button>
   </nav>
 
   <div id="view-pick" hidden></div>
   <div id="view-ask" hidden></div>
   <div id="view-kid" hidden></div>
   <div id="view-reco" hidden></div>
+  <div id="view-cal" hidden></div>
 
   <div class="layout" id="view-map">
     <div class="stack">
@@ -335,7 +338,20 @@ function childClass(it) {
   if (c && c.count === 0) return { status: 'no', text: `올해 만${a}세반 없음(공시)`, known: false };
   return { status: 'unk', text: U, known: null };
 }
+// ── 5단계: 상담 기록 (사용자 입력). 공식 자료를 덮어쓰지 않고, 공식 값이 없을 때만 계산에 씀 ──
+state.consult = store.get('consult', {});
+const consultOf = (it) => state.consult[it.id] ?? null;
+const cTag = (c) => ` (상담 기록${c?.date ? ' ' + c.date : ''})`;
+const NATURE_V = { '주 3회 이상': 1, '주 1~2회': 0.6, '월 1~3회': 0.3, '거의 없음': 0 };
+const SUPPORT_V = { 있음: 1, 일부: 0.5, 없음: 0 };
+const STATUSES = ['', '관심', '설명회 신청함', '설명회 다녀옴', '상담함', '우선모집 지원함', '일반모집 지원함', '선발됨', '대기 중', '등록함', '지원 안 함'];
 function busKnown(it) {
+  const c = consultOf(it);
+  const cb = c?.bus === '있음' ? true : c?.bus === '없음' ? false : null;
+  const off = busOfficial(it);
+  return off !== null ? off : cb;
+}
+function busOfficial(it) {
   if (it.kind !== '유치원') return null;
   const t = it.admission?.bus?.text;
   if (t) return !/^(없음|미운행)/.test(t);
@@ -343,6 +359,10 @@ function busKnown(it) {
   return null;
 }
 function lateEnd(it) {
+  const off = lateEndOfficial(it);
+  return off ?? consultOf(it)?.careEnd ?? null;
+}
+function lateEndOfficial(it) {
   if (it.kind !== '유치원') return null;
   const ends = [it.hoursPubEnd];
   const care = it.admission?.care?.text ?? it.admission?.hours?.text;
@@ -595,6 +615,12 @@ const MUSTS = [
   { key: 'budget', label: '한 달 비용이 예산 이하 (맞춤 추천 탭의 예산 사용)', why: '예산 초과' },
 ];
 function monthlyCost(it) {
+  const off = monthlyCostOfficial(it); const c = consultOf(it);
+  if (off) { if (c?.cost && c.cost !== off.won) off.text += ` · 상담 기록 월 ${(+c.cost).toLocaleString('ko-KR')}원(다름)`; return off; }
+  if (c?.cost) return { won: +c.cost, text: `월 ${(+c.cost).toLocaleString('ko-KR')}원${cTag(c)}` };
+  return null;
+}
+function monthlyCostOfficial(it) {
   if (it.kind !== '유치원') { const c = [...it.courses].filter((x) => x.tuition).sort((a, b) => (b.minutes ?? 0) - (a.minutes ?? 0))[0]; return c ? { won: c.tuition, text: `월 ${Math.round(c.tuition).toLocaleString('ko-KR')}원 (가장 긴 과정, 등록 교습비)` } : null; }
   const t = it.admission?.cost?.text; if (!t) return null;
   if (/부담금 없음|부담금 0원|무상|수익자 부담금 없음/.test(t)) return { won: 0, text: '부모 부담금 없음 (요강)' };
@@ -712,6 +738,139 @@ function questions(it) {
   for (const x of kidQuestions()) add(x.key, x.text, x.why);
   return q;
 }
+
+function consultForm(it) {
+  const c = consultOf(it) ?? {};
+  const k = curKid(); const picks = k?.records.at(-1)?.picks ?? [];
+  const sel = (key, opts, label) => `<label>${label}<select data-cs="${key}"><option value="">모름</option>${opts.map((o) => `<option ${c[key] === o ? 'selected' : ''}>${o}</option>`).join('')}</select></label>`;
+  return `<div style="display:grid;gap:8px;border-top:1px solid var(--line);padding-top:10px">
+    <h3>상담 결과 기록 → 맞춤 추천에 반영</h3>
+    <p class="small muted" style="margin:0">들은 답을 적으면 공식 자료에 없는 항목만 추천 계산에 들어가고 "(상담 기록 날짜)"로 표시됩니다. 공식 자료와 다르면 둘 다 보여 줍니다. 이 기기에만 저장됩니다.</p>
+    <div class="params">
+      <label>상담한 날<input type="date" data-cs="date" value="${esc(c.date ?? '')}"></label>
+      ${sel('status', STATUSES.filter(Boolean), '내 진행 상태 (직접 관리)')}
+      ${sel('nature', Object.keys(NATURE_V), '바깥놀이·숲 활동 빈도')}
+      <label>한 달 실제 비용 (원)<input type="number" min="0" step="10000" data-cs="cost" value="${esc(c.cost ?? '')}" placeholder="예) 250000"></label>
+      ${sel('careEnd', ['16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00'], '돌봄 끝나는 시각')}
+      <label>우리 아이 반 예상 인원 (명)<input type="number" min="1" max="40" data-cs="classSize" value="${esc(c.classSize ?? '')}"></label>
+      ${sel('bus', ['있음', '없음'], '우리 집 쪽 버스')}
+      <label>버스 탑승 시간 (분)<input type="number" min="0" max="120" data-cs="busMin" value="${esc(c.busMin ?? '')}"></label>
+    </div>
+    ${picks.length ? `<div class="params">${picks.map((p) => `<label>${esc(SUPPORTS[p].name)} (${esc(k.nick)} 설문)<select data-cssup="${p}"><option value="">모름</option>${Object.keys(SUPPORT_V).map((o) => `<option ${c.supports?.[p] === o ? 'selected' : ''}>${o}</option>`).join('')}</select></label>`).join('')}</div>` : '<p class="small muted" style="margin:0">설문에서 중요한 지원을 고르면 여기서 기관의 답(있음·일부·없음)을 기록할 수 있습니다.</p>'}
+    <p class="small muted" style="margin:0">진행 상태는 직접 적는 메모입니다. 실제 접수·선발 결과는 유보통합포털에서 확인하세요.</p>
+  </div>`;
+}
+
+// ── 5단계: 설명회·모집 달력 ─────────────────────────────
+state.myEvents = store.get('myEvents', []);
+state.archive = store.get('archive', []);
+state.calMine = store.get('calMine', false);
+const pad2 = (n) => String(n).padStart(2, '0');
+/** 글에서 날짜 찾기. 연도 없는 '12. 3.'·'12월 3일'은 학년도 기준으로 연도 추정(9~12월=학년도-1, 1~8월=학년도) */
+function findDates(text, sy = SY) {
+  const out = []; const t = String(text);
+  const push = (y, m, d, idx, len) => { if (m < 1 || m > 12 || d < 1 || d > 31) return; const tm = t.slice(idx + len, idx + len + 30).match(/^[^\n\d]{0,12}?(\d{1,2}):(\d{2})/); out.push({ date: `${y}-${pad2(m)}-${pad2(d)}`, time: tm ? `${pad2(tm[1])}:${tm[2]}` : null, idx }); };
+  const full = /(20\d{2})\s*[.\-/년]\s*(\d{1,2})\s*[.\-/월]\s*(\d{1,2})\s*일?/g;
+  const used = [];
+  for (const m of t.matchAll(full)) { push(+m[1], +m[2], +m[3], m.index, m[0].length); used.push([m.index, m.index + m[0].length]); }
+  const short = /(?<![\d.])(\d{1,2})\s*(?:월\s*|\.\s*|\/)(\d{1,2})\s*(?:일|\.)?\s*(?=\(|\s|~|$|,)/g;
+  for (const m of t.matchAll(short)) {
+    if (used.some(([a, b]) => m.index >= a && m.index < b)) continue;
+    const mo = +m[1]; push(mo >= 9 ? sy - 1 : sy, mo, +m[2], m.index, m[0].length);
+  }
+  return out.sort((a, b) => a.idx - b.idx);
+}
+function eventType(s) {
+  if (/설명회/.test(s) && /(신청|예약|마감)/.test(s)) return '설명회 예약';
+  if (/설명회/.test(s)) return '설명회';
+  if (/공개의 날|참관|둘러보기/.test(s)) return '공개 행사';
+  if (/접수|원서/.test(s)) return '접수';
+  if (/발표|추첨 결과/.test(s)) return '발표';
+  if (/등록/.test(s)) return '등록';
+  if (/찜하기|요강 조회/.test(s)) return '요강 공개';
+  if (/추가모집|대기/.test(s)) return '추가모집·대기';
+  return '기타';
+}
+function calEvents() {
+  const ev = [];
+  for (const sch of DATA.schedule) {
+    const ds = findDates(sch.when);
+    if (!ds.length) continue;
+    // '2026-11-02(월) 09:00 ~ 11-04(수) 18:00' 의 끝 날짜
+    const endM = sch.when.match(/~\s*(\d{2})-(\d{2})/); const end = endM ? `${ds[0].date.slice(0, 4)}-${endM[1]}-${endM[2]}` : (sch.when.match(/~\s*(20\d{2}-\d{2}-\d{2})/)?.[1] ?? null);
+    ev.push({ date: ds[0].date, end, time: ds[0].time, type: eventType(sch.step), what: sch.step, who: '충남 공통 (요강을 읽은 유치원 모두 같음)', src: '각 유치원 2027 모집요강', note: sch.note ?? '', kind: 'official' });
+  }
+  for (const it of DATA.institutions) for (const e of it.admission?.events ?? []) {
+    const ds = findDates(e.when);
+    ev.push({ date: ds[0]?.date ?? null, time: ds[0]?.time ?? null, type: eventType(e.what), what: e.what, who: it.name, id: it.id, src: e.src ? `${e.src.title}${e.src.posted ? ` (${e.src.posted} 게시)` : ''}` : '기관 홈페이지', note: e.when, kind: 'official' });
+  }
+  for (const m of state.myEvents) ev.push({ ...m, kind: 'mine' });
+  return ev;
+}
+const dday = (d) => { const a = new Date(today() + 'T00:00:00+09:00'), b = new Date(d + 'T00:00:00+09:00'); return Math.round((b - a) / 86400000); };
+const WD = ['일', '월', '화', '수', '목', '금', '토'];
+const fmtDate = (d) => { const x = new Date(d + 'T12:00:00Z'); return `${+d.slice(5, 7)}월 ${+d.slice(8, 10)}일(${WD[x.getUTCDay()]})`; };
+
+function drawCal() {
+  const mineIds = new Set([...state.plan, ...state.compare, ...Object.keys(state.consult).filter((k) => state.consult[k]?.status)]);
+  let ev = calEvents();
+  if (state.calMine) ev = ev.filter((e) => !e.id || mineIds.has(e.id));
+  const t = today();
+  const dated = ev.filter((e) => e.date).sort((a, b) => (a.date + (a.time ?? '')).localeCompare(b.date + (b.time ?? '')));
+  const undated = ev.filter((e) => !e.date);
+  const upcoming = dated.filter((e) => (e.end ?? e.date) >= t), past = dated.filter((e) => (e.end ?? e.date) < t);
+  const months = [...new Set(upcoming.map((e) => e.date.slice(0, 7)))];
+  const row = (e) => { const dd = dday(e.date); const live = e.end && e.date <= t && e.end >= t;
+    return `<div class="pickrow" style="grid-template-columns:minmax(0,1fr)"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><strong>${fmtDate(e.date)}${e.time ? ' ' + e.time : ''}${e.end && e.end !== e.date ? ` ~ ${fmtDate(e.end)}` : ''}</strong>
+      <span class="small ${live ? '' : 'muted'}">${live ? '<span class="state ok">진행 중</span>' : dd > 0 ? `D-${dd}` : dd === 0 ? '<span class="state warn">오늘</span>' : '지남'}</span></div>
+      <div><span class="tag">${esc(e.type)}</span> ${esc(e.what)} · <span class="small">${esc(e.who)}</span></div>
+      ${e.note ? `<div class="small muted">${esc(e.note)}</div>` : ''}
+      <div class="src">${e.kind === 'mine' ? `사용자 입력${e.src ? ' · ' + esc(e.src) : ''} <button class="mini" type="button" data-delev="${esc(e.uid)}">지우기</button>` : `출처: ${esc(e.src)}`}</div></div>`; };
+  const instOpts = DATA.institutions.map((x) => `<option value="${esc(x.id)}">${esc(x.name)}</option>`).join('');
+  $('#view-cal').innerHTML = `<div class="cols2">
+    <div class="stack">
+      <div class="panel" style="display:grid;gap:8px"><h2>보기</h2>
+        <div class="fgroup"><button class="chip" type="button" id="calMine" aria-pressed="${state.calMine}">내 관심 기관만 (희망·비교함·진행 상태)</button></div>
+        <p class="small muted" style="margin:0">${SY}학년도 모집 일정만 모았습니다. 설명회 예약 마감·설명회·접수·발표·등록을 따로 적습니다. 찾지 못한 일정은 "없음"이 아니라 아직 모르는 것입니다. 시간은 한국 시간입니다.</p></div>
+      <div class="panel" style="display:grid;gap:8px"><h2>일정 직접 추가</h2>
+        <div class="params">
+          <label>기관<select id="ne-inst"><option value="">기타·공통</option>${instOpts}</select></label>
+          <label>종류<select id="ne-type">${['설명회 예약', '설명회', '공개 행사', '상담', '접수', '발표', '등록', '기타'].map((x) => `<option>${x}</option>`).join('')}</select></label>
+          <label>날짜<input type="date" id="ne-date"></label>
+          <label>시간<input type="time" id="ne-time"></label>
+        </div>
+        <label class="small muted" for="ne-what">내용</label><input id="ne-what" class="qitem" style="padding:6px 8px" placeholder="예) 원 방문 상담 예약">
+        <button class="btn primary" type="button" id="ne-add">추가</button></div>
+      <div class="panel" style="display:grid;gap:8px"><h2>공지에서 일정 찾기 (자료 보관함)</h2>
+        <p class="small muted" style="margin:0">홈페이지 공지·문자·PDF의 글자를 복사해 붙여 넣으면 날짜를 찾아 줍니다. 맞는 것만 골라 달력에 넣으세요. 사진 속 글자 읽기는 아직 안 됩니다.</p>
+        <div class="params"><label>기관<select id="ar-inst"><option value="">기타·공통</option>${instOpts}</select></label><label>출처(주소·제목, 선택)<input id="ar-src" placeholder="예) 홈페이지 공지사항"></label></div>
+        <textarea id="ar-text" placeholder="공지 내용을 붙여 넣으세요"></textarea>
+        <button class="btn" type="button" id="ar-find">날짜 찾기</button>
+        <div id="ar-out"></div>
+        ${state.archive.length ? `<h3>보관한 자료 ${state.archive.length}개</h3>${state.archive.slice().reverse().map((a) => `<div class="pickrow"><div class="small"><b>${esc(a.who)}</b> · ${esc(a.saved)} 보관${a.src ? ' · ' + esc(a.src) : ''}${a.yearWarn ? ` <span class="state warn">${esc(a.yearWarn)}</span>` : ''}</div><div class="small muted" style="white-space:pre-wrap;max-height:6em;overflow:auto">${esc(a.text.slice(0, 600))}</div><button class="mini" type="button" data-delar="${esc(a.uid)}">지우기</button></div>`).join('')}` : ''}
+      </div>
+    </div>
+    <div class="stack">
+      <div class="panel" style="display:grid;gap:10px"><h2>다가오는 일정 <span class="cnt">${upcoming.length}</span></h2>
+        ${months.map((m) => `<h3>${+m.slice(0, 4)}년 ${+m.slice(5, 7)}월</h3>${upcoming.filter((e) => e.date.startsWith(m)).map(row).join('')}`).join('') || '<p class="small muted">없음</p>'}</div>
+      ${undated.length ? `<div class="panel" style="display:grid;gap:8px"><h3>날짜 미정 <span class="cnt">${undated.length}</span></h3>${undated.map((e) => `<div class="pickrow"><div><span class="tag">${esc(e.type)}</span> ${esc(e.what)} · ${esc(e.who)}</div><div class="small muted">${esc(e.note)}</div></div>`).join('')}</div>` : ''}
+      ${past.length ? `<details class="panel"><summary>지난 일정 ${past.length}개</summary><div style="display:grid;gap:8px;margin-top:8px">${past.reverse().map(row).join('')}</div></details>` : ''}
+    </div></div>`;
+}
+function findInArchive() {
+  const text = $('#ar-text').value; const out = $('#ar-out');
+  if (!text.trim()) { out.innerHTML = '<p class="small">붙여 넣은 글이 없습니다.</p>'; return; }
+  const yrs = [...text.matchAll(/(20\d{2})\s*학년도/g)].map((m) => +m[1]);
+  const other = yrs.filter((y) => y !== SY);
+  const warn = other.length && !yrs.includes(SY) ? `${[...new Set(other)].join('·')}학년도 공지로 보임 — 참고 자료로만 보관` : '';
+  const ds = findDates(text);
+  state.arDraft = { text, warn, ds: ds.map((d) => { const line = text.slice(Math.max(0, text.lastIndexOf('\n', d.idx) + 1), (text.indexOf('\n', d.idx) + 1 || text.length + 1) - 1).trim().slice(0, 120); return { ...d, line, type: eventType(line) }; }) };
+  out.innerHTML = `${warn ? `<p class="small"><span class="state warn">${esc(warn)}</span></p>` : ''}
+    ${state.arDraft.ds.length ? `<div class="checks">${state.arDraft.ds.map((d, i) => `<label><input type="checkbox" data-ard="${i}" ${warn ? '' : 'checked'}> <span><b>${fmtDate(d.date)}${d.time ? ' ' + d.time : ''}</b> <span class="tag">${esc(d.type)}</span> <span class="small muted">${esc(d.line)}</span></span></label>`).join('')}</div>` : '<p class="small">날짜를 찾지 못했습니다. 직접 추가해 주세요.</p>'}
+    <div class="fgroup"><button class="btn primary" type="button" id="ar-save">${state.arDraft.ds.length ? '고른 날짜를 달력에 넣고 보관' : '글만 보관'}</button></div>
+    <p class="small muted" style="margin:0">연도가 없는 날짜는 ${SY}학년도 기준으로 추정했습니다(9~12월은 ${SY - 1}년, 1~8월은 ${SY}년). 넣기 전에 확인하세요.</p>`;
+}
+
 function drawAsk() {
   const all = DATA.institutions;
   const pool = [...state.plan, ...state.compare].filter((v, i, a) => a.indexOf(v) === i);
@@ -734,6 +893,7 @@ function drawAsk() {
       <label for="memo" class="small muted">상담 메모 (상담일·들은 답·느낀 점)</label>
       <textarea id="memo" placeholder="예) 10/30 통화 — 3세반 2학급 예정, 차량 8:20 탑승">${esc(state.memo[it.id] ?? '')}</textarea>
       <p class="small muted" style="margin:0">메모는 자동 수집 자료를 덮어쓰지 않고, 공식 자료도 메모로 바뀌지 않습니다.</p>
+      ${consultForm(it)}
     </div></div>`;
   $('#askSel').value = it.id;
 }
@@ -929,7 +1089,8 @@ const CRIT = {
   care: { label: '돌봄 시간', calc(it) {
     const e = lateEnd(it); if (!e) return { value: null, text: '끝나는 시각 미확인', q: `${state.reco.pickup}까지 돌봐 줄 수 있나요? 신청 자격은요?` };
     const v = minutesOf(e) >= minutesOf(state.reco.pickup) ? 1 : 0;
-    return { value: v, text: `${e}까지${it.admission?.care ? ' (돌봄, 자격 확인)' : ''}` };
+    const fromC = !lateEndOfficial(it);
+    return { value: v, text: `${e}까지${fromC ? cTag(consultOf(it)) : it.admission?.care ? ' (돌봄, 자격 확인)' : ''}` };
   } },
   cost: { label: '비용', calc(it) {
     const c = monthlyCost(it); if (!c) return { value: null, text: '비용 미확인', q: '매달 실제로 내는 비용은 얼마인가요? (원비·특성화비·차량비 포함)' };
@@ -938,17 +1099,26 @@ const CRIT = {
     return { value: costValue(c.won, state.reco.budget), text: c.text };
   } },
   size: { label: '해당 연령 반 규모', calc(it) {
-    if (it.kind !== '유치원') return { value: null, text: '반 규모 미확인', q: '우리 아이 반은 몇 명이고 선생님은 몇 분인가요?' };
+    if (it.kind !== '유치원') { const cs0 = consultOf(it); return cs0?.classSize ? { value: linear(+cs0.classSize, state.reco.classStd, state.reco.classStd * 1.5), text: `반 ${cs0.classSize}명${cTag(cs0)}` } : { value: null, text: '반 규모 미확인', q: '우리 아이 반은 몇 명이고 선생님은 몇 분인가요?' }; }
     const a = manAge(); const c = it.classes.find((x) => x.manAge === a && !x.mixed);
+    const cs = consultOf(it);
+    if (cs?.classSize) return { value: linear(+cs.classSize, state.reco.classStd, state.reco.classStd * 1.5), text: `반 ${cs.classSize}명 예정${cTag(cs)}` };
     if (!c || !c.count || c.enrolled === null) return { value: null, text: it.classes.some((x) => x.mixed && x.count) ? '혼합반 — 연령별 인원 미확인' : '해당 연령 반 정보 없음', q: '우리 아이 반은 몇 명이고 선생님은 몇 분인가요?' };
     const per = c.enrolled / c.count;
     return { value: linear(per, state.reco.classStd, state.reco.classStd * 1.5), text: `올해 반당 ${Math.round(per * 10) / 10}명 (공시, 기관 평균 아님)` };
   } },
-  bus: { label: '통학 편의(버스)', calc(it) { const b = busKnown(it); return b === null ? { value: null, text: '버스 미확인', q: '우리 집 근처에 버스가 서나요? 탑승 시간은요?' } : { value: b ? 1 : 0, text: b ? '버스 운행' : '버스 없음' }; } },
-  nature: { label: '자연·바깥놀이', calc() { return { value: null, text: '빈도 미확인', q: '바깥놀이·숲 활동은 일주일에 몇 번, 한 번에 얼마나 하나요?' }; } },
-  support: { label: '설문에서 고른 지원', calc() {
-    const k = curKid(); const rec = k?.records.at(-1); const picks = rec?.picks ?? [];
-    return { value: null, text: picks.length ? `${picks.map((p) => SUPPORTS[p].name).join(', ')} — 기관 정보 미확인` : '설문에서 고른 지원 없음', q: picks.length ? SUPPORTS[picks[0]].q : null };
+  bus: { label: '통학 편의(버스)', calc(it) { const b = busKnown(it); const fromC = busOfficial(it) === null && b !== null; return b === null ? { value: null, text: '버스 미확인', q: '우리 집 근처에 버스가 서나요? 탑승 시간은요?' } : { value: b ? 1 : 0, text: (b ? '버스 운행' : '버스 없음') + (fromC ? cTag(consultOf(it)) : '') }; } },
+  nature: { label: '자연·바깥놀이', calc(it) {
+    const c = consultOf(it); const v = c?.nature ? NATURE_V[c.nature] : undefined;
+    return v === undefined ? { value: null, text: '빈도 미확인', q: '바깥놀이·숲 활동은 일주일에 몇 번, 한 번에 얼마나 하나요?' } : { value: v, text: `${c.nature}${cTag(c)}` };
+  } },
+  support: { label: '설문에서 고른 지원', calc(it) {
+    const k = state.evalKid ?? curKid(); const rec = k?.records?.at(-1); const picks = rec?.picks ?? [];
+    if (!picks.length) return { value: null, text: '설문에서 고른 지원 없음', q: null };
+    const c = consultOf(it); const ans = picks.map((p) => c?.supports?.[p]).filter((x) => x in SUPPORT_V);
+    if (!ans.length) return { value: null, text: `${picks.map((p) => SUPPORTS[p].name).join(', ')} — 기관 확인 전`, q: SUPPORTS[picks[0]].q };
+    const v = ans.reduce((a, x) => a + SUPPORT_V[x], 0) / ans.length;
+    return { value: Math.round(v * 100) / 100, text: `${picks.map((p) => `${SUPPORTS[p].name} ${c.supports[p] ?? '미확인'}`).join(', ')}${cTag(c)}` };
   } },
 };
 const tone = (v) => (v === null ? 'u' : v >= 0.7 ? 'g' : v >= 0.4 ? 'm' : 'b');
@@ -960,6 +1130,7 @@ function whoList() {
   return ks;
 }
 function evalFor(it, kid) {
+  state.evalKid = kid.records ? kid : null;
   return withBirth(kid.birth, () => {
     const must = state.must.map((k) => ({ k, value: mustVal(it, k) }));
     const crit = state.reco.crit.filter((c) => c.on).map((c) => ({ key: c.key, weight: WEIGHTS[c.w], w: c.w, ...CRIT[c.key].calc(it) }));
@@ -980,6 +1151,7 @@ function recoCard(row, rank) {
   const sc = row.score;
   return `<div class="rcard">
     <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline"><div>${rank ? `<span class="rk">${rank}</span>` : ''}<strong>${esc(it.name)}</strong></div><div class="tags">${typeTag(it)}<span class="tag">${esc(it.area)}</span></div></div>
+    ${consultOf(it)?.status ? `<div class="small"><span class="state warn">내 진행 상태: ${esc(consultOf(it).status)}</span></div>` : ''}
     ${state.reco.mode === 'composite' ? `<div class="score">비교 지표 <b>${sc.index === null ? '–' : Math.round(sc.index)}</b> · 정보 확인 정도 <b>${Math.round(sc.coverage * 100)}%</b>${multi ? ' <span class="small muted">(아이들 중 낮은 값)</span>' : ''}</div>` : ''}
     ${row.evals.map((ev) => `<div class="small">${multi ? `<b>${esc(ev.kid.nick)}</b> · ` : ''}${esc(ev.cc.text)}${multi && state.reco.mode === 'composite' ? ` · 지표 ${ev.score.index === null ? '–' : Math.round(ev.score.index)}` : ''}</div>`).join('')}
     <div class="reasons">${e.crit.filter((c) => !(multi && c.key === 'size')).map((c) => `<span class="cv ${tone(c.value)}">${esc(CRIT[c.key].label)}: ${esc(c.text)}</span>`).join('')}${multi ? row.evals.map((ev) => ev.crit.filter((c) => c.key === 'size').map((c) => `<span class="cv ${tone(c.value)}">${esc(ev.kid.nick)} 반 규모: ${esc(c.text)}</span>`).join('')).join('') : ''}</div>
@@ -1055,8 +1227,8 @@ function drawReco() {
 
 function showTab(t) {
   state.tab = t; store.set('tab', t);
-  for (const k of ['map', 'pick', 'ask', 'kid', 'reco']) { $('#tab-' + k).setAttribute('aria-selected', String(k === t)); $('#view-' + k).hidden = k !== t; }
-  if (t === 'pick') drawPick(); if (t === 'ask') drawAsk(); if (t === 'kid') drawKid(); if (t === 'reco') drawReco();
+  for (const k of ['map', 'pick', 'ask', 'kid', 'reco', 'cal']) { $('#tab-' + k).setAttribute('aria-selected', String(k === t)); $('#view-' + k).hidden = k !== t; }
+  if (t === 'pick') drawPick(); if (t === 'ask') drawAsk(); if (t === 'kid') drawKid(); if (t === 'reco') drawReco(); if (t === 'cal') drawCal();
 }
 
 function render() {
@@ -1085,6 +1257,15 @@ function select(id, scroll) {
 document.addEventListener('click', (e) => {
   const t = e.target.closest('button'); if (!t) return;
   if (t.dataset.tab) { showTab(t.dataset.tab); return; }
+  if (t.id === 'calMine') { state.calMine = !state.calMine; store.set('calMine', state.calMine); drawCal(); return; }
+  if (t.id === 'ne-add') { const date = $('#ne-date').value; const what = $('#ne-what').value.trim(); if (!date || !what) { $('#ne-what').placeholder = '날짜와 내용을 넣어 주세요'; return; } const id = $('#ne-inst').value; const it = DATA.institutions.find((x) => x.id === id); state.myEvents.push({ uid: uid(), date, time: $('#ne-time').value || null, type: $('#ne-type').value, what, who: it?.name ?? '기타·공통', id: id || null, src: '', note: '' }); store.set('myEvents', state.myEvents); drawCal(); return; }
+  if (t.dataset.delev) { state.myEvents = state.myEvents.filter((e) => e.uid !== t.dataset.delev); store.set('myEvents', state.myEvents); drawCal(); return; }
+  if (t.id === 'ar-find') { findInArchive(); return; }
+  if (t.id === 'ar-save') { const d = state.arDraft; if (!d) return; const id = $('#ar-inst').value; const it = DATA.institutions.find((x) => x.id === id); const who = it?.name ?? '기타·공통'; const src = $('#ar-src').value.trim();
+    document.querySelectorAll('[data-ard]').forEach((cb) => { if (!cb.checked) return; const x = d.ds[+cb.dataset.ard]; state.myEvents.push({ uid: uid(), date: x.date, time: x.time, type: x.type, what: x.line.slice(0, 60), who, id: id || null, src: `붙여 넣은 공지${src ? ' · ' + src : ''}`, note: '' }); });
+    state.archive.push({ uid: uid(), who, src, text: d.text.slice(0, 5000), saved: today(), yearWarn: d.warn }); state.arDraft = null;
+    store.set('myEvents', state.myEvents); store.set('archive', state.archive); drawCal(); return; }
+  if (t.dataset.delar) { state.archive = state.archive.filter((a) => a.uid !== t.dataset.delar); store.set('archive', state.archive); drawCal(); return; }
   if (t.dataset.who) { state.reco.who = t.dataset.who; saveReco(); drawReco(); return; }
   if (t.dataset.rmode) { state.reco.mode = t.dataset.rmode; saveReco(); drawReco(); return; }
   if (t.dataset.cup || t.dataset.cdown) { const c = state.reco.crit; const i = +(t.dataset.cup ?? t.dataset.cdown); const j = t.dataset.cup ? i - 1 : i + 1; if (j >= 0 && j < c.length) [c[i], c[j]] = [c[j], c[i]]; saveReco(); drawReco(); return; }
@@ -1134,6 +1315,8 @@ document.addEventListener('change', (e) => {
     saveReco(); drawReco();
   }
   else if (el.dataset.fam) { const k = el.dataset.fam; state.fam = el.checked ? [...state.fam, k] : state.fam.filter((x) => x !== k); store.set('fam', state.fam); drawPick(); }
+  else if (el.dataset.cs) { const id = state.askId; const c = (state.consult[id] ??= {}); const v = el.value; if (v === '') delete c[el.dataset.cs]; else c[el.dataset.cs] = v; if (!c.date && v) c.date = today(); store.set('consult', state.consult); if (el.dataset.cs !== 'date') { const dEl = document.querySelector('[data-cs="date"]'); if (dEl && !dEl.value) dEl.value = c.date; } }
+  else if (el.dataset.cssup) { const id = state.askId; const c = (state.consult[id] ??= {}); (c.supports ??= {}); if (el.value) c.supports[el.dataset.cssup] = el.value; else delete c.supports[el.dataset.cssup]; if (!c.date) c.date = today(); store.set('consult', state.consult); }
   else if (el.dataset.kq) { const r = curRec(); r.answers[el.dataset.kq] = el.value; saveKids(); const p = document.getElementById('kprog'); if (p) p.textContent = `${Object.keys(r.answers).length}/24문항 답함 · 바로 저장됩니다`; }
   else if (el.dataset.pick) { const r = curRec(); const k = el.dataset.pick; r.picks = el.checked ? [...(r.picks ?? []), k] : (r.picks ?? []).filter((x) => x !== k); saveKids(); }
   else if (el.id === 'askSel') { state.askId = el.value; store.set('askId', state.askId); drawAsk(); }
