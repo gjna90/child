@@ -127,8 +127,10 @@ async function fetchKinderBulk(sidoCode = '44', sidoName = '충청남도') {
 async function fetchDaycare(env) {
   // 어린이집 API 주소는 명세서에서 확인한 값을 .env 에 직접 넣는다(이 코드가 주소를 지어내지 않도록).
   // 예: CHILDCARE_API_URL=https://.../request?key={KEY}&arcode=44200
-  const tpl = env.CHILDCARE_API_URL;
-  if (!tpl || !env.CHILDCARE_API_KEY) return { skipped: 'CHILDCARE_API_URL 또는 CHILDCARE_API_KEY 없음' };
+  // 기본값: 어린이집정보공개포털 '어린이집별 기본정보 조회'(cpmsapi030), 아산시(44200).
+  // 2026-10-27 확인: 이 주소는 이 환경에서 응답함(잘못된 키 → INFO-100). https 주소는 해외 접속 차단이라 http 사용.
+  const tpl = env.CHILDCARE_API_URL ?? 'http://api.childcare.go.kr/mediate/rest/cpmsapi030/cpmsapi030/request?key={KEY}&arcode=44200';
+  if (!env.CHILDCARE_API_KEY) return { skipped: 'CHILDCARE_API_KEY 없음 (어린이집정보공개포털 승인 대기)' };
   const url = tpl.replace('{KEY}', encodeURIComponent(env.CHILDCARE_API_KEY));
   try {
     const res = await fetch(url);
@@ -137,6 +139,9 @@ async function fetchDaycare(env) {
       const data = JSON.parse(text);
       return { rows: Array.isArray(data) ? data : data.item ?? data.items ?? data.data ?? [], url: tpl.replace(/key=[^&]*/, 'key=***') };
     }
+    // 오류 응답(<errmsg>)은 0건으로 처리하지 않고 실패로 기록 — 확인일·기존 자료를 바꾸지 않음
+    const err = text.match(/<errmsg>([\s\S]*?)<\/errmsg>/);
+    if (err) return { error: `어린이집 API 오류: ${err[1].trim()} (${(text.match(/<errcode>([^<]*)/) ?? [])[1] ?? ''})` };
     // XML 응답: <item> 안의 단순 태그만 읽는다
     const items = [...text.matchAll(/<item>([\s\S]*?)<\/item>/g)].map((m) =>
       Object.fromEntries([...m[1].matchAll(/<([A-Za-z0-9_]+)>([\s\S]*?)<\/\1>/g)].map((x) => [x[1], x[2].replace(/<!\[CDATA\[|\]\]>/g, '').trim()])));
