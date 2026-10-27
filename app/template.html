@@ -146,6 +146,27 @@ th { color: var(--muted); font-weight: 500; white-space: nowrap; }
 .qlist label { display: flex; gap: 8px; align-items: flex-start; cursor: pointer; font-size: .9rem; }
 .qlist input { margin-top: 4px; accent-color: var(--accent); }
 textarea { font: inherit; width: 100%; min-height: 70px; border: 1px solid var(--line); border-radius: 8px; padding: 8px; background: var(--surface); color: var(--ink); }
+.survey { display: grid; gap: 10px; }
+.qitem { border: 1px solid var(--line); border-radius: var(--r); padding: 10px 12px; display: grid; gap: 6px; }
+.qitem .qt { font-size: .93rem; }
+.qitem .qn { color: var(--muted); font-variant-numeric: tabular-nums; margin-right: 4px; }
+.opts { display: flex; flex-wrap: wrap; gap: 4px; }
+.opts label { font-size: .82rem; border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; cursor: pointer; display: inline-flex; gap: 4px; align-items: center; }
+.opts input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.opts label:has(input:checked) { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.opts label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.qitem input[type="text"], .lifeq input, .lifeq textarea, .kidform input { font: inherit; font-size: .88rem; width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; background: var(--surface); color: var(--ink); }
+.lifeq { display: grid; gap: 4px; }
+.lifeq label { font-size: .86rem; font-weight: 500; }
+.kidlist { display: grid; gap: 6px; }
+.kidbtn { font: inherit; text-align: left; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 8px; padding: 8px 10px; cursor: pointer; }
+.kidbtn[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+.kidform { display: grid; gap: 6px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; align-items: end; }
+.res { display: grid; gap: 12px; }
+.res section { border-top: 1px solid var(--line); padding-top: 10px; display: grid; gap: 4px; }
+.res ul { margin: 0; padding-left: 1.1rem; }
+.diff { font-size: .82rem; color: var(--warn-ink); }
+.progress { font-size: .82rem; color: var(--muted); }
 footer { margin-top: 24px; font-size: .8rem; color: var(--muted); display: grid; gap: 4px; }
 svg text { font-family: var(--font-body); }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
@@ -170,10 +191,12 @@ svg text { font-family: var(--font-body); }
     <button class="tab" role="tab" id="tab-map" data-tab="map" type="button">지도·목록</button>
     <button class="tab" role="tab" id="tab-pick" data-tab="pick" type="button">지원할 3곳 고르기</button>
     <button class="tab" role="tab" id="tab-ask" data-tab="ask" type="button">전화·상담 질문지</button>
+    <button class="tab" role="tab" id="tab-kid" data-tab="kid" type="button">우리 아이 성향·생활 알아보기</button>
   </nav>
 
   <div id="view-pick" hidden></div>
   <div id="view-ask" hidden></div>
+  <div id="view-kid" hidden></div>
 
   <div class="layout" id="view-map">
     <div class="stack">
@@ -657,6 +680,7 @@ function questions(it) {
     add('bus', '차량 운행 지역과 탑승 시각은요?', '차량 미확인');
     add('vacation', '방학과 쉬는 날은 언제인가요?', '방학 미확인');
   }
+  for (const x of kidQuestions()) add(x.key, x.text, x.why);
   return q;
 }
 function drawAsk() {
@@ -685,11 +709,179 @@ function drawAsk() {
   $('#askSel').value = it.id;
 }
 
+
+// ── 3단계: 우리 아이 성향·생활 알아보기 ───────────────────
+// 자체 설문 초안. 표준화 검사·진단이 아님. 답은 이 기기 브라우저에만 저장.
+const SCALE = ['거의 없음', '가끔', '자주', '대부분', '관찰 기회 없음'];
+const HIGH = new Set(['자주', '대부분']);
+const LOW = new Set(['거의 없음', '가끔']);
+const SUPPORTS = {
+  gradual_adapt: { name: '적응 지원', q: '처음 적응 기간에 단계적 등원이나 보호자 동반, 사전 방문이 가능한가요?' },
+  transition_notice: { name: '활동 전환 안내', q: '활동을 바꿀 때 미리 알려 주시나요? 하던 놀이를 마무리할 시간을 주시나요?' },
+  movement: { name: '움직임 기회', q: '하루에 바깥놀이·신체활동 시간은 얼마나 되고, 앉아서 하는 활동 중 잠깐 움직이거나 쉴 수 있나요?' },
+  choice_play: { name: '자유놀이·선택', q: '자유놀이 시간은 하루에 얼마나 되고, 아이가 놀이를 고르고 오래 이어 갈 수 있나요?' },
+  quiet_space: { name: '조용한 휴식 공간', q: '시끄럽거나 지칠 때 쉴 수 있는 조용한 공간이 있나요? 참여 방식을 조정해 주시나요?' },
+  sensory: { name: '재료·촉감 배려', q: '싫어하는 촉감·재료 활동은 다른 활동을 고를 수 있나요?' },
+  small_group: { name: '친구 사귀기 도움', q: '소그룹 활동이 있나요? 처음에 친구와 이어지도록 도와주시나요?' },
+  express_help: { name: '도움 요청 살피기', q: '아이가 불편을 말로 잘 표현하지 못할 때 선생님이 어떻게 알아채고 도와주시나요?' },
+  conflict: { name: '갈등·감정 지원', q: '친구와 의견이 부딪치면 어떻게 중재하고, 감정 표현을 어떻게 도와주시나요?' },
+  retry: { name: '재도전 지원', q: '뜻대로 안 돼서 그만두려 할 때 어떻게 격려하시나요? 결과보다 과정을 말해 주시나요?' },
+  presentation: { name: '발표 부담 조정', q: '발표·공연처럼 여러 사람 앞에서 하는 활동은 참여 방식을 조정해 줄 수 있나요?' },
+  hands_on: { name: '직접 해보는 활동', q: '설명 위주보다 직접 보고 해보는 활동이 많은 편인가요?' },
+};
+// type: strength(강점·선호) comfort(편안한 조건) help(도움이 필요한 상황). low: 낮게 답했을 때의 해석(있는 문항만)
+const ITEMS = [
+  [1, '새로운 장소에서 먼저 지켜본 뒤 참여한다.', 'comfort', '새 장소에서는 먼저 지켜볼 시간이 있으면 편안해한다', 'gradual_adapt'],
+  [2, '낯선 어른과 있을 때 보호자 가까이에 머무르려 한다.', 'help', '낯선 어른과 있을 때 보호자 곁을 찾는다 — 익숙해질 시간이 필요할 수 있다', 'gradual_adapt'],
+  [3, '보호자와 헤어진 뒤 익숙한 어른의 도움을 받아 놀이한다.', 'strength', '헤어진 뒤 익숙한 어른의 도움으로 놀이를 이어 간다', 'gradual_adapt'],
+  [4, '새로운 활동을 미리 설명하면 참여하기 수월해진다.', 'comfort', '새 활동을 미리 설명해 주면 참여가 수월하다', 'transition_notice'],
+  [5, '달리기·오르기 등 움직이는 놀이를 스스로 찾는다.', 'strength', '몸을 움직이는 놀이를 스스로 찾는다', 'movement'],
+  [6, '앉아서 하는 활동 중 움직이거나 쉬고 싶어 한다.', 'help', '앉아서 하는 활동 중에 움직이거나 쉴 기회가 필요하다', 'movement'],
+  [7, '좋아하는 놀이를 오래 이어가려 한다.', 'strength', '좋아하는 놀이에 오래 몰입한다', 'choice_play'],
+  [8, '여러 활동 중 자신이 할 활동을 고르려 한다.', 'strength', '할 활동을 스스로 고르려 한다', 'choice_play'],
+  [9, '놀이가 갑자기 끝나면 불편함을 표현한다.', 'help', '놀이가 갑자기 끝나면 힘들어한다', 'transition_notice'],
+  [10, '전환을 미리 알려주면 다음 활동으로 이동하기 수월하다.', 'comfort', '다음 활동을 미리 알려 주면 옮겨 가기 수월하다', 'transition_notice'],
+  [11, '소리나 사람이 많은 공간에서 물러나거나 쉬려 한다.', 'help', '소리나 사람이 많은 곳에서는 물러나 쉬려 한다', 'quiet_space'],
+  [12, '특정 촉감이나 재료의 활동을 피한다.', 'help', '특정 촉감이나 재료를 피한다', 'sensory'],
+  [13, '단체활동 후 조용한 곳에서 쉬려 한다.', 'comfort', '단체활동 뒤 조용히 쉬면 회복한다', 'quiet_space'],
+  [14, '휴식 후 다시 활동에 참여한다.', 'strength', '쉬고 나면 다시 활동에 참여한다', 'quiet_space'],
+  [15, '처음 만난 또래보다 익숙한 한두 명과 먼저 놀이한다.', 'comfort', '익숙한 한두 명과 먼저 놀며 시작한다', 'small_group'],
+  [16, '놀이에 참여할 때 어른의 소개나 도움을 활용한다.', 'comfort', '어른의 소개·도움이 있으면 놀이에 들어가기 쉽다', 'small_group'],
+  [17, '불편하거나 도움이 필요할 때 어른에게 표현한다.', 'strength', '불편하거나 도움이 필요할 때 어른에게 말한다', 'express_help', '도움이 필요할 때 표현하는 것을 어른이 먼저 살펴 줄 필요가 있을 수 있다'],
+  [18, '친구와 의견이 다를 때 어른의 중재가 필요하다.', 'help', '친구와 의견이 다를 때 어른의 중재가 도움이 된다', 'conflict'],
+  [19, '활동이 뜻대로 되지 않으면 그만하려 한다.', 'help', '뜻대로 안 되면 그만두려 한다', 'retry'],
+  [20, '과정을 격려하거나 도와주면 다시 시도한다.', 'comfort', '과정을 격려하거나 도와주면 다시 시도한다', 'retry'],
+  [21, '여러 사람 앞에서 말하거나 보여주는 활동을 부담스러워한다.', 'help', '여러 사람 앞에서 말하거나 보여 주는 활동을 부담스러워한다', 'presentation'],
+  [22, '자신의 방식으로 만들거나 탐색하는 활동을 즐긴다.', 'strength', '자기 방식으로 만들고 탐색하는 것을 즐긴다', 'choice_play'],
+  [23, '긴 설명보다 직접 보고 해볼 때 참여하기 수월하다.', 'comfort', '긴 설명보다 직접 보고 해볼 때 수월하다', 'hands_on'],
+  [24, '관심 있는 주제로 질문하거나 놀이를 확장한다.', 'strength', '관심 있는 주제로 질문하고 놀이를 넓혀 간다', 'choice_play'],
+].map(([n, text, type, hi, sup, lo]) => ({ n, text, type, hi, sup, lo }));
+const LIFE = [
+  ['rhythm', '기상·취침·등하원 시간 (평소 생활 패턴)', '예) 7시 기상, 9시 취침, 9시 등원'],
+  ['nap', '낮잠 (필요 여부·횟수·시간)', '예) 매일 1시간, 안 자면 저녁에 힘들어함'],
+  ['meal', '식사 속도와 필요한 도움', '예) 천천히 먹음, 숟가락은 혼자'],
+  ['toilet', '배변·옷 갈아입기에 필요한 도움', '예) 대변 후 뒤처리 도움 필요'],
+  ['newtoilet', '낯선 화장실을 쓸 때 필요한 도움', '예) 처음엔 같이 가 줘야 함'],
+  ['commute', '차·버스로 이동할 때 실제 반응', '예) 20분 넘으면 멀미'],
+  ['play3', '좋아하는 놀이 세 가지', '예) 블록, 역할놀이, 그림'],
+  ['nowgood', '지금 다니는 곳에서 잘 맞는 점', ''],
+  ['nowhard', '지금 다니는 곳에서 힘든 점', ''],
+  ['health', '필요한 의사소통·건강 지원 (선택)', '예) 견과류 알레르기'],
+  ['parentWant', '부모가 원하는 교육 (부모의 바람)', '예) 바깥놀이가 많은 곳'],
+  ['childLikes', '아이가 실제로 보이는 선호 (관찰)', '예) 실내에서 만들기를 오래 함'],
+];
+const uid = () => Math.random().toString(36).slice(2, 10);
+const today = () => new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Seoul' }).format(new Date());
+state.kids = store.get('kids', []);
+state.kidSel = store.get('kidSel', null);
+state.recSel = store.get('recSel', null);
+state.kidMode = store.get('kidMode', 'form');
+const saveKids = () => store.set('kids', state.kids);
+const curKid = () => state.kids.find((k) => k.id === state.kidSel) ?? null;
+const curRec = () => curKid()?.records.find((r) => r.id === state.recSel) ?? null;
+
+function analyze(rec) {
+  const out = { strength: [], comfort: [], help: [], unseen: [], sup: {} };
+  for (const it of ITEMS) {
+    const a = rec.answers[it.n];
+    if (!a) continue;
+    if (a === '관찰 기회 없음') { out.unseen.push(it); continue; }
+    const note = rec.notes?.[it.n] ? ` (예: ${rec.notes[it.n]})` : '';
+    if (HIGH.has(a)) {
+      out[it.type].push(it.hi + note);
+      if (it.type !== 'strength' || it.sup === 'quiet_space') (out.sup[it.sup] ??= []).push(it.n);
+    } else if (it.lo && LOW.has(a)) {
+      out.help.push(it.lo + note); (out.sup[it.sup] ??= []).push(it.n);
+    }
+  }
+  return out;
+}
+function lifeQuestions(life) {
+  const q = [];
+  if (life?.nap) q.push(['nap', '낮잠 시간은 언제·얼마나이고, 낮잠을 안 자는 아이는 그동안 무엇을 하나요?']);
+  if (life?.meal) q.push(['meal', '식사할 때 천천히 먹거나 도움이 필요한 아이는 어떻게 도와주시나요? 편식은 어떻게 지도하나요?']);
+  if (life?.toilet || life?.newtoilet) q.push(['toilet', '배변·옷 갈아입기 도움은 어디까지 해 주시나요? 처음에 화장실 적응은 어떻게 돕나요?']);
+  if (life?.commute) q.push(['commute', '버스 탑승 시간이 가장 긴 아이는 몇 분 타나요? 우리 집 쪽은 몇 분쯤인가요?']);
+  if (life?.health) q.push(['health', `이런 지원이 가능한가요: ${life.health}`]);
+  return q;
+}
+function kidQuestions() {
+  const k = curKid(); if (!k) return [];
+  const rec = [...k.records].filter((r) => r.by === '부모').sort((a, b) => b.date.localeCompare(a.date))[0] ?? k.records[k.records.length - 1];
+  if (!rec) return [];
+  const an = analyze(rec);
+  const picks = rec.picks ?? [];
+  const keys = Object.keys(an.sup).sort((a, b) => (picks.includes(b) ? 1 : 0) - (picks.includes(a) ? 1 : 0));
+  const out = keys.map((s) => ({ key: 'kid_' + s, text: SUPPORTS[s].q, why: `${k.nick} 설문 — ${SUPPORTS[s].name}${picks.includes(s) ? ' ★부모가 중요하다고 고름' : ''}` }));
+  for (const [key, text] of lifeQuestions(rec.life)) out.push({ key: 'kidlife_' + key, text, why: `${k.nick} 생활 질문` });
+  return out;
+}
+
+function drawKid() {
+  const k = curKid();
+  const left = `<div class="stack">
+    <div class="panel" style="display:grid;gap:10px"><h2>아이</h2>
+      <p class="small muted" style="margin:0">별명과 출생연도만 있으면 됩니다. 아이마다 따로 답하고 날짜별로 다시 작성할 수 있습니다. 답은 <b>이 기기 브라우저에만</b> 저장되고 어디로도 보내지 않습니다.</p>
+      <div class="kidlist">${state.kids.map((x) => `<button class="kidbtn" type="button" data-kid="${x.id}" aria-pressed="${x.id === state.kidSel}"><b>${esc(x.nick)}</b> <span class="small muted">${x.birth}년생 · 기록 ${x.records.length}개</span></button>`).join('') || '<p class="small muted" style="margin:0">아직 없음 — 아래에서 추가하세요</p>'}</div>
+      <form class="kidform" id="kidAdd"><div><label for="kidNick" class="small">별명</label><input id="kidNick" placeholder="예) 첫째" maxlength="12" required></div>
+        <div><label for="kidBirth" class="small">출생연도</label><input id="kidBirth" type="number" min="${SY - 7}" max="${SY - 1}" value="${state.birth}" required></div>
+        <button class="btn" type="submit">추가</button></form>
+    </div>
+    ${k ? `<div class="panel" style="display:grid;gap:8px"><h2>${esc(k.nick)}의 기록</h2>
+      <div class="kidlist">${[...k.records].sort((a, b) => b.date.localeCompare(a.date)).map((r) => `<button class="kidbtn" type="button" data-rec="${r.id}" aria-pressed="${r.id === state.recSel}">${esc(r.date)} · ${esc(r.by)} 관찰 <span class="small muted">${Object.keys(r.answers).length}/24문항</span></button>`).join('') || '<p class="small muted" style="margin:0">기록 없음</p>'}</div>
+      <div class="fgroup"><button class="btn" type="button" id="recNew" data-by="부모">새로 작성 (부모)</button><button class="btn" type="button" id="recNewT" data-by="교사">교사 관찰 추가</button>
+        <button class="btn" type="button" id="kidUse">이 아이 출생연도로 기관 보기</button></div>
+      ${state.recSel ? '<button class="btn" type="button" id="recDel">이 기록 지우기</button>' : ''}
+      <button class="btn" type="button" id="kidDel">${esc(k.nick)} 지우기 (기록 모두)</button>
+      <div id="delAsk" class="small" hidden></div>
+    </div>` : ''}
+  </div>`;
+  let right = '<div class="panel"><p>왼쪽에서 아이를 추가하거나 고르세요. 설문을 하지 않아도 기관 검색·비교는 그대로 쓸 수 있습니다.</p></div>';
+  const rec = curRec();
+  if (k && !rec) right = `<div class="panel"><p>"새로 작성"을 누르면 오늘 날짜로 설문을 시작합니다. 최근 2~4주 동안 본 모습을 기준으로 답하세요.</p></div>`;
+  if (k && rec) right = `<div class="panel" style="display:grid;gap:12px">
+    <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center"><h2>${esc(k.nick)} · ${esc(rec.date)} · ${esc(rec.by)} 관찰</h2>
+      <div class="fgroup"><button class="chip" type="button" data-kmode="form" aria-pressed="${state.kidMode === 'form'}">답하기</button><button class="chip" type="button" data-kmode="res" aria-pressed="${state.kidMode === 'res'}">결과 보기</button></div></div>
+    <p class="small muted" style="margin:0">부모 관찰로 만든 자체 설문 초안입니다. 표준화된 심리·발달 검사나 진단이 아니며, 기관을 고를 때 무엇을 확인할지 정리하는 참고 도구입니다. 아이를 유형으로 나누거나 점수를 매기지 않습니다.</p>
+    ${state.kidMode === 'form' ? kidForm(rec) : kidResult(k, rec)}</div>`;
+  $('#view-kid').innerHTML = `<div class="cols2">${left}${right}</div>`;
+}
+function kidForm(rec) {
+  const n = Object.keys(rec.answers).length;
+  return `<div class="survey"><div class="progress" id="kprog">${n}/24문항 답함 · 바로 저장됩니다</div>
+    ${ITEMS.map((it) => `<div class="qitem"><div class="qt"><span class="qn">${it.n}.</span>${esc(it.text)}</div>
+      <div class="opts" role="radiogroup" aria-label="${it.n}번">${SCALE.map((o) => `<label><input type="radio" name="kq${it.n}" value="${o}" data-kq="${it.n}" ${rec.answers[it.n] === o ? 'checked' : ''}>${o}</label>`).join('')}</div>
+      <input type="text" data-kn="${it.n}" placeholder="관찰한 상황·실제 예 (선택)" value="${esc(rec.notes?.[it.n] ?? '')}" aria-label="${it.n}번 예시"></div>`).join('')}
+    <h3>생활 질문</h3>
+    ${LIFE.map(([key, label, ph]) => `<div class="lifeq"><label for="life-${key}">${esc(label)}</label><input id="life-${key}" data-life="${key}" placeholder="${esc(ph)}" value="${esc(rec.life?.[key] ?? '')}"></div>`).join('')}
+    <button class="btn primary" type="button" data-kmode="res">결과 보기</button></div>`;
+}
+function kidResult(k, rec) {
+  const an = analyze(rec);
+  const li = (arr) => (arr.length ? `<ul>${arr.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : '<p class="small muted" style="margin:0">해당 답 없음</p>');
+  const sups = Object.keys(an.sup);
+  const picks = rec.picks ?? [];
+  // 같은 아이의 다른 관찰자(부모↔교사) 최신 기록과 비교
+  const other = [...k.records].filter((r) => r.by !== rec.by).sort((a, b) => b.date.localeCompare(a.date))[0];
+  const diffs = other ? ITEMS.filter((it) => { const a = rec.answers[it.n], b = other.answers[it.n]; return a && b && a !== '관찰 기회 없음' && b !== '관찰 기회 없음' && HIGH.has(a) !== HIGH.has(b); }) : [];
+  const lq = lifeQuestions(rec.life);
+  return `<div class="res">
+    <section><h3>관찰된 강점과 선호</h3>${li(an.strength)}${rec.life?.play3 ? `<div class="small">좋아하는 놀이: ${esc(rec.life.play3)}</div>` : ''}</section>
+    <section><h3>편안하게 참여하는 조건</h3>${li(an.comfort)}</section>
+    <section><h3>도움이 필요한 상황</h3>${li(an.help)}</section>
+    <section><h3>기관에서 확인할 지원 <span class="small muted">— 중요한 것에 체크하면 질문지 맨 위에 ★로 나옵니다</span></h3>
+      ${sups.length ? `<div class="checks">${sups.map((s) => `<label><input type="checkbox" data-pick="${s}" ${picks.includes(s) ? 'checked' : ''}> <span><b>${esc(SUPPORTS[s].name)}</b> <span class="small muted">(${an.sup[s].map((n) => n + '번').join(', ')} 답에서 나온 잠정 제안)</span></span></label>`).join('')}</div>` : '<p class="small muted" style="margin:0">아직 제안할 지원이 없습니다</p>'}</section>
+    <section><h3>상담 질문</h3>${sups.length || lq.length ? `<ul>${sups.map((s) => `<li>${esc(SUPPORTS[s].q)}</li>`).join('')}${lq.map(([, t]) => `<li>${esc(t)}</li>`).join('')}</ul><div class="small muted">이 질문은 '전화·상담 질문지' 탭의 모든 기관 질문 목록에도 들어갑니다. 기관의 지원 정보는 아직 대부분 미확인이라, 맞는 곳이라고 추측하지 않고 질문으로 확인합니다.</div>` : '<p class="small muted" style="margin:0">아직 없음</p>'}</section>
+    <section><h3>아직 관찰하지 못한 부분</h3>${an.unseen.length ? `<ul>${an.unseen.map((it) => `<li>${esc(it.text)}</li>`).join('')}</ul>` : ''}${24 - Object.keys(rec.answers).length ? `<div class="small muted">답하지 않은 문항 ${24 - Object.keys(rec.answers).length}개</div>` : ''}${!an.unseen.length && Object.keys(rec.answers).length === 24 ? '<p class="small muted" style="margin:0">없음</p>' : ''}</section>
+    ${rec.life?.parentWant || rec.life?.childLikes ? `<section><h3>부모의 바람과 아이의 실제 선호</h3><div>부모가 원하는 교육: ${esc(rec.life.parentWant || U)}</div><div>아이가 보이는 선호: ${esc(rec.life.childLikes || U)}</div><div class="small muted">둘을 따로 두고 봅니다. 성향 하나로 특정 교육 방식(예: 숲·몬테소리)을 정답으로 정하지 않습니다.</div></section>` : ''}
+    ${other ? `<section><h3>${esc(other.by)} 관찰(${esc(other.date)})과 다른 부분</h3>${diffs.length ? `<ul>${diffs.map((it) => `<li class="diff">${it.n}. ${esc(it.text)} — ${esc(rec.by)}: ${esc(rec.answers[it.n])} / ${esc(other.by)}: ${esc(other.answers[it.n])}</li>`).join('')}</ul><div class="small muted">집과 기관처럼 환경이 다르면 다르게 보일 수 있습니다. 어느 쪽이 맞다고 정하지 않습니다.</div>` : '<p class="small muted" style="margin:0">크게 다른 답 없음</p>'}</section>` : ''}
+  </div>`;
+}
+
 function showTab(t) {
   state.tab = t; store.set('tab', t);
-  for (const k of ['map', 'pick', 'ask']) { $('#tab-' + k).setAttribute('aria-selected', String(k === t)); }
-  $('#view-map').hidden = t !== 'map'; $('#view-pick').hidden = t !== 'pick'; $('#view-ask').hidden = t !== 'ask';
-  if (t === 'pick') drawPick(); if (t === 'ask') drawAsk();
+  for (const k of ['map', 'pick', 'ask', 'kid']) { $('#tab-' + k).setAttribute('aria-selected', String(k === t)); $('#view-' + k).hidden = k !== t; }
+  if (t === 'pick') drawPick(); if (t === 'ask') drawAsk(); if (t === 'kid') drawKid();
 }
 
 function render() {
@@ -718,6 +910,15 @@ function select(id, scroll) {
 document.addEventListener('click', (e) => {
   const t = e.target.closest('button'); if (!t) return;
   if (t.dataset.tab) { showTab(t.dataset.tab); return; }
+  if (t.dataset.kid) { state.kidSel = t.dataset.kid; state.recSel = curKid()?.records.at(-1)?.id ?? null; store.set('kidSel', state.kidSel); store.set('recSel', state.recSel); drawKid(); return; }
+  if (t.dataset.rec) { state.recSel = t.dataset.rec; store.set('recSel', state.recSel); drawKid(); return; }
+  if (t.dataset.kmode) { state.kidMode = t.dataset.kmode; store.set('kidMode', state.kidMode); drawKid(); window.scrollTo({ top: 0 }); return; }
+  if (t.id === 'recNew' || t.id === 'recNewT') { const k = curKid(); const prev = [...k.records].filter((r) => r.by === t.dataset.by).at(-1); const r = { id: uid(), date: today(), by: t.dataset.by, answers: {}, notes: {}, life: prev ? { ...prev.life } : {}, picks: prev ? [...(prev.picks ?? [])] : [] }; k.records.push(r); state.recSel = r.id; state.kidMode = 'form'; saveKids(); store.set('recSel', r.id); drawKid(); return; }
+  if (t.id === 'kidUse') { state.birth = curKid().birth; store.set('birth', state.birth); $('#birth').value = state.birth; render(); return; }
+  if (t.id === 'recDel' || t.id === 'kidDel') { const box = $('#delAsk'); box.hidden = false; box.innerHTML = `${t.id === 'kidDel' ? '아이와 모든 기록을' : '이 기록을'} 지울까요? 되돌릴 수 없습니다. <button class="btn" type="button" id="${t.id}Yes">지우기</button> <button class="btn" type="button" id="delNo">취소</button>`; return; }
+  if (t.id === 'delNo') { $('#delAsk').hidden = true; return; }
+  if (t.id === 'recDelYes') { const k = curKid(); k.records = k.records.filter((r) => r.id !== state.recSel); state.recSel = k.records.at(-1)?.id ?? null; saveKids(); store.set('recSel', state.recSel); drawKid(); return; }
+  if (t.id === 'kidDelYes') { state.kids = state.kids.filter((x) => x.id !== state.kidSel); state.kidSel = state.kids[0]?.id ?? null; state.recSel = null; saveKids(); store.set('kidSel', state.kidSel); drawKid(); return; }
   if (t.dataset.plan) { const id = t.dataset.plan; const i = state.plan.indexOf(id); if (i >= 0) state.plan.splice(i, 1); else if (state.plan.length < 3) state.plan.push(id); store.set('plan', state.plan); drawPick(); return; }
   if (t.id === 'planUp') { const p = state.plan; if (p.length > 1) [p[0], p[1]] = [p[1], p[0]]; store.set('plan', p); drawPick(); return; }
   if (t.id === 'planClear') { state.plan = []; store.set('plan', []); drawPick(); return; }
@@ -745,8 +946,22 @@ document.addEventListener('change', (e) => {
   if (el.id === 'radius') render();
   else if (el.dataset.must) { const k = el.dataset.must; state.must = el.checked ? [...state.must, k] : state.must.filter((x) => x !== k); store.set('must', state.must); drawPick(); }
   else if (el.dataset.fam) { const k = el.dataset.fam; state.fam = el.checked ? [...state.fam, k] : state.fam.filter((x) => x !== k); store.set('fam', state.fam); drawPick(); }
+  else if (el.dataset.kq) { const r = curRec(); r.answers[el.dataset.kq] = el.value; saveKids(); const p = document.getElementById('kprog'); if (p) p.textContent = `${Object.keys(r.answers).length}/24문항 답함 · 바로 저장됩니다`; }
+  else if (el.dataset.pick) { const r = curRec(); const k = el.dataset.pick; r.picks = el.checked ? [...(r.picks ?? []), k] : (r.picks ?? []).filter((x) => x !== k); saveKids(); }
   else if (el.id === 'askSel') { state.askId = el.value; store.set('askId', state.askId); drawAsk(); }
   else if (el.dataset.q) { const id = state.askId; const arr = state.qdone[id] ?? []; state.qdone[id] = el.checked ? [...arr, el.dataset.q] : arr.filter((x) => x !== el.dataset.q); store.set('qdone', state.qdone); }
+});
+document.addEventListener('input', (e) => {
+  const el = e.target;
+  if (el.dataset.kn) { const r = curRec(); (r.notes ??= {})[el.dataset.kn] = el.value; saveKids(); }
+  if (el.dataset.life) { const r = curRec(); (r.life ??= {})[el.dataset.life] = el.value; saveKids(); }
+});
+document.addEventListener('submit', (e) => {
+  if (e.target.id !== 'kidAdd') return;
+  e.preventDefault();
+  const nick = $('#kidNick').value.trim(); const birth = +$('#kidBirth').value;
+  if (!nick || !birth) return;
+  const k = { id: uid(), nick, birth, records: [] }; state.kids.push(k); state.kidSel = k.id; state.recSel = null; saveKids(); store.set('kidSel', k.id); drawKid();
 });
 document.addEventListener('input', (e) => { if (e.target.id === 'memo') { state.memo[state.askId] = e.target.value; store.set('memo', state.memo); } });
 $('#overlay').addEventListener('click', (e) => { if (e.target.id === 'overlay') closeSheet(); });
