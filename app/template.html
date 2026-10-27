@@ -200,6 +200,7 @@ svg text { font-family: var(--font-body); }
       <label for="birth">우리 아이 출생연도</label>
       <select id="birth"></select>
       <span id="childLabel" class="small"></span>
+      <span id="saveState" class="small muted" style="width:100%"></span>
     </div>
   </header>
 
@@ -212,6 +213,7 @@ svg text { font-family: var(--font-body); }
     <button class="tab" role="tab" id="tab-kid" data-tab="kid" type="button">우리 아이 성향·생활 알아보기</button>
     <button class="tab" role="tab" id="tab-reco" data-tab="reco" type="button">맞춤 추천</button>
     <button class="tab" role="tab" id="tab-cal" data-tab="cal" type="button">설명회·모집 달력</button>
+    <button class="tab" role="tab" id="tab-me" data-tab="me" type="button">내 기록 관리</button>
   </nav>
 
   <div id="view-pick" hidden></div>
@@ -219,6 +221,7 @@ svg text { font-family: var(--font-body); }
   <div id="view-kid" hidden></div>
   <div id="view-reco" hidden></div>
   <div id="view-cal" hidden></div>
+  <div id="view-me" hidden></div>
 
   <div class="layout" id="view-map">
     <div class="stack">
@@ -285,7 +288,7 @@ const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const store = {
   get(k, d) { try { const v = localStorage.getItem('bt-' + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
-  set(k, v) { try { localStorage.setItem('bt-' + k, JSON.stringify(v)); } catch { /* 저장 안 돼도 화면은 동작 */ } },
+  set(k, v) { try { localStorage.setItem('bt-' + k, JSON.stringify(v)); } catch { /* 저장 안 돼도 화면은 동작 */ } if (window.__cloudMark) window.__cloudMark(k); },
 };
 
 const SY = DATA.schoolYear;
@@ -1225,10 +1228,114 @@ function drawReco() {
     </div></div>`;
 }
 
+
+// ── 6단계: 계정별 저장 (claude.ai 계정의 비공개 공간 data/users/<본인>/state) ──
+// 다른 사람(페이지 주인 포함)은 읽을 수 없음 — 플랫폼 규칙. 쓰기는 사용 중인 기기의 화면에서만, 바뀐 뒤 잠시 멈췄을 때 한 번.
+const PERSIST = { birth: 'birth', origin: 'origin', compare: 'compare', sort: 'sort', filters: 'f', tab: 'tab', must: 'must', fam: 'fam', plan: 'plan', askId: 'askId', qdone: 'qdone', memo: 'memo', kids: 'kids', kidSel: 'kidSel', recSel: 'recSel', kidMode: 'kidMode', reco: 'reco', consult: 'consult', myEvents: 'myEvents', archive: 'archive', calMine: 'calMine' };
+const cloud = { mode: 'local', ref: null, timer: null, saving: false, again: false, lastAt: null, err: null, lastBody: null, applying: false };
+function snapshotData() { const d = {}; for (const [k, f] of Object.entries(PERSIST)) if (state[f] !== undefined) d[k] = state[f]; return d; }
+function hasPersonal(d) { return !!(d.kids?.length || Object.keys(d.consult ?? {}).length || d.plan?.length || d.myEvents?.length || Object.keys(d.memo ?? {}).length || d.archive?.length); }
+function applyData(d) {
+  cloud.applying = true;
+  for (const [k, f] of Object.entries(PERSIST)) if (d[k] !== undefined) { state[f] = d[k]; try { localStorage.setItem('bt-' + k, JSON.stringify(d[k])); } catch {} }
+  if (state.f && !state.f.cond) state.f = { kind: [], est: [], area: [], cond: [], radius: 3, unknown: true, ...state.f };
+  $('#birth').value = state.birth; $('#sort').value = state.sort;
+  render(); showTab(state.tab);
+  cloud.applying = false;
+}
+function drawSaveState() {
+  const el = $('#saveState'); if (!el) return;
+  el.textContent = cloud.mode === 'cloud' ? `저장: 내 claude.ai 계정(본인만 보기)${cloud.saving ? ' · 저장 중…' : cloud.lastAt ? ' · 저장됨 ' + cloud.lastAt : ''}` : cloud.mode === 'readonly' ? '저장: 이 기기만 (이 페이지에서 계정 저장 권한이 없음)' : '저장: 이 기기 브라우저만';
+}
+async function cloudSave() {
+  if (!cloud.ref) return;
+  if (cloud.saving) { cloud.again = true; return; }
+  cloud.saving = true; drawSaveState();
+  try {
+    const data = snapshotData();
+    const body = JSON.stringify(data);
+    if (body === cloud.lastBody) return; // 바뀐 것이 없으면 쓰지 않음
+    if (body.length > 240000) { data.archive = (data.archive ?? []).map((a) => ({ ...a, text: a.text.slice(0, 800) })); }
+    await cloud.ref.set({ v: 1, savedAt: new Date().toISOString(), data });
+    cloud.lastBody = body;
+    cloud.lastAt = new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', hour: '2-digit', minute: '2-digit' }).format(new Date());
+  } catch (e) {
+    if (e?.code === 'invalid_argument' || e?.code === 'not_granted') { cloud.mode = 'readonly'; cloud.ref = null; }
+    cloud.err = e?.code ?? 'error';
+  } finally { cloud.saving = false; drawSaveState(); if (cloud.again) { cloud.again = false; cloudSave(); } }
+}
+window.__cloudMark = () => { if (!cloud.ref || cloud.applying) return; clearTimeout(cloud.timer); cloud.timer = setTimeout(cloudSave, 1500); };
+async function cloudInit() {
+  try {
+    const [user, db] = await Promise.all([window.claude?.use?.('user'), window.claude?.use?.('db')]);
+    if (!user || !db) { drawSaveState(); return; }
+    const id = await user.id();
+    if (!id) { drawSaveState(); return; }
+    const ref = db.doc('data/users/' + id + '/state');
+    const snap = await ref.get();
+    cloud.ref = ref; cloud.mode = 'cloud';
+    if (snap.exists && snap.data()?.data) {
+      applyData(snap.data().data);
+      cloud.lastBody = JSON.stringify(snapshotData());
+      cloud.lastAt = snap.data().savedAt ? new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(snap.data().savedAt)) : null;
+    } else if (hasPersonal(snapshotData())) {
+      await cloudSave(); // 처음 한 번: 이 기기 기록을 내 계정 비공개 공간으로 옮김
+    }
+  } catch (e) { cloud.mode = cloud.ref ? cloud.mode : 'local'; }
+  drawSaveState();
+}
+
+function drawMe() {
+  const d = snapshotData();
+  const n = { kids: d.kids?.length ?? 0, recs: (d.kids ?? []).reduce((a, k) => a + k.records.length, 0), consult: Object.keys(d.consult ?? {}).length, events: d.myEvents?.length ?? 0, archive: d.archive?.length ?? 0, memo: Object.values(d.memo ?? {}).filter(Boolean).length };
+  $('#view-me').innerHTML = `<div class="cols2">
+    <div class="panel" style="display:grid;gap:10px"><h2>어디에 저장되나요</h2>
+      ${cloud.mode === 'cloud' ? '<p style="margin:0"><span class="state ok">내 claude.ai 계정</span> 이 페이지를 연 사람마다 따로 있는 <b>비공개 공간</b>에 저장됩니다. 페이지 주인을 포함해 다른 사람은 볼 수 없습니다. 휴대폰과 PC에서 같은 계정으로 열면 이어서 쓸 수 있습니다.</p>' : cloud.mode === 'readonly' ? '<p style="margin:0"><span class="state warn">이 기기만</span> 이 페이지에서 계정 저장 권한이 없습니다(보기 전용 공유). 페이지 주인에게 "참여자(Contributor)"로 공유해 달라고 하세요.</p>' : '<p style="margin:0"><span class="state unk">이 기기만</span> 지금 보는 화면에서는 계정 저장을 쓸 수 없어 이 브라우저에만 저장됩니다. claude.ai에 로그인한 상태로 페이지를 열면 계정에 저장됩니다.</p>'}
+      <p class="small muted" style="margin:0">유치원 정보(공시·요강)는 모든 사람이 같은 공개 자료를 봅니다. 아이 설문·상담 기록·메모·희망 순서·출발지 같은 개인 기록만 사람별로 따로 저장됩니다. 정확한 주소·생년월일·건강정보는 받지 않습니다(별명·출생연도만).</p>
+      <h3>지금 저장된 내 기록</h3>
+      <ul class="rlist"><li>아이 ${n.kids}명 · 설문 기록 ${n.recs}개</li><li>상담 결과 기록 ${n.consult}곳 · 메모 ${n.memo}곳</li><li>직접 넣은 일정 ${n.events}개 · 보관한 공지 ${n.archive}개</li><li>희망 순서 ${d.plan?.length ?? 0}곳 · 비교함 ${d.compare?.length ?? 0}곳 · 출발지 ${d.origin ? '있음' : '없음'}</li></ul>
+    </div>
+    <div class="stack">
+      <div class="panel" style="display:grid;gap:8px"><h2>내보내기 (백업)</h2>
+        <p class="small muted" style="margin:0">내 기록 전체를 파일(.json)로 받아 둡니다. 공유용 비교표가 아니라 내 개인 기록 백업이므로 다른 사람에게 보내지 마세요.</p>
+        <div class="fgroup"><button class="btn primary" type="button" id="exportBtn">파일로 받기</button><button class="btn" type="button" id="exportShow">글자로 보기</button></div>
+        <textarea id="exportText" readonly hidden></textarea></div>
+      <div class="panel" style="display:grid;gap:8px"><h2>가져오기 (복원)</h2>
+        <p class="small muted" style="margin:0">백업 파일을 고르거나 글자를 붙여 넣으면 지금 기록을 그 내용으로 바꿉니다.</p>
+        <input type="file" id="importFile" accept=".json,application/json">
+        <textarea id="importText" placeholder="백업 글자를 붙여 넣어도 됩니다"></textarea>
+        <button class="btn" type="button" id="importBtn">이 내용으로 복원</button><div id="importMsg" class="small"></div></div>
+      <div class="panel" style="display:grid;gap:8px"><h2>내 기록 모두 지우기</h2>
+        <p class="small muted" style="margin:0">계정의 비공개 공간과 이 기기에 저장된 개인 기록을 모두 지웁니다. 되돌릴 수 없으니 먼저 내보내기를 권합니다.</p>
+        <button class="btn" type="button" id="wipeBtn">모두 지우기…</button><div id="wipeAsk" class="small" hidden></div></div>
+    </div></div>`;
+}
+async function doExport() {
+  const text = JSON.stringify({ app: '배방·탕정 유치원 지도', exportedAt: new Date().toISOString(), data: snapshotData() }, null, 2);
+  const dl = await window.claude?.use?.('downloads');
+  if (dl) { try { await dl.save({ filename: `유치원지도_내기록_${today()}.json`, data: text }); return; } catch (e) { if (e?.code === 'declined') return; } }
+  const ta = $('#exportText'); ta.hidden = false; ta.value = text; ta.select();
+}
+function doImport(text) {
+  const msg = $('#importMsg');
+  try {
+    const j = JSON.parse(text); const d = j.data ?? j;
+    if (typeof d !== 'object' || Array.isArray(d)) throw new Error('형식');
+    const clean = {}; for (const k of Object.keys(PERSIST)) if (k in d) clean[k] = d[k];
+    if (!Object.keys(clean).length) throw new Error('내용 없음');
+    applyData(clean); window.__cloudMark(); showTab('me'); $('#importMsg').textContent = '복원했습니다.';
+  } catch { msg.textContent = '백업 형식이 아닙니다. 내보내기로 받은 파일인지 확인해 주세요.'; }
+}
+async function doWipe() {
+  for (const k of Object.keys(PERSIST)) { try { localStorage.removeItem('bt-' + k); } catch {} }
+  if (cloud.ref) { try { await cloud.ref.delete(); } catch {} }
+  location.reload();
+}
+
 function showTab(t) {
   state.tab = t; store.set('tab', t);
-  for (const k of ['map', 'pick', 'ask', 'kid', 'reco', 'cal']) { $('#tab-' + k).setAttribute('aria-selected', String(k === t)); $('#view-' + k).hidden = k !== t; }
-  if (t === 'pick') drawPick(); if (t === 'ask') drawAsk(); if (t === 'kid') drawKid(); if (t === 'reco') drawReco(); if (t === 'cal') drawCal();
+  for (const k of ['map', 'pick', 'ask', 'kid', 'reco', 'cal', 'me']) { $('#tab-' + k).setAttribute('aria-selected', String(k === t)); $('#view-' + k).hidden = k !== t; }
+  if (t === 'pick') drawPick(); if (t === 'ask') drawAsk(); if (t === 'kid') drawKid(); if (t === 'reco') drawReco(); if (t === 'cal') drawCal(); if (t === 'me') drawMe();
 }
 
 function render() {
@@ -1257,6 +1364,12 @@ function select(id, scroll) {
 document.addEventListener('click', (e) => {
   const t = e.target.closest('button'); if (!t) return;
   if (t.dataset.tab) { showTab(t.dataset.tab); return; }
+  if (t.id === 'exportBtn') { doExport(); return; }
+  if (t.id === 'exportShow') { const ta = $('#exportText'); ta.hidden = false; ta.value = JSON.stringify({ app: '배방·탕정 유치원 지도', exportedAt: new Date().toISOString(), data: snapshotData() }, null, 2); ta.select(); return; }
+  if (t.id === 'importBtn') { const f = $('#importFile').files?.[0]; if (f) { const r = new FileReader(); r.onload = () => doImport(String(r.result)); r.readAsText(f); } else doImport($('#importText').value); return; }
+  if (t.id === 'wipeBtn') { const b = $('#wipeAsk'); b.hidden = false; b.innerHTML = '정말 모두 지울까요? <button class="btn" type="button" id="wipeYes">지우기</button> <button class="btn" type="button" id="wipeNo">취소</button>'; return; }
+  if (t.id === 'wipeNo') { $('#wipeAsk').hidden = true; return; }
+  if (t.id === 'wipeYes') { doWipe(); return; }
   if (t.id === 'calMine') { state.calMine = !state.calMine; store.set('calMine', state.calMine); drawCal(); return; }
   if (t.id === 'ne-add') { const date = $('#ne-date').value; const what = $('#ne-what').value.trim(); if (!date || !what) { $('#ne-what').placeholder = '날짜와 내용을 넣어 주세요'; return; } const id = $('#ne-inst').value; const it = DATA.institutions.find((x) => x.id === id); state.myEvents.push({ uid: uid(), date, time: $('#ne-time').value || null, type: $('#ne-type').value, what, who: it?.name ?? '기타·공통', id: id || null, src: '', note: '' }); store.set('myEvents', state.myEvents); drawCal(); return; }
   if (t.dataset.delev) { state.myEvents = state.myEvents.filter((e) => e.uid !== t.dataset.delev); store.set('myEvents', state.myEvents); drawCal(); return; }
@@ -1354,5 +1467,7 @@ $('#foot').innerHTML = `<div>유치원: 유치원알리미 공시 (확인일 ${e
   <div>${esc(DATA.roster.note)} · 화면 자료 생성 ${esc(DATA.builtAt)}</div>`;
 render();
 showTab(state.tab);
+drawSaveState();
+cloudInit();
 const ask = document.getElementById('askSel'); if (ask) ask.value = state.askId;
 </script>

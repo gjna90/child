@@ -8,7 +8,10 @@
     "test": "node --test test/*.test.js",
     "collect": "NODE_USE_ENV_PROXY=1 NODE_NO_WARNINGS=1 node scripts/collect.js",
     "report": "node scripts/stage1-report.js",
-    "notices": "NODE_USE_ENV_PROXY=1 NODE_NO_WARNINGS=1 node scripts/collect-notices.js"
+    "notices": "NODE_USE_ENV_PROXY=1 NODE_NO_WARNINGS=1 node scripts/collect-notices.js",
+    "snapshot": "node scripts/snapshot.js",
+    "build": "node scripts/admission-report.js && node scripts/build-app.js",
+    "refresh": "npm run collect && npm run notices && npm run snapshot && npm run build"
   },
   "engines": {
     "node": ">=20"
