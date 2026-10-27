@@ -6,6 +6,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { KINDER, PENDING, PRIO, COMMON_SCHEDULE, CHECKED_AT as ADM_CHECKED } from '../data/admissions/2027_kinder.js';
 import { monthlyFor } from './collect-costs.js';
+import { STYLES } from '../src/lib/profile.js';
+import { CURATED, CURATED_AT } from '../data/profiles/curated_2026.js';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const latest = (dir) => {
@@ -17,6 +19,28 @@ const latest = (dir) => {
 // 시험용: ROSTER_FILE·APP_OUT 환경 변수로 다른 명부·출력 파일을 쓸 수 있음(가상 자료는 실제 화면에 넣지 않음)
 const R = process.env.ROSTER_FILE ? JSON.parse(fs.readFileSync(process.env.ROSTER_FILE, 'utf8')) : latest('data/roster');
 const A = latest('data/academies');
+// 교육 특징: 운영계획 공시 자동 분석(data/profiles) + 사람이 읽고 정리한 값(data/profiles/curated_2026.js)
+const PROF = latest('data/profiles');
+function profileOf(r) {
+  const p = PROF?.items?.[r.id] ?? null;
+  const c = CURATED[r.name] ?? null;
+  if (!p && !c) return null;
+  const source = c?.src ? { kind: c.src.kind, title: c.src.title, url: c.src.url, checkedAt: CURATED_AT } : p?.source ? { kind: 'plan', ...p.source, checkedAt: p.checkedAt, status: p.status } : null;
+  const newer = !!(c && !c.missing && p?.source?.registered && p.source.registered > CURATED_AT && !c.src); // 정리한 뒤 새 계획 파일이 올라옴
+  if (c && !c.missing) {
+    return {
+      reviewed: true, reviewedAt: CURATED_AT, newer, source,
+      motto: c.motto ?? null, focus: c.focus ?? [], outdoor: c.outdoor ?? null, highlights: c.highlights ?? [],
+      tags: Object.keys(STYLES).map((k) => ({ key: k, level: c.styles?.[k] ?? '중점에 없음' })),
+    };
+  }
+  return {
+    reviewed: false, newer, source, missing: c?.missing ?? p?.note ?? null,
+    motto: null, focus: [], outdoor: p?.outdoor?.[0] ?? null, highlights: [],
+    tags: (p?.tags ?? []).map((t) => ({ key: t.key, level: t.level, auto: true })),
+  };
+}
+
 // 유치원알리미 '교육·보육 비용' 공시 (scripts/collect-costs.js)
 const COST = latest('data/costs');
 function pubCostOf(id) {
@@ -69,6 +93,7 @@ const kinder = [...R.included, ...R.needsCheck].filter((r) => r.kind === '유치
     playground: r.playgroundArea?.value ?? null,
     pubAsOf: r.disclosureRound,
     pubCost: pubCostOf(r.id),
+    profile: profileOf(r),
     admission: k ? {
       read: !!k.recruit,
       recruit: k.recruit ?? null,
@@ -174,6 +199,8 @@ const data = {
   schedule: COMMON_SCHEDULE,
   academySource: A ? A.source : null,
   institutions: instList,
+  styles: Object.fromEntries(Object.entries(STYLES).map(([k, v]) => [k, { label: v.label, short: v.short }])),
+  profileSource: PROF ? { source: PROF.source, checkedAt: PROF.checkedAt, curatedAt: CURATED_AT } : null,
   apartments,
   aptRoutes,
   routeInfo: RT ? { walk: RT.source?.walk, car: RT.source?.car, rules: RT.rules, checkedAt: RT.log?.at(-1)?.at, remaining: RT.log?.at(-1)?.remaining, aptSource: APT?.source, aptCheckedAt: APT?.checkedAt } : null,
@@ -183,6 +210,8 @@ const data = {
 const tpl = fs.readFileSync(path.join(ROOT, 'app', 'template.html'), 'utf8');
 const json = JSON.stringify(data).replace(/</g, '\\u003c');
 // 추천 계산 규칙(src/lib/recommend.js)을 화면에 그대로 넣는다 — 테스트한 코드와 화면 코드가 같도록
-const reco = fs.readFileSync(path.join(ROOT, 'src', 'lib', 'recommend.js'), 'utf8').replace(/^export /gm, '');
+const reco = fs.readFileSync(path.join(ROOT, 'src', 'lib', 'recommend.js'), 'utf8').replace(/^export /gm, '')
+  // 교육 방향 맞춤 계산(src/lib/profile.js)도 같은 코드를 넣음 — 화면에 필요한 함수만
+  + '\n' + fs.readFileSync(path.join(ROOT, 'src', 'lib', 'profile.js'), 'utf8').replace(/^export /gm, '');
 fs.writeFileSync(process.env.APP_OUT ?? path.join(ROOT, 'app', 'index.html'), tpl.replace('/*__DATA__*/null', () => json).replace('/*__RECO__*/', () => reco));
 console.log(`아파트 ${apartments.length}곳 · 경로 ${Object.values(aptRoutes).reduce((a, x) => a + Object.keys(x).length, 0)}쌍 · app/index.html: 기관 ${data.institutions.length}곳 (유치원 ${kinder.length}, 어린이집 ${daycares.length}, 영어유치원·유아 영어학원 ${academies.length}), ${(json.length / 1024).toFixed(0)}KB`);

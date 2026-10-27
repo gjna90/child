@@ -48,6 +48,9 @@
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 tr.me td { background: rgba(80, 120, 255, .10); font-weight: 600; }
+.tag.sty { background: rgba(46, 140, 90, .14); color: var(--ink); }
+.tag.sty.weak { background: transparent; border: 1px solid rgba(46, 140, 90, .35); }
+.linkbtn { background: none; border: 0; padding: 0; color: inherit; text-decoration: underline; cursor: pointer; font: inherit; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.55; }
 .wrap { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 16px 96px; max-width: 1280px; margin: 0 auto; }
 h1 { font-family: var(--font-display); font-weight: 400; font-size: 1.7rem; margin: 0; text-wrap: balance; }
@@ -316,7 +319,7 @@ const state = {
   qdone: store.get('qdone', {}),
   memo: store.get('memo', {}),
   sort: store.get('sort', 'dist'),
-  f: store.get('filters', { kind: [], est: [], area: [], cond: [], radius: 3, unknown: true }),
+  f: store.get('filters', { kind: [], est: [], area: [], style: [], cond: [], radius: 3, unknown: true }),
 };
 const manAge = () => SY - state.birth - 1;
 
@@ -329,6 +332,41 @@ function haversine(a, b) {
 }
 function dist(it) { return state.origin && it.lat ? haversine(state.origin, it) : null; }
 const km = (m) => (m === null ? null : m < 1000 ? `${Math.round(m / 10) * 10}m` : `${(m / 1000).toFixed(1)}km`);
+
+// ── 교육 특징 (운영계획 공시 · docs/09_교육특징_분류.md) ──
+const styleShort = (k) => DATA.styles?.[k]?.short ?? k;
+function profTags(it, lv = '강조') { return (it.profile?.tags ?? []).filter((t) => t.level === lv); }
+function styleChips(it, max = 3) {
+  return profTags(it).slice(0, max).map((t) => `<span class="tag sty" title="${esc(DATA.styles[t.key].label)}${t.auto ? ' (자동 분류, 확인 전)' : ''}">${esc(styleShort(t.key))}${t.auto ? '?' : ''}</span>`).join('');
+}
+/** 아이의 최신 부모 설문(없으면 최신 기록) */
+function latestRec(kid) { if (!kid?.records?.length) return null; return [...kid.records].filter((r) => r.by === '부모').sort((a, b) => b.date.localeCompare(a.date))[0] ?? kid.records[kid.records.length - 1]; }
+/** 원하는 교육 방향 = 부모가 고른 방향 + 아이 설문에서 나온 방향 */
+function wantedStyles(kid) {
+  const rec = latestRec(kid);
+  const fromKid = rec ? Object.keys(kidStyles(rec.answers)) : [];
+  return [...new Set([...(state.reco.styles ?? []), ...fromKid])];
+}
+function profileSection(it) {
+  if (isDc(it)) return `<section><h3>교육 특징</h3><div class="small">${U} — 어린이집은 공시에 연간 운영계획 파일이 없어, 홈페이지·상담으로 확인합니다.</div></section>`;
+  const p = it.profile;
+  if (!p) return `<section><h3>교육 특징 (운영계획)</h3><div class="small">${U}</div></section>`;
+  const lvTag = (t) => `<span class="tag sty${t.level === '강조' ? '' : ' weak'}">${esc(DATA.styles[t.key].label)}${t.level === '언급' ? ' · 정기 활동' : ''}</span>`;
+  const strong = p.tags.filter((t) => t.level === '강조'), some = p.tags.filter((t) => t.level === '언급');
+  const kid = curKid(); const want = kid ? wantedStyles(kid) : (state.reco.styles ?? []);
+  const fit = want.length && p.tags.length ? want.map((k) => { const t = p.tags.find((x) => x.key === k); return `${styleShort(k)} ${t?.level === '강조' ? '◎ 중점' : t?.level === '언급' ? '○ 정기 활동' : '– 중점에 없음'}`; }).join(' · ') : '';
+  const src = !p.source ? '' : p.source.kind === 'homepage' ? `기관 ${esc(p.source.title)} · ${esc(p.source.url)}` : `유치원알리미 연간 교육과정 편성 계획안 「${esc(p.source.title ?? '')}」(${esc(p.source.registered ?? '')} 등록)`;
+  return `<section><h3>교육 특징 (${p.source?.kind === 'homepage' ? '기관 홈페이지' : `${SY - 1} 교육과정 운영계획`})</h3>
+    ${p.motto ? `<div><b>${esc(p.motto)}</b></div>` : ''}
+    ${p.missing ? `<div class="small"><span class="state unk">${esc(p.missing)}</span></div>` : ''}
+    ${strong.length || some.length ? `<div class="tags" style="margin:4px 0">${strong.map(lvTag).join('')}${some.map(lvTag).join('')}</div>` : ''}
+    ${p.focus.length ? `<div class="small"><strong>중점·특색 교육</strong><ul>${p.focus.map((f) => `<li>${esc(f)}</li>`).join('')}</ul></div>` : ''}
+    ${p.outdoor ? `<div class="small"><strong>바깥놀이·숲 (계획에 적힌 빈도)</strong> ${esc(p.outdoor)}</div>` : ''}
+    ${p.highlights.length ? `<div class="small"><strong>눈에 띄는 활동</strong> ${p.highlights.map(esc).join(' · ')}</div>` : ''}
+    ${fit ? `<div class="small"><strong>${kid ? esc(kid.nick) + '에게 ' : ''}원하는 방향과 비교</strong> ${esc(fit)}</div>` : ''}
+    <div class="small muted">${p.reviewed ? (p.source?.kind === 'homepage' ? '기관 홈페이지 소개를 읽고 정리했습니다.' : '운영계획 원문을 읽고 정리했습니다.') : '자동 분류(글에 나온 표현 수 기준) — 사람이 아직 확인하지 않았습니다.'} 계획서에 적힌 내용이며 실제 운영은 상담·참관으로 확인하세요. 모든 유치원은 국가 누리과정에 따라 놀이 중심으로 운영합니다.${p.newer ? ' <b>정리한 뒤 새 계획 파일이 올라왔습니다 — 다시 확인 필요.</b>' : ''}</div>
+    <div class="src">출처: ${src}${p.reviewedAt ? ` · 정리일 ${esc(p.reviewedAt)}` : ''}${p.source?.checkedAt ? ` · 확인일 ${esc(p.source.checkedAt)}` : ''}</div></section>`;
+}
 
 function pubCostSection(it) {
   const pc = it.pubCost;
@@ -417,6 +455,7 @@ const GROUPS = [
   { key: 'kind', label: '종류', opts: [['유치원', '유치원'], ...(DATA.institutions.some((x) => x.kind === '어린이집') ? [['어린이집', '어린이집']] : []), ['영어유치원(학원)', '영어유치원·유아 영어학원']], test: (it, v) => it.kind === v },
   { key: 'est', label: '설립', opts: [['pub', '공립'], ['pri', '사립·학원']], test: (it, v) => (v === 'pub' ? it.isPublic === true : it.isPublic === false) },
   { key: 'area', label: '지역', opts: [['배방읍', '배방읍'], ['탕정면', '탕정면']], test: (it, v) => it.area === v },
+  { key: 'style', label: '교육 특징', opts: Object.entries(DATA.styles ?? {}).map(([k, v]) => [k, v.short]), test: (it, v) => profTags(it).some((t) => t.key === v) },
 ];
 const CONDS = [
   { key: 'child', label: '우리 아이 반 있음', val: (it) => childClass(it).known },
@@ -554,6 +593,7 @@ function card(it) {
   return `<article class="card${state.sel === it.id ? ' sel' : ''}" id="c-${esc(it.id)}">
     <div class="row1"><button class="name" type="button" data-open="${esc(it.id)}">${esc(it.name)}</button><div class="tags">${typeTag(it)}<span class="tag">${esc(it.area)}</span></div></div>
     <div><span class="state ${cc.status === 'no' ? 'unk' : cc.status}">${cc.status === 'no' ? '해당 반 없음 · ' : ''}${esc(cc.text)}</span></div>
+    ${styleChips(it) ? `<div class="tags" aria-label="교육 특징(중점)">${styleChips(it)}</div>` : ''}
     <dl class="facts">${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
     <div class="acts"><button class="btn" type="button" data-open="${esc(it.id)}">상세 보기</button>
       <button class="btn" type="button" data-cmp="${esc(it.id)}" ${!inCmp && state.compare.length >= 4 ? 'disabled' : ''}>${inCmp ? '비교함에서 빼기' : '비교함에 담기'}</button></div>
@@ -612,6 +652,7 @@ function detail(it) {
       <div class="small">교사 ${it.teacherTotal ?? U}명 — 기관 전체 인원이며 반별 배치가 아닙니다 · 체육장 면적 ${it.playground ?? U}㎡(공시, 실내·실외 구분 없음)</div>
       <div class="src">출처: 유치원알리미 공시 (${esc(it.pubAsOf ?? '')}) · 확인일 ${esc(DATA.roster.checkedAt)}</div></section>`;
     h += pubCostSection(it);
+    h += profileSection(it);
     const a = it.admission;
     if (a && a.read) {
       h += `<section><h3>${SY}학년도 모집 (요강)</h3>${a.classNames ? item('기관이 쓰는 반 이름', a.classNames) : ''}
@@ -632,6 +673,7 @@ function detail(it) {
       ${it.restriction ? `<div class="small"><span class="state warn">${esc(it.restriction)}</span></div>` : ''}
       <div class="src">출처: ${esc(it.source)} ${it.pubAsOf ? `(기준 ${esc(it.pubAsOf)})` : ''} · 확인일 ${esc(DATA.roster.checkedAt)}</div></section>
       <section><h3>${SY}년 입소</h3><div>어린이집은 유치원처럼 유보통합포털 우선·일반모집으로 뽑지 않고, <b>아이사랑 포털의 입소대기 신청</b>으로 순번을 받습니다. 반 편성·입소 가능 인원은 어린이집에 확인하세요.</div></section>
+      ${profileSection(it)}
       <section><h3>아직 모르는 것</h3><div>2027년 반 편성과 입소 가능 인원, 운영시간·연장보육, 필요경비(특별활동비 등), 차량 노선·탑승 시각, 반별 교사 배치, 바깥놀이·적응 방식</div></section>`;
   } else {
     h += `<div class="small">등록 강사 ${it.teachers ?? U}명 (학원 전체)</div></section>
@@ -643,6 +685,8 @@ function detail(it) {
       <div class="src">출처: ${esc(DATA.academySource?.name)} (${esc(DATA.academySource?.asOf)} 기준) · ${esc(DATA.academySource?.url)}</div></section>
       <section><h3>아직 모르는 것</h3><div>2027 모집 일정·설명회, 대상 출생연도, 원어민·한국인 교사 배치, 하루 일과·바깥놀이, 급식·차량, 방학</div></section>`;
   }
+  const inCmp = state.compare.includes(it.id);
+  h += `<div class="acts" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"><button class="btn primary" type="button" data-cmp="${esc(it.id)}" data-insheet="1" ${!inCmp && state.compare.length >= 4 ? 'disabled' : ''}>${inCmp ? '비교함에서 빼기' : '비교함에 담기'}</button>${!inCmp && state.compare.length >= 4 ? '<span class="small muted">비교함은 4곳까지 — 하나를 빼고 담으세요</span>' : ''}</div>`;
   return h + '</div>';
 }
 
@@ -660,6 +704,9 @@ function compareTable() {
     ['아침·저녁 돌봄(요강)', careText],
     ['통학버스', busText],
     ['부모 부담 비용', (it) => (it.kind === '유치원' ? monthlyCost(it)?.text ?? it.admission?.cost?.text ?? U : isDc(it) ? U : (it.courses.filter((c) => c.tuition).sort((a, b) => b.minutes - a.minutes)[0] ? `가장 긴 과정 월 ${Math.round(it.courses.sort((a, b) => b.minutes - a.minutes)[0].tuition).toLocaleString('ko-KR')}원(등록 교습비)` : U))],
+    ['교육 특징 (중점)', (it) => (isAca(it) ? U : profTags(it).map((t) => DATA.styles[t.key].label + (t.auto ? '(자동)' : '')).join(', ') || (it.profile?.missing ? '미확인 (계획서에 없음)' : U))],
+    ['중점·특색 교육', (it) => it.profile?.focus?.join(' / ') || U],
+    ['바깥놀이·숲 (계획)', (it) => it.profile?.outdoor ?? U],
     ['교사(기관 전체)', (it) => (it.kind === '유치원' ? `${it.teacherTotal ?? U}명` : isDc(it) ? U : `${it.teachers ?? U}명(강사)`)],
     ['체육장 면적(공시)', (it) => (it.kind === '유치원' ? (it.playground === null ? U : `${it.playground}㎡`) : U)],
     ['설명회', (it) => (it.admission?.events?.length ? it.admission.events.map((e) => `${e.what}: ${e.when}`).join(' / ') : U)],
@@ -799,6 +846,14 @@ function questions(it) {
     const pcA = pubCostAge(it);
     if (pcA && pcA.known) { if (pcA.total > 0 || !it.isPublic) add('cost', `${SY}학년도에도 매달 부담금이 공시(${it.pubCost.asOf}) 월 ${pcA.total.toLocaleString('ko-KR')}원과 같나요? 특성화비 외에 현장학습비·차량비·원복·입학 준비물 등 따로 내는 비용이 있나요?`, '공시는 올해 기준'); }
     else if (!a?.cost || /알리미 확인/.test(a.cost.text) || !it.isPublic) add('cost', '매달 실제로 내는 비용은 얼마인가요? (원비·특성화비·차량비·현장학습비·입학 준비물 포함)', it.isPublic ? '요강에 금액 없음' : '사립 원비 미확인');
+    const pf = it.profile; const kidHs = latestRec(curKid()) ? kidStyles(latestRec(curKid()).answers) : {};
+    if (pf?.reviewed) {
+      const st = (k) => pf.tags.find((t) => t.key === k)?.level;
+      if (st('nature') === '강조') add('style_nature', '계획서의 숲·바깥 활동은 실제로 일주일에 몇 번, 한 번에 얼마나 하나요? 비·추위·미세먼지 때는 어떻게 하나요?', '운영계획 중점: 자연·생태');
+      if (st('learning') === '강조') add('style_learning', '한글·수·영어·AI 활동은 앉아서 하는 수업인가요, 놀이로 하나요? 하루에 얼마나 하나요?', '운영계획 중점: 학습·기초교육');
+      if (st('arts') === '강조' || /동극|발표|공연|시상/.test((pf.focus ?? []).join(' '))) add('style_stage', '동극·발표·시상 같은 여러 사람 앞 활동은 얼마나 자주 있고, 부담스러워하는 아이는 참여 방식을 조정할 수 있나요?', '운영계획에 발표·공연 활동');
+      if (kidHs.play && st('play') !== '강조') add('style_play', '아이가 놀이를 고르고 오래 이어 가는 자유놀이 시간은 하루에 얼마나 되나요?', '아이 설문: 몰입·선택 놀이 선호');
+    } else if (pf?.missing) add('style_unknown', '원에서 가장 중점으로 하는 교육(특색교육)은 무엇이고, 하루 일과는 어떻게 되나요?', '운영계획 공시에 교육 방향 없음');
     if (busKnown(it) !== false) add('bus', '우리 집 근처 승하차 장소와 아침·저녁 탑승 시각, 차 안에 있는 시간은 얼마나 되나요?', '버스 탑승 시각 미확인');
     if (a?.care) add('care', '저녁 돌봄 신청 자격과 증빙서류, 신청 인원이 많을 때 선발 방식은요?', '돌봄 신청 방법 추후 안내');
     else add('care', '아침·저녁 돌봄이 있나요? 몇 시까지, 누가 신청할 수 있나요?', '돌봄 미확인');
@@ -1157,6 +1212,15 @@ function kidResult(k, rec) {
     <section><h3>도움이 필요한 상황</h3>${li(an.help)}</section>
     <section><h3>기관에서 확인할 지원 <span class="small muted">— 중요한 것에 체크하면 질문지 맨 위에 ★로 나옵니다</span></h3>
       ${sups.length ? `<div class="checks">${sups.map((s) => `<label><input type="checkbox" data-pick="${s}" ${picks.includes(s) ? 'checked' : ''}> <span><b>${esc(SUPPORTS[s].name)}</b> <span class="small muted">(${an.sup[s].map((n) => n + '번').join(', ')} 답에서 나온 잠정 제안)</span></span></label>`).join('')}</div>` : '<p class="small muted" style="margin:0">아직 제안할 지원이 없습니다</p>'}</section>
+    ${(() => {
+      const hs = kidStyles(rec.answers); const keys = Object.keys(hs);
+      if (!keys.length) return '<section><h3>잘 맞을 수 있는 교육 방향</h3><p class="small muted" style="margin:0">5·6·7·8·22·23·24번 답에서 뚜렷한 방향이 나오지 않았습니다.</p></section>';
+      const list = DATA.institutions.filter((x) => x.profile?.reviewed).map((x) => ({ x, n: keys.filter((kk) => profTags(x).some((t) => t.key === kk)).length })).filter((o) => o.n).sort((a, b) => b.n - a.n || a.x.name.localeCompare(b.x.name, 'ko'));
+      return `<section><h3>잘 맞을 수 있는 교육 방향 <span class="small muted">— 자체 설문 해석이며 진단이 아닙니다</span></h3>
+        <ul>${keys.map((kk) => `<li><b>${esc(DATA.styles[kk].label)}</b> <span class="small muted">(${hs[kk].map((n) => n + '번').join(', ')} 답)</span></li>`).join('')}</ul>
+        ${list.length ? `<div class="small">이 방향을 운영계획 중점으로 둔 유치원: ${list.slice(0, 8).map((o) => `<button class="linkbtn" type="button" data-open="${esc(o.x.id)}">${esc(o.x.name.replace('초등학교병설유치원', '초 병설'))}</button>`).join(' · ')}${list.length > 8 ? ` 외 ${list.length - 8}곳` : ''}</div>` : ''}
+        <div class="small muted">'맞춤 추천' 탭의 '교육 방향 맞춤' 기준에 자동으로 들어갑니다. 계획서의 중점일 뿐이니 실제 하루 일과는 상담에서 확인하세요.</div></section>`;
+    })()}
     <section><h3>상담 질문</h3>${sups.length || lq.length ? `<ul>${sups.map((s) => `<li>${esc(SUPPORTS[s].q)}</li>`).join('')}${lq.map(([, t]) => `<li>${esc(t)}</li>`).join('')}</ul><div class="small muted">이 질문은 '전화·상담 질문지' 탭의 모든 기관 질문 목록에도 들어갑니다. 기관의 지원 정보는 아직 대부분 미확인이라, 맞는 곳이라고 추측하지 않고 질문으로 확인합니다.</div>` : '<p class="small muted" style="margin:0">아직 없음</p>'}</section>
     <section><h3>아직 관찰하지 못한 부분</h3>${an.unseen.length ? `<ul>${an.unseen.map((it) => `<li>${esc(it.text)}</li>`).join('')}</ul>` : ''}${24 - Object.keys(rec.answers).length ? `<div class="small muted">답하지 않은 문항 ${24 - Object.keys(rec.answers).length}개</div>` : ''}${!an.unseen.length && Object.keys(rec.answers).length === 24 ? '<p class="small muted" style="margin:0">없음</p>' : ''}</section>
     ${rec.life?.parentWant || rec.life?.childLikes ? `<section><h3>부모의 바람과 아이의 실제 선호</h3><div>부모가 원하는 교육: ${esc(rec.life.parentWant || U)}</div><div>아이가 보이는 선호: ${esc(rec.life.childLikes || U)}</div><div class="small muted">둘을 따로 두고 봅니다. 성향 하나로 특정 교육 방식(예: 숲·몬테소리)을 정답으로 정하지 않습니다.</div></section>` : ''}
@@ -1171,9 +1235,12 @@ state.reco = Object.assign({
   mode: 'composite', who: null, okKm: 1, maxKm: 4, travel: 'line', okWalk: 10, maxWalk: 30, okCar: 5, maxCar: 20, pickup: '18:30', budget: null, classStd: 16, withAcademy: false,
   crit: [
     { key: 'dist', on: true, w: '매우 중요' }, { key: 'care', on: true, w: '중요' }, { key: 'cost', on: true, w: '중요' },
-    { key: 'size', on: true, w: '참고' }, { key: 'bus', on: false, w: '참고' }, { key: 'nature', on: false, w: '참고' }, { key: 'support', on: false, w: '참고' },
+    { key: 'size', on: true, w: '참고' }, { key: 'bus', on: false, w: '참고' }, { key: 'nature', on: false, w: '참고' }, { key: 'support', on: false, w: '참고' }, { key: 'style', on: true, w: '중요' },
   ],
+  styles: [],
 }, store.get('reco', {}));
+if (!state.reco.crit.some((c) => c.key === 'style')) state.reco.crit.push({ key: 'style', on: true, w: '중요' });
+if (!Array.isArray(state.reco.styles)) state.reco.styles = [];
 const saveReco = () => store.set('reco', state.reco);
 function withBirth(b, fn) { const o = state.birth; state.birth = b; try { return fn(); } finally { state.birth = o; } }
 const minutesOf = (hhmm) => { const [h, m] = String(hhmm).split(':').map(Number); return h * 60 + m; };
@@ -1219,7 +1286,21 @@ const CRIT = {
   bus: { label: '통학 편의(버스)', calc(it) { const b = busKnown(it); const fromC = busOfficial(it) === null && b !== null; return b === null ? { value: null, text: '버스 미확인', q: '우리 집 근처에 버스가 서나요? 탑승 시간은요?' } : { value: b ? 1 : 0, text: (b ? '버스 운행' : '버스 없음') + (fromC ? cTag(consultOf(it)) : '') }; } },
   nature: { label: '자연·바깥놀이', calc(it) {
     const c = consultOf(it); const v = c?.nature ? NATURE_V[c.nature] : undefined;
-    return v === undefined ? { value: null, text: '빈도 미확인', q: '바깥놀이·숲 활동은 일주일에 몇 번, 한 번에 얼마나 하나요?' } : { value: v, text: `${c.nature}${cTag(c)}` };
+    if (v !== undefined) return { value: v, text: `${c.nature}${cTag(c)}` };
+    // 상담 기록이 없으면 운영계획의 방향을 약하게 반영 (빈도는 계획서 표기일 뿐이라 최고점은 주지 않음)
+    const t = it.profile?.tags?.find((x) => x.key === 'nature');
+    if (t && !t.auto) return { value: t.level === '강조' ? 0.8 : t.level === '언급' ? 0.5 : 0.3, text: `운영계획: 자연·생태 ${t.level === '강조' ? '중점' : t.level === '언급' ? '정기 활동' : '중점 아님'} (실제 빈도는 상담 확인)`, q: '바깥놀이·숲 활동은 일주일에 몇 번, 한 번에 얼마나 하나요?' };
+    return { value: null, text: '빈도 미확인', q: '바깥놀이·숲 활동은 일주일에 몇 번, 한 번에 얼마나 하나요?' };
+  } },
+  style: { label: '교육 방향 맞춤', calc(it) {
+    const want = wantedStyles(state.evalKid);
+    if (!want.length) return { skip: true }; // 원하는 방향을 아직 안 정함 → 계산에서 뺌
+    if (isAca(it)) return { value: null, text: '학원 — 교육 방향 공시 없음', q: '하루 일과 중 놀이·바깥활동과 수업 시간은 각각 얼마나 되나요?' };
+    const tags = it.profile?.tags ?? [];
+    const v = styleMatch(tags.filter((t) => !t.auto || t.level === '강조'), want);
+    if (v === null) return { value: null, text: `${want.map(styleShort).join('·')} — 운영계획 미확인`, q: '원에서 가장 중점으로 하는 교육은 무엇이고, 하루 중 얼마나 하나요?' };
+    const hit = want.filter((k) => tags.find((t) => t.key === k)?.level === '강조');
+    return { value: v, text: hit.length ? `${hit.map(styleShort).join('·')} 중점${hit.length < want.length ? ` (원하는 ${want.length}개 중 ${hit.length}개)` : ''}${tags.some((t) => t.auto) ? ' · 자동 분류' : ''}` : `원하는 방향(${want.map(styleShort).join('·')})이 중점에 없음` };
   } },
   support: { label: '설문에서 고른 지원', calc(it) {
     const k = state.evalKid ?? curKid(); const rec = k?.records?.at(-1); const picks = rec?.picks ?? [];
@@ -1242,7 +1323,7 @@ function evalFor(it, kid) {
   state.evalKid = kid.records ? kid : null;
   return withBirth(kid.birth, () => {
     const must = state.must.map((k) => ({ k, value: mustVal(it, k) }));
-    const crit = state.reco.crit.filter((c) => c.on).map((c) => ({ key: c.key, weight: WEIGHTS[c.w], w: c.w, ...CRIT[c.key].calc(it) }));
+    const crit = state.reco.crit.filter((c) => c.on).map((c) => ({ key: c.key, weight: WEIGHTS[c.w], w: c.w, ...CRIT[c.key].calc(it) })).filter((c) => !c.skip); // skip = 이 아이에게 해당 없는 기준(계산에서 뺌)
     return { kid, cc: childClass(it), must, mustSt: mustStatus(must), crit, score: composite(crit) };
   });
 }
@@ -1320,6 +1401,10 @@ function drawReco() {
           <label style="align-self:end"><span><input type="checkbox" id="rp-aca" ${R.withAcademy ? 'checked' : ''}> 영어유치원(학원)도 포함</span></label>
           ${DATA.institutions.some(isDc) ? `<label style="align-self:end"><span><input type="checkbox" id="rp-dc" ${R.withDaycare !== false ? 'checked' : ''}> 어린이집도 포함</span></label>` : ''}
         </div>
+        <div style="display:grid;gap:4px"><span class="small"><b>원하는 교육 방향</b> (부모의 바람 — 여러 개 고를 수 있음)</span>
+          <div class="fgroup">${Object.entries(DATA.styles ?? {}).map(([k, v]) => `<button class="chip" type="button" data-rstyle="${k}" aria-pressed="${(R.styles ?? []).includes(k)}" title="${esc(v.label)}">${esc(v.short)}</button>`).join('')}</div>
+          ${(() => { const ks = who.kids.filter((k) => k.records?.length); const parts = ks.map((k) => { const h = kidStyles(latestRec(k).answers); const keys = Object.keys(h); return keys.length ? `${esc(k.nick)}: ${keys.map((x) => `${esc(styleShort(x))}(${h[x].map((n) => n + '번').join(',')})`).join(', ')}` : ''; }).filter(Boolean); return `<span class="small muted">${parts.length ? '아이 설문에서 더해지는 방향 — ' + parts.join(' / ') : '「우리 아이」 설문을 하면 아이에게 맞을 수 있는 방향이 자동으로 더해집니다.'} '교육 방향 맞춤' 기준은 원하는 방향이 하나라도 있을 때만 계산합니다.</span>`; })()}
+        </div>
         <div class="fgroup"><span class="glabel">정렬</span><button class="chip" type="button" data-rmode="composite" aria-pressed="${R.mode === 'composite'}">여러 조건 종합</button><button class="chip" type="button" data-rmode="priority" aria-pressed="${R.mode === 'priority'}">우선순위대로</button></div>
         <p class="small muted" style="margin:0">${R.mode === 'composite' ? '종합: 매우 중요 3 · 중요 2 · 참고 1을 곱해 확인된 기준만으로 평균을 냅니다. 확인 정도가 50% 미만이면 위로 올리지 않고 「정보 부족」에 둡니다.' : '우선순위: 1번 기준으로 먼저 묶고, 같은 묶음 안에서 2번, 3번 순으로 정렬합니다. 그 기준이 미확인이면 그 단계에서 뒤로 갑니다.'}</p>
       </div>
@@ -1347,6 +1432,7 @@ function applyData(d) {
   cloud.applying = true;
   for (const [k, f] of Object.entries(PERSIST)) if (d[k] !== undefined) { state[f] = d[k]; try { localStorage.setItem('bt-' + k, JSON.stringify(d[k])); } catch {} }
   if (state.f && !state.f.cond) state.f = { kind: [], est: [], area: [], cond: [], radius: 3, unknown: true, ...state.f };
+  if (state.f && !state.f.style) state.f.style = [];
   $('#birth').value = state.birth; $('#sort').value = state.sort;
   render(); showTab(state.tab);
   cloud.applying = false;
@@ -1506,10 +1592,11 @@ document.addEventListener('click', (e) => {
   if (t.dataset.g) { const arr = state.f[t.dataset.g]; const i = arr.indexOf(t.dataset.v); i >= 0 ? arr.splice(i, 1) : arr.push(t.dataset.v); store.set('filters', state.f); render(); }
   else if (t.dataset.c) { const arr = state.f.cond; const i = arr.indexOf(t.dataset.c); i >= 0 ? arr.splice(i, 1) : arr.push(t.dataset.c); store.set('filters', state.f); render(); }
   else if (t.id === 'unk') { state.f.unknown = !state.f.unknown; store.set('filters', state.f); render(); }
-  else if (t.id === 'reset') { state.f = { kind: [], est: [], area: [], cond: [], radius: state.f.radius, unknown: true }; store.set('filters', state.f); render(); }
+  else if (t.id === 'reset') { state.f = { kind: [], est: [], area: [], style: [], cond: [], radius: state.f.radius, unknown: true }; store.set('filters', state.f); render(); }
   else if (t.dataset.relax) { const k = t.dataset.relax; if (state.f[k] && Array.isArray(state.f[k])) state.f[k] = []; else state.f.cond = state.f.cond.filter((x) => x !== k); store.set('filters', state.f); render(); }
   else if (t.dataset.open) { const it = DATA.institutions.find((x) => x.id === t.dataset.open); state.sel = it.id; render(); openSheet(it.name, detail(it)); }
-  else if (t.dataset.cmp) { const id = t.dataset.cmp; const i = state.compare.indexOf(id); if (i >= 0) state.compare.splice(i, 1); else if (state.compare.length < 4) state.compare.push(id); store.set('compare', state.compare); render(); }
+  else if (t.dataset.cmp) { const id = t.dataset.cmp; const i = state.compare.indexOf(id); if (i >= 0) state.compare.splice(i, 1); else if (state.compare.length < 4) state.compare.push(id); store.set('compare', state.compare); render(); if (t.dataset.insheet) { const it = DATA.institutions.find((x) => x.id === id); $('#sheetBody').innerHTML = detail(it); } }
+  else if (t.dataset.rstyle) { const k = t.dataset.rstyle; const a = state.reco.styles; const i = a.indexOf(k); if (i >= 0) a.splice(i, 1); else a.push(k); saveReco(); render(); }
   else if (t.id === 'cmpOpen') openSheet(`나란히 비교 (${state.compare.length}곳)`, compareTable());
   else if (t.id === 'sheetClose') closeSheet();
   else if (t.id === 'clearOrigin') { $('#aptInput').value = ''; setOrigin(null); }

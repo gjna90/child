@@ -6,6 +6,17 @@ import { CHECKED_AT, SCHOOL_YEAR, COMMON_SCHEDULE, COMMON_RULES, KINDER, PENDING
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 import { monthlyFor } from './collect-costs.js';
+import { STYLES } from '../src/lib/profile.js';
+import { CURATED, CURATED_AT } from '../data/profiles/curated_2026.js';
+/** 교육 특징 한 줄 (사람이 정리한 값) */
+function styleLine(r) {
+  const c = CURATED[r.name];
+  if (!c) return `- **교육 특징**: 미확인`;
+  if (c.missing) return `- **교육 특징**: 미확인 — ${c.missing}`;
+  const st = (lv) => Object.entries(c.styles ?? {}).filter(([, l]) => l === lv).map(([k]) => STYLES[k].label).join(', ');
+  const src = c.src ? `〔${c.src.title}〕` : '〔유치원알리미 연간 교육과정 편성 계획안(2026 운영계획)〕';
+  return `- **교육 특징 (${CURATED_AT} 정리)**: ${c.motto} — 중점: ${st('강조') || '-'}${st('언급') ? ` · 정기 활동: ${st('언급')}` : ''}\n  - 중점·특색 교육: ${c.focus.join(' / ')}\n  - 바깥놀이·숲(계획 표기): ${c.outdoor ?? '미확인'} ${src}`;
+}
 const cdir = path.join(ROOT, 'data', 'costs');
 const cf = fs.existsSync(cdir) ? fs.readdirSync(cdir).filter((f) => f.endsWith('.json')).sort().pop() : null;
 const COST = cf ? JSON.parse(fs.readFileSync(path.join(cdir, cf), 'utf8')) : null;
@@ -83,6 +94,7 @@ for (const area of ['배방읍', '탕정면']) {
     L.push(`- 2026 반 구성(공시): ${cls}`);
     L.push(`- 교사(기관 전체, 반별 배치 아님): ${v(r.staffWhole?.teacherTotal)}명 · 운영시간(공시, 방과후 포함): ${r.afterSchool?.hours?.value ?? v(r.operatingHours)}`);
     L.push(costLine(r));
+    L.push(styleLine(r));
     L.push(`- 체육장 면적(공시, 실내·실외 구분 없음): ${r.playgroundArea?.value ?? U}㎡ · 통학차량(공시): ${r.schoolBus?.value?.운영여부 ?? U}${r.schoolBus?.value?.운행차량수 ? ` ${r.schoolBus.value.운행차량수}대` : ''}`);
     if (k?.classNames) L.push(line('기관이 쓰는 반 이름', k.classNames, k));
     L.push('');

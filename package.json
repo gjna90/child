@@ -10,9 +10,10 @@
     "report": "node scripts/stage1-report.js",
     "notices": "NODE_USE_ENV_PROXY=1 NODE_NO_WARNINGS=1 node scripts/collect-notices.js",
     "costs": "NODE_USE_ENV_PROXY=1 NODE_NO_WARNINGS=1 node scripts/collect-costs.js",
+    "profiles": "NODE_USE_ENV_PROXY=1 NODE_NO_WARNINGS=1 node scripts/collect-profiles.js",
     "snapshot": "node scripts/snapshot.js",
     "build": "node scripts/admission-report.js && node scripts/build-app.js",
-    "refresh": "npm run collect && npm run costs && npm run notices && npm run snapshot && npm run build"
+    "refresh": "npm run collect && npm run costs && npm run profiles && npm run notices && npm run snapshot && npm run build"
   },
   "engines": {
     "node": ">=20"
