@@ -4,7 +4,7 @@
 // - 요강 원문 파일: data/raw/notices/<유치원>/ (공개 저장소 제외)
 // - 반 이름: 요강의 '3세반'은 만 나이 기준(2023년생). 옛 세는나이 '5세반'과 다르다.
 
-export const CHECKED_AT = '2026-10-28';
+export const CHECKED_AT = '2026-10-28'; // 유보통합포털 요강 5곳(아주나·일심·프라임·자연·하나)은 사용자가 저장해 준 PDF로 확인
 export const SCHOOL_YEAR = 2027;
 
 /** 충남 공통 일정 (요강 8곳에서 같은 값 확인) */
@@ -156,20 +156,20 @@ export const KINDER = {
     notes: ['혼합연령반 — 2023년생이 함께 지내는 연령 구성은 원에 확인', '현장 접수 16:00까지'],
   },
   일심유치원: {
-    sources: { page: { title: '홈페이지 「모집요강」 화면 (2027년도 원아모집요강)', posted: null, url: 'https://ilsim.kidsnote.ac/home/admission' } },
+    sources: { page: { title: '홈페이지 「모집요강」 화면 (2027년도 원아모집요강)', posted: null, url: 'https://ilsim.kidsnote.ac/home/admission' }, portal: { title: '유보통합포털 유치원입학 > 모집요강 조회 화면 (일심유치원, 사용자가 PDF로 저장해 전달)', posted: '2026-10-28', url: 'https://enter.childinfo.go.kr' } },
     classNames: { value: '2023년(3세) 밝은햇살반·어린새싹반·푸른잎새반 / 2022년(4세) 예쁜꽃잎반·알찬열매반 / 2021년(5세) 흙내음반·솔내음반', src: 'page' },
     recruit: [
       { age: '3세', birth: '2023년생', classes: 3, capacity: 45, staying: null, recruit: 45, src: 'page' },
       { age: '4세', birth: '2022년생', classes: 2, capacity: 44, staying: null, recruit: 16, src: 'page' },
       { age: '5세', birth: '2021년생', classes: 2, capacity: 50, staying: null, recruit: 20, src: 'page' },
     ],
-    priority3: ['우선모집 90% · 일반모집 10%', 우선공통 + ' (2·3순위 최소 3%)', '4순위(3·4세) 본원 재학생 동생 10%', '5순위(3·4세) 다자녀(3자녀 이상) 5%', '6순위(3·4세) 30%: 쌍생아·형제자매 동시입학·다문화·외국국적'],
-    twins: '쌍생아·형제자매 동시입학이 6순위에 포함 (접수 방식은 유보통합포털 요강 확인)',
+    priority3: ['우선모집 90% · 일반모집 10% (홈페이지)', 우선공통 + ' (2·3순위 각 2명)', '3세: 4순위 재학생 동생 4명(10%) / 5순위 다자녀(3자녀 이상) 2명(5%)', '3세: 6순위 13명(30%) 다자녀(2자녀)·쌍생아·형제자매 동시입학·다문화·외국국적 / 7순위 일심유치원 통학차량 노선 유아 20명(45%)'],
+    twins: '쌍생아·형제자매 동시입학이 3세 6순위에 포함 (포털 요강)',
     hours: { value: '평일 07:30~19:30 (온종일 돌봄유치원, 아침죽·급식·오후간식·저녁간식)', src: 'page' },
     bus: { value: '자이1·2차, 롯데캐슬, 더샵센트로, 중앙1~3차, 꿈비채, 한성필리버시티, 연화마을7·8단지, 탕정지웰1~3단지, 탕정시티프라디움, 예미지, 탕정하늘채, 별하신도시하늘채, 엘리프, 금강펜테리움, 로제비앙, 힐스테이트자이아산센텀, 탕정e편한세상, 한성1~6차, 푸르지오1·2차, 삼정그린코아, 우방아이유쉘1·2차, 북수리·풍세 한양수자인, 탕정더샵인피니티시티2차, 탕정푸르지오리버파크', src: 'page' },
     cost: { value: '특성화비 월 40,000원 외 일체 비용 없음(가방·현장학습비·교통비 등) — 홈페이지 표기', src: 'page' },
     events: [],
-    notes: ['홈페이지의 모집대상 출생일 표기("2023년 1월 1일 ~ 2022년 12월 31일" 등)는 오기로 보임 → 반 구성표 기준 2023년생=3세. 전화 확인 권장', '방과후반은 맞벌이 아닌 유아도 지원 가능, 서류는 주민등록등본 (홈페이지 표기)'],
+    notes: ['홈페이지의 모집대상 출생일 표기("2023년 1월 1일 ~ 2022년 12월 31일" 등)는 오기로 보임 → 반 구성표 기준 2023년생=3세. 전화 확인 권장', '방과후반은 맞벌이 아닌 유아도 지원 가능, 서류는 주민등록등본 (홈페이지 표기)', '포털: 교육과정+방과후 08:30~16:30(부모 희망 시 2시간 조기 하원), 온종일 돌봄 07:30~19:30', '현장접수 11월 2~4일 17:00까지, 증빙서류(주민등록등본) 마감일 18:00까지 (포털)'],
   },
   삼성샛별유치원: {
     sources: { seminar: { title: '<2027학년도 유치원 입학설명회 신청> (입학안내 게시판)', posted: '2026-10-06', url: 'https://samsungkid.kidsnote.ac' } },
@@ -280,16 +280,67 @@ export const KINDER = {
     events: [],
     notes: ['현장 접수 17:00까지', '증빙서류는 제출일 1개월 이내 발급분(다른 곳은 대부분 3개월)', '우선모집 증빙서류 제출 11월 4일(수) 18:00까지'],
   },
+  아주나유치원: {
+    sources: { portal: { title: '유보통합포털 유치원입학 > 모집요강 조회 화면 (아주나유치원, 사용자가 PDF로 저장해 전달)', posted: '2026-10-28', url: 'https://enter.childinfo.go.kr' } },
+    recruit: [
+      { age: '3세', birth: '2023년생', classes: 4, capacity: 64, staying: null, recruit: '64 (우선모집 인원)', src: 'portal' },
+      { age: '4세', birth: '2022년생', classes: 5, capacity: 104, staying: null, recruit: '42 (우선모집 인원)', src: 'portal' },
+      { age: '5세', birth: '2021년생', classes: 4, capacity: 104, staying: null, recruit: '0 (우선모집 인원)', src: 'portal' },
+    ],
+    priority3: ['최우선: 본원 재학 유아·특수교육대상자 / 1순위 법정저소득층(모집인원 내 100%) / 2순위 국가보훈 2명 / 3순위 북한이탈 2명', '4순위 다자녀(3자녀 이상) 2명 / 5순위 다자녀(2자녀) 2명', '6순위 본원 재학 유아의 형제자매 10명 / 7순위 근거리 거주 유아(통학차량 운행지역 및 걸어서 등하원 가능 지역) 45명'],
+    twins: TWINS_COMMON + ' — 포털 표기: 쌍생아는 우선모집 기타 4순위 예시로 유치원 자율',
+    hours: { value: '교육과정 08:30~12:30, 교육과정+방과후 ~16:30(15:30), 일일 최대 운영 08:00~18:00', src: 'portal' },
+    events: [],
+    notes: ['현장접수 마감 11월 4일(수) 17:00, 증빙서류 11월 6일(금) 17:00 도착분까지', '5세는 우선모집 인원 0명', '자세한 순위 조건은 포털 요강 하단 첨부 「2027학년도 아주나유치원 모집요강」 참조(미확인)', '홈페이지 aju.m-sol.kr · 앱 「아주나유치원」 · 041-545-7400'],
+  },
+  프라임유치원: {
+    sources: { portal: { title: '유보통합포털 유치원입학 > 모집요강 조회 화면 (프라임유치원, 사용자가 PDF로 저장해 전달)', posted: '2026-10-28', url: 'https://enter.childinfo.go.kr' }, page: { title: '홈페이지 원아모집 「2027학년도 표준모집요강-우선모집」 (첨부 HWP 미확인)', posted: '2026-10-28', url: 'https://www.xn--oi2bs40a3gwn45zymk.kr/main/sub.html?Mode=view&boardID=www26&num=10092' } },
+    recruit: [
+      { age: '3세', birth: '2023년생', classes: 2, capacity: 34, staying: null, recruit: '34 (우선모집 인원)', src: 'portal' },
+      { age: '4세', birth: '2022년생', classes: 3, capacity: 64, staying: null, recruit: '30 (우선모집 인원)', src: 'portal' },
+      { age: '5세', birth: '2021년생', classes: 2, capacity: 54, staying: null, recruit: '11 (우선모집 인원)', src: 'portal' },
+    ],
+    priority3: ['최우선: 본원 재학 유아·특수교육대상자 / 1순위 법정저소득층(모집인원 내 100%) / 2순위 국가보훈 1명 / 3순위 북한이탈 1명', '4순위 재원생의 동생 2명 / 5순위 다자녀(3명 이상) 1명', '6순위 쌍생아·다자녀(2명 이상)·통학차량 거주지 인근 30명'],
+    twins: TWINS_COMMON + ' — 포털 표기: 쌍생아는 우선모집 기타 4순위 예시로 유치원 자율',
+    hours: { value: '교육과정 08:40~12:40 + 방과후 12:40~16:40 (학부모 동의 시 1시간 단축 가능)', src: 'portal' },
+    events: [],
+    notes: ['현장접수·증빙서류 마감 11월 5일(목) 17:00', '포털의 우선순위 설명표에는 "5순위: 통학차량 거주지 우선, 쌍생아 및 다자녀"로 적혀 있어 순위별 표(4·5·6순위)와 다름 — 원에 확인', '주소 배방읍 북수로 111번길 6-9 · 041-533-3851'],
+  },
+  자연유치원: {
+    sources: { portal: { title: '유보통합포털 유치원입학 > 모집요강 조회 화면 (자연유치원, 사용자가 PDF로 저장해 전달)', posted: '2026-10-28', url: 'https://enter.childinfo.go.kr' } },
+    recruit: [
+      { age: '3세', birth: '2023년생', classes: 3, capacity: 49, staying: null, recruit: '49 (우선모집 인원)', src: 'portal' },
+      { age: '4세', birth: '2022년생', classes: 3, capacity: 64, staying: null, recruit: '38 (우선모집 인원)', src: 'portal' },
+      { age: '5세', birth: '2021년생', classes: 3, capacity: 79, staying: null, recruit: '55 (우선모집 인원)', src: 'portal' },
+    ],
+    priority3: ['최우선: 본원 재학 유아·특수교육대상자 / 1순위 법정저소득층(모집인원 내 100%) / 2순위 국가보훈 1명 / 3순위 북한이탈 1명', '4순위 다자녀(3자녀 이상) 1명', '5순위 44명: 다자녀(2자녀)·통학차량 운행지역·재학생의 동생(2027년 4·5세 재원 유아의 형제자매)'],
+    twins: TWINS_COMMON + ' — 포털 표기: 쌍생아는 우선모집 기타 4순위 예시로 유치원 자율',
+    hours: { value: '교육과정 08:30~12:30, 교육과정+방과후 08:30~15:30 또는 08:30~16:30', src: 'portal' },
+    bus: { value: '운행지역: 공수리, 북수리, 탕정방면(신라아파트·지웰시티푸르지오 1·2·3단지·탕정 시티프라디움·연화마을·대광로제비앙·예미지·한들물빛 하늘채·탕정호반써밋·e편한세상탕정퍼스트드림·금강펜테리움·탕정 엘리프·힐스테이트자이·탕정푸르지오리버파크·트라펠리스), 풍세 한양수자인, 모종동방면(캐슬어울림 1·2·3단지·힐스테이트·한성 1·2차·푸르지오·이편한세상)', src: 'portal' },
+    events: [],
+    notes: ['현장접수 11월 2일~4일 10:00~17:30(등본 지참), 증빙서류 11월 6일 17:30까지', '기타순위 서류(등본·확인서·개인정보 동의서)는 홈페이지 www.kid2008.net 유치원안내 > 입학안내 > 2027학년도 지원서류 란에 있음', '입주 예정 지역 지원 유아는 입주 확인서 제출', '홈페이지 www.kid2008.net · 인스타그램 jayeonkids_ · 041-548-5611'],
+  },
+  하나유치원: {
+    sources: { portal: { title: '유보통합포털 유치원입학 > 모집요강 조회 화면 (하나유치원, 사용자가 PDF로 저장해 전달)', posted: '2026-10-28', url: 'https://enter.childinfo.go.kr' }, page: { title: '홈페이지 입학안내 > 모집요강 (2027학년도 원아모집요강)', posted: null, url: 'https://hana0065.kidsnote.ac/home/admission' } },
+    recruit: [
+      { age: '3세', birth: '2023년생', classes: 2, capacity: 34, staying: null, recruit: '34 (우선모집 인원)', src: 'portal' },
+      { age: '4세', birth: '2022년생', classes: 1, capacity: 24, staying: null, recruit: '11 (우선모집 인원)', src: 'portal' },
+      { age: '5세', birth: '2021년생', classes: 2, capacity: 54, staying: null, recruit: '24 (우선모집 인원)', src: 'portal' },
+    ],
+    priority3: ['최우선: 본원 재학 유아·특수교육대상자 / 1순위 법정저소득층(모집인원 내 100%) / 2순위 국가보훈 2명 / 3순위 북한이탈 2명', '4순위 다자녀(3명 이상) 2명', '5순위 28명(연령별 모집인원의 80%): 다자녀(2명 이상)·쌍생아·2027년 4·5세 본원 재학 유아의 형제자매·사회적 배려·다문화·장애부모·통학차량 이용·개별 등하원 유아'],
+    twins: TWINS_COMMON + ' — 이 원은 쌍생아를 5순위에 명시',
+    hours: { value: '교육과정 09:00~13:00, 교육과정+방과후 09:00~17:00 (15:30부터 순차 귀가), 19:30까지 통합교육', src: 'portal' },
+    care: { value: '평일 07:30~19:30 운영 (홈페이지 모집요강)', src: 'page' },
+    bus: { value: '차량운행 가능 지역: 배방읍 공수리, 북수리, 탕정면 일대 (홈페이지)', src: 'page' },
+    events: [],
+    notes: ['포털의 현장접수·증빙서류 마감 칸이 "2025.11.3~2025.11.05 17:00"으로 적혀 있음(연도 오기로 보임) — 2026년 11월 5일(목) 17:00로 추정되나 원에 확인', '홈페이지 https://hana0065.kidsnote.ac · 041-532-0065'],
+  },
 };
 
 /** 아직 요강을 확인하지 못한 곳의 현재 상태 */
 export const PENDING = {
   아산용연초등학교병설유치원: '홈페이지 유치원·학교 게시판 전체에 2027 모집 글 없음 (10/28 21시 확인, 작년엔 10/24 게시) — 유보통합포털에서 확인',
   탕정초등학교병설유치원: '홈페이지 병설유치원·학교 게시판 전체에 2027 모집 글 없음 (10/28 21시 확인) — 유보통합포털에서 확인',
-  프라임유치원: '홈페이지 원아모집 게시판에 「2027학년도 표준모집요강-우선모집」(10/28) 게시 확인 — 첨부 HWP가 해외에서 내려받기 막혀 내용 미확인. https://www.프라임유치원.kr/main/sub.html?Mode=view&boardID=www26&num=10092',
-  아주나유치원: '공식 홈페이지 http://aju.m-sol.kr (카카오맵 등록 정보로 찾음, 10/28) — 해외 접속 차단으로 내용 미확인',
-  자연유치원: '홈페이지를 찾지 못함 (유치원알리미·카카오맵·웹 검색 모두 없음, 10/28) — 전화 041-548-5611',
-  하나유치원: '홈페이지를 찾지 못함 (유치원알리미·카카오맵·웹 검색 모두 없음, 10/28) — 전화 041-532-0065',
 };
 
 /**
@@ -369,8 +420,29 @@ export const PRIO = {
     { rank: 5, pct: '70%', keys: ['multi2', 'health', 'twins', 'sibling', 'social', 'multicultural', 'disabledParent'] },
   ],
   일심유치원: [
-    { rank: 1, pct: '모집인원 내 100%', keys: ['low'] }, { rank: 2, pct: '최소 3%', keys: ['vet'] }, { rank: 3, pct: '최소 3%', keys: ['nk'] },
-    { rank: 4, pct: '10%', keys: ['sibling'] }, { rank: 5, pct: '5%', keys: ['multi3'] },
-    { rank: 6, pct: '30%', keys: ['twins', 'together', 'multicultural', 'foreign'] },
+    { rank: 1, pct: '모집인원 내 100%', keys: ['low'] }, { rank: 2, pct: '2명', keys: ['vet'] }, { rank: 3, pct: '2명', keys: ['nk'] },
+    { rank: 4, pct: '10%(4명)', keys: ['sibling'] }, { rank: 5, pct: '5%(2명)', keys: ['multi3'] },
+    { rank: 6, pct: '30%(13명)', keys: ['multi2', 'twins', 'together', 'multicultural', 'foreign'] },
+    { rank: 7, pct: '45%(20명)', keys: ['busroute'] },
+  ],
+  아주나유치원: [
+    { rank: 1, pct: '모집인원 내 100%', keys: ['low'] }, { rank: 2, pct: '2명', keys: ['vet'] }, { rank: 3, pct: '2명', keys: ['nk'] },
+    { rank: 4, pct: '2명', keys: ['multi3'] }, { rank: 5, pct: '2명', keys: ['multi2'] },
+    { rank: 6, pct: '10명', keys: ['sibling'] }, { rank: 7, pct: '45명', keys: ['busroute', 'walk'], note: '근거리 거주(통학차량 운행지역·걸어서 등하원 가능 지역). 쌍생아는 4순위 예시로 원 자율' },
+  ],
+  프라임유치원: [
+    { rank: 1, pct: '모집인원 내 100%', keys: ['low'] }, { rank: 2, pct: '1명', keys: ['vet'] }, { rank: 3, pct: '1명', keys: ['nk'] },
+    { rank: 4, pct: '2명', keys: ['sibling'] }, { rank: 5, pct: '1명', keys: ['multi3'] },
+    { rank: 6, pct: '30명', keys: ['twins', 'multi2', 'busroute'], note: '포털 설명표와 순위표가 조금 다름 — 원에 확인' },
+  ],
+  자연유치원: [
+    { rank: 1, pct: '모집인원 내 100%', keys: ['low'] }, { rank: 2, pct: '1명', keys: ['vet'] }, { rank: 3, pct: '1명', keys: ['nk'] },
+    { rank: 4, pct: '1명', keys: ['multi3'] },
+    { rank: 5, pct: '44명', keys: ['multi2', 'busroute', 'sibling'], note: '쌍생아는 4순위 예시로 원 자율' },
+  ],
+  하나유치원: [
+    { rank: 1, pct: '모집인원 내 100%', keys: ['low'] }, { rank: 2, pct: '2명', keys: ['vet'] }, { rank: 3, pct: '2명', keys: ['nk'] },
+    { rank: 4, pct: '2명', keys: ['multi3'] },
+    { rank: 5, pct: '80%(28명)', keys: ['multi2', 'twins', 'sibling', 'social', 'multicultural', 'disabledParent', 'busroute', 'walk'] },
   ],
 };

@@ -172,6 +172,7 @@ function platformOf(url) {
 
 /** 유치원알리미에 홈페이지가 등록되지 않았지만 직접 찾은 공식 홈페이지 (확인일·근거 함께) */
 export const HOMEPAGE_EXTRA = {
+  // 아래 3곳은 자동 수집 틀이 없어 기록만: 아주나 http://aju.m-sol.kr(해외 차단), 자연 http://www.kid2008.net(입학안내 pageCode=133, 세종과 같은 프로그램), 하나 https://hana0065.kidsnote.ac
   연화초등학교병설유치원: { url: 'http://yeonhwa.cnees.kr', found: '2026-10-28', note: '충남 학교 홈페이지 플랫폼, 유치원 > 공지사항 게시판' },
   // 세종유치원: 홈페이지는 등록돼 있으나 자체 CMS — 입학안내 게시판 http://www.sejongkids.com/main/sub.html?pageCode=118 (boardID www118), 첨부는 /core/anyboard/download.php?boardID=www118&fileNum=N (POST)
 };
