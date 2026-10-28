@@ -245,6 +245,20 @@ export const KINDER = {
     events: [{ what: '교육과정 설명회 (신입생·재입학생 보호자)', when: '2026-12-10(목) 14:00 예정, 1층 한들물빛 어울림터', src: 'yogang' }],
     notes: ['3세반 정원 14명 중 우선모집 6명 — 나머지는 일반모집 인원으로 보임(요강 표 기준, 원에 확인)', '현장 접수 평일 10:00~15:00 (점심 11:30~12:30 제외)', '조기입학·취학유예·미숙아 하위연령 지원은 모집 대상 아님', '쌍생아·재원생 형제자매가 우선순위에 따로 적혀 있지 않음 — 원에 확인'],
   },
+  연화초등학교병설유치원: {
+    sources: { yogang: { title: '2027학년도 연화초등학교병설유치원 유아모집 요강 (HWP) — 「유아모집 안내」 글', posted: '2026-10-27', url: 'http://yeonhwa.cnees.kr/boardCnts/view.do?boardID=241724&boardSeq=45260794&lev=0&s=yeonhwa' } },
+    recruit: [
+      { age: '3~4세반 (혼합)', birth: '2022~2023년생', classes: 1, capacity: 16, staying: '0', recruit: 16, src: 'yogang' },
+      { age: '5세반', birth: '2021년생', classes: 1, capacity: 20, staying: '2', recruit: 18, src: 'yogang' },
+    ],
+    priority3: [우선공통 + ' (2·3순위 각 3%)', '4순위 다자녀(3자녀 이상) 30%', '5순위 이하 50%: 다자녀(2자녀)·건강취약·쌍생아·본원 재학 유아 형제자매·사회적 배려·다문화·장애부모'],
+    twins: TWINS_COMMON,
+    hours: { value: '교육과정+방과후 08:30~16:30', src: 'yogang' },
+    bus: { value: '없음', src: 'yogang' },
+    cost: { value: '"유치원알리미 확인"', src: 'yogang' },
+    events: [],
+    notes: ['3·4세가 한 반(혼합), 재학 예정 0명 — 3·4세 16명 모두 새로 모집', '현장 접수 16:00까지', '서류 온라인 간편제출 11월 6일(금) 18:00까지', '요강에 돌봄·설명회 안내 없음 — 원에 확인', '유치원알리미에 홈페이지 미등록 — 학교 홈페이지(yeonhwa.cnees.kr) 유치원 공지사항에서 확인'],
+  },
 };
 
 /** 아직 요강을 확인하지 못한 곳의 현재 상태 */
@@ -256,7 +270,6 @@ export const PENDING = {
   아주나유치원: '유치원알리미에 홈페이지 공시 없음, 웹 검색에서도 못 찾음',
   자연유치원: '유치원알리미에 홈페이지 공시 없음, 웹 검색에서도 못 찾음',
   하나유치원: '유치원알리미에 홈페이지 공시 없음, 웹 검색에서도 못 찾음',
-  연화초등학교병설유치원: '유치원알리미에 홈페이지 공시 없음',
 };
 
 /**
@@ -318,6 +331,11 @@ export const PRIO = {
     { rank: 1, pct: '모집인원 내 100%', keys: ['low'] }, { rank: 2, pct: '15%', keys: ['vet'] }, { rank: 3, pct: '15%', keys: ['nk'] },
     { rank: 4, pct: '25%', keys: ['multi3'] },
     { rank: 5, pct: '25%', keys: ['multi2', 'social', 'multicultural', 'disabledParent'], note: '쌍생아·재원생 형제자매 별도 표기 없음 — 원에 확인' },
+  ],
+  연화초등학교병설유치원: [
+    { rank: 1, pct: '모집인원 내 100%', keys: ['low'] }, { rank: 2, pct: '3%', keys: ['vet'] }, { rank: 3, pct: '3%', keys: ['nk'] },
+    { rank: 4, pct: '30%', keys: ['multi3'] },
+    { rank: 5, pct: '50%', keys: ['multi2', 'health', 'twins', 'sibling', 'social', 'multicultural', 'disabledParent'] },
   ],
   금곡초등학교병설유치원: [
     { rank: 1, pct: '모집인원 내 100%', keys: ['low'] }, { rank: 2, pct: '모집인원 내 100%', keys: ['vet'] }, { rank: 3, pct: '모집인원 내 100%', keys: ['nk'] },

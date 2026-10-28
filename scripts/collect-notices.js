@@ -170,6 +170,11 @@ function platformOf(url) {
   return 'other';
 }
 
+/** 유치원알리미에 홈페이지가 등록되지 않았지만 직접 찾은 공식 홈페이지 (확인일·근거 함께) */
+export const HOMEPAGE_EXTRA = {
+  연화초등학교병설유치원: { url: 'http://yeonhwa.cnees.kr', found: '2026-10-28', note: '충남 학교 홈페이지 플랫폼, 유치원 > 공지사항 게시판' },
+};
+
 async function main() {
   const rdir = path.join(ROOT, 'data', 'roster');
   const file = process.argv[2] ?? fs.readdirSync(rdir).filter((f) => f.endsWith('.json')).sort().pop();
@@ -177,6 +182,7 @@ async function main() {
   const list = [...R.included, ...R.needsCheck].filter((r) => r.kind === '유치원');
   const result = { checkedAt: today, roster: file, kindergartens: [] };
   for (const rec of list) {
+    if (!rec.homepage?.value && HOMEPAGE_EXTRA[rec.name]) rec.homepage = { value: HOMEPAGE_EXTRA[rec.name].url, source: '직접 확인한 홈페이지(유치원알리미 미등록)' };
     const hp = rec.homepage?.value ?? null;
     const p = platformOf(hp);
     const entry = { id: rec.id, name: rec.name, area: rec.area, homepage: hp, platform: p };
