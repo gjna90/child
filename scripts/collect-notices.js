@@ -173,7 +173,35 @@ function platformOf(url) {
 /** 유치원알리미에 홈페이지가 등록되지 않았지만 직접 찾은 공식 홈페이지 (확인일·근거 함께) */
 export const HOMEPAGE_EXTRA = {
   연화초등학교병설유치원: { url: 'http://yeonhwa.cnees.kr', found: '2026-10-28', note: '충남 학교 홈페이지 플랫폼, 유치원 > 공지사항 게시판' },
+  // 세종유치원: 홈페이지는 등록돼 있으나 자체 CMS — 입학안내 게시판 http://www.sejongkids.com/main/sub.html?pageCode=118 (boardID www118), 첨부는 /core/anyboard/download.php?boardID=www118&fileNum=N (POST)
 };
+
+/** 세종유치원 자체 홈페이지(anyboard): 입학안내 게시판 목록 → 모집 글·첨부 */
+export function parseAnyboardList(html) {
+  const posts = [...html.matchAll(/<a href="(\/main\/sub\.html\?Mode=view&(?:amp;)?boardID=(\w+)&(?:amp;)?num=(\d+)[^"]*)">([^<]+)<\/a>/g)]
+    .map((m) => ({ href: decode(m[1]), boardID: m[2], num: m[3], title: m[4].trim() }));
+  const files = [...new Set([...html.matchAll(/anyboard\.fileDown\('(\d+)'\);">([^<]+)<\/a>/g)].map((m) => `${m[1]}|${m[2].trim()}`))].map((x) => { const [id, name] = x.split('|'); return { id, name }; });
+  const seen = new Set();
+  return { posts: posts.filter((p) => !seen.has(p.num) && seen.add(p.num)), files };
+}
+async function scanSejong(rec, outDir) {
+  const base = 'http://www.sejongkids.com';
+  const listUrl = `${base}/main/sub.html?pageCode=118`;
+  const res = await fetch(listUrl, { headers: { 'User-Agent': UA } });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const { posts, files } = parseAnyboardList(await res.text());
+  const found = posts.filter((x) => isAdmissionTitle(x.title)).map((x) => ({ title: x.title, date: null, url: base + x.href, files: [] }));
+  for (const f of files.filter((x) => /2027/.test(x.name))) {
+    const r = await fetch(`${base}/core/anyboard/download.php?boardID=www118&fileNum=${f.id}`, { method: 'POST', headers: { 'User-Agent': UA, Referer: listUrl } });
+    if (!r.ok) continue;
+    const file = path.join(outDir, `${f.id}_${safeName(f.name)}`);
+    fs.writeFileSync(file, Buffer.from(await r.arrayBuffer()));
+    const t = extractText(file);
+    if (t.text) fs.writeFileSync(file + '.txt', t.text);
+    (found[0]?.files ?? []).push({ name: f.name, how: t.how });
+  }
+  return { board: '입학안내 (pageCode=118)', found };
+}
 
 async function main() {
   const rdir = path.join(ROOT, 'data', 'roster');
@@ -187,6 +215,12 @@ async function main() {
     const p = platformOf(hp);
     const entry = { id: rec.id, name: rec.name, area: rec.area, homepage: hp, platform: p };
     if (!hp) entry.status = '홈페이지 공시 없음 — 웹 검색 등으로 따로 확인';
+    else if (/sejongkids\.com/.test(hp)) {
+      const outDir = path.join(ROOT, 'data', 'raw', 'notices', safeName(rec.name));
+      fs.mkdirSync(outDir, { recursive: true });
+      try { Object.assign(entry, await scanSejong(rec, outDir)); entry.status = entry.found.some((x) => /2027/.test(x.title)) ? '2027 모집 관련 글 있음' : '2027 모집 관련 글 못 찾음'; }
+      catch (e) { entry.status = `수집 실패: ${e.message}`; }
+    }
     else if (p !== 'cne') entry.status = '이 홈페이지 틀은 자동 수집 미지원 — 따로 확인';
     else {
       const outDir = path.join(ROOT, 'data', 'raw', 'notices', safeName(rec.name));
