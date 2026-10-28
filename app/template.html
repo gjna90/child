@@ -321,6 +321,14 @@ const state = {
   sort: store.get('sort', 'dist'),
   f: store.get('filters', { kind: [], est: [], area: [], style: [], cond: [], radius: 3, unknown: true }),
 };
+// 예전 버전에서 저장된 설정에 새 항목이 없을 수 있어 기본값으로 채움 (새 필터를 추가해도 화면이 멈추지 않게)
+function normFilters(f) {
+  const d = { kind: [], est: [], area: [], style: [], cond: [], radius: 3, unknown: true };
+  const o = { ...d, ...(f && typeof f === 'object' ? f : {}) };
+  for (const k of ['kind', 'est', 'area', 'style', 'cond']) if (!Array.isArray(o[k])) o[k] = [];
+  return o;
+}
+state.f = normFilters(state.f);
 const manAge = () => SY - state.birth - 1;
 
 // ── 계산 ──────────────────────────────────────────────
@@ -468,7 +476,7 @@ const CONDS = [
 function passes(it, skip) {
   for (const g of GROUPS) {
     if (skip === g.key) continue;
-    const sel = state.f[g.key];
+    const sel = state.f[g.key] ?? [];
     if (sel.length && !sel.some((v) => g.test(it, v))) return false; // 같은 범주: OR
   }
   for (const c of CONDS) {
@@ -620,7 +628,7 @@ function sortList(list) {
 
 // ── 조건 화면 ──────────────────────────────────────────
 function drawFilters() {
-  const g = GROUPS.map((gr) => `<div class="fgroup" role="group" aria-label="${gr.label}"><span class="glabel">${gr.label}</span>${gr.opts.map(([v, l]) => `<button class="chip" type="button" data-g="${gr.key}" data-v="${esc(v)}" aria-pressed="${state.f[gr.key].includes(v)}">${esc(l)}</button>`).join('')}</div>`).join('');
+  const g = GROUPS.map((gr) => `<div class="fgroup" role="group" aria-label="${gr.label}"><span class="glabel">${gr.label}</span>${gr.opts.map(([v, l]) => `<button class="chip" type="button" data-g="${gr.key}" data-v="${esc(v)}" aria-pressed="${(state.f[gr.key] ?? []).includes(v)}">${esc(l)}</button>`).join('')}</div>`).join('');
   const c = `<div class="fgroup" role="group" aria-label="조건"><span class="glabel">조건</span>${CONDS.map((cd) => `<button class="chip" type="button" data-c="${cd.key}" aria-pressed="${state.f.cond.includes(cd.key)}">${esc(cd.label)}</button>`).join('')}</div>`;
   const r = `<div class="fgroup"><span class="glabel">반경</span><input type="range" id="radius" min="0.5" max="8" step="0.5" value="${state.f.radius}" aria-label="반경 km" ${state.origin ? '' : 'disabled'}><span class="small num" id="radiusVal">${state.f.radius}km</span>${state.origin ? '' : '<span class="small muted">출발지를 정하면 쓸 수 있습니다</span>'}</div>`;
   const u = `<div class="fgroup"><span class="glabel">미확인</span><button class="chip" type="button" id="unk" aria-pressed="${state.f.unknown}">미확인도 보기</button><button class="btn" type="button" id="reset">조건 모두 지우기</button></div>`;
@@ -1431,8 +1439,7 @@ function hasPersonal(d) { return !!(d.kids?.length || Object.keys(d.consult ?? {
 function applyData(d) {
   cloud.applying = true;
   for (const [k, f] of Object.entries(PERSIST)) if (d[k] !== undefined) { state[f] = d[k]; try { localStorage.setItem('bt-' + k, JSON.stringify(d[k])); } catch {} }
-  if (state.f && !state.f.cond) state.f = { kind: [], est: [], area: [], cond: [], radius: 3, unknown: true, ...state.f };
-  if (state.f && !state.f.style) state.f.style = [];
+  state.f = normFilters(state.f);
   $('#birth').value = state.birth; $('#sort').value = state.sort;
   render(); showTab(state.tab);
   cloud.applying = false;
