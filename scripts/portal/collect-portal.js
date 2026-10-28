@@ -88,7 +88,27 @@ async function saveYogang(page, name, how) {
 }
 
 /** 자동: 포털에서 '모집요강' 메뉴 → 기관명 검색 → 결과 열기 (화면 구조를 모르는 상태라 글자로 찾는다) */
+/** 포털 밖이지만 해외에서 막혀 PC에서만 열리는 기관 홈페이지 글 (10/28 확인) */
+const DIRECT = [
+  { name: '프라임유치원', url: 'https://www.xn--oi2bs40a3gwn45zymk.kr/main/sub.html?Mode=view&boardID=www26&num=10092', note: '「2027학년도 표준모집요강-우선모집」 글(첨부 HWP)' },
+  { name: '아주나유치원', url: 'https://aju.m-sol.kr/', note: '홈페이지 첫 화면 — 모집 글이 보이면 학습 모드로 열어 저장' },
+];
+async function direct(page) {
+  for (const d of DIRECT) {
+    if (!names.includes(d.name) || saved.has(d.name)) continue;
+    try {
+      await page.goto(d.url, { waitUntil: 'domcontentloaded', timeout: 60000 });
+      await human();
+      const text = await pageText(page);
+      await probe(page, `direct_${d.name}`);
+      if (looksLikeYogang(text) || /2027/.test(text)) await saveYogang(page, d.name, `기관 홈페이지 직접 (${d.note})`);
+      else log(`${d.name}: 홈페이지는 열렸지만 2027 요강 글이 아님 — 학습 모드로 직접 찾아 저장해 주세요`);
+    } catch (e) { log(`${d.name} 홈페이지 실패: ${String(e.message).slice(0, 80)}`); }
+  }
+}
+
 async function auto(ctx, page) {
+  await direct(page);
   await page.goto(PORTAL, { waitUntil: 'domcontentloaded', timeout: 60000 });
   await human();
   if (isBlocked(await pageText(page))) { log('보안 확인 화면이 나왔습니다. 창에서 직접 통과한 뒤 Enter를 누르세요(30초 안에 안 하면 학습 모드로 바꿔 진행).'); await sleep(30000); }
