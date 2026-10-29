@@ -1,0 +1,1343 @@
+{
+  "source": "유치원알리미 > 학급·교육 > 연간 교육과정 편성 계획안(필수) 공시 파일",
+  "checkedAt": "2026-10-29",
+  "rules": "교육 방향 분류는 운영계획 글에 나온 표현을 세어 자동으로 나눈 것(규칙: docs/09_교육특징_분류.md). 기관이 실제로 그렇게 운영하는지는 상담·참관으로 확인",
+  "items": {
+    "kinder:1ecec08c-f94b-b044-e053-0a32095ab044": {
+      "name": "금곡초등학교병설유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-29",
+      "source": {
+        "title": "2026년 금곡초등학교병설유치원 교육과정 운영계획(연간).pdf",
+        "registered": "2026-03-16",
+        "round": "2026년 1차"
+      },
+      "scores": {
+        "nature": 10.3,
+        "play": 7.8,
+        "reading": 4.5,
+        "body": 9.1,
+        "arts": 3.7,
+        "character": 4.9,
+        "learning": 4.8
+      },
+      "tags": [
+        {
+          "key": "nature",
+          "label": "자연·생태 체험",
+          "level": "강조",
+          "score": 10.3
+        },
+        {
+          "key": "body",
+          "label": "신체·운동",
+          "level": "강조",
+          "score": 9.1
+        },
+        {
+          "key": "play",
+          "label": "놀이·프로젝트 (아이 주도)",
+          "level": "언급",
+          "score": 7.8
+        },
+        {
+          "key": "character",
+          "label": "인성·예절",
+          "level": "적음",
+          "score": 4.9
+        },
+        {
+          "key": "learning",
+          "label": "학습·기초교육 (한글·수·영어·AI)",
+          "level": "적음",
+          "score": 4.8
+        },
+        {
+          "key": "reading",
+          "label": "독서·말·글(문해)",
+          "level": "적음",
+          "score": 4.5
+        },
+        {
+          "key": "arts",
+          "label": "예술·표현",
+          "level": "적음",
+          "score": 3.7
+        }
+      ],
+      "outdoor": [
+        "쉼(,)이 있는 바깥놀이 활성화: 매일 60분 이상",
+        "12) 교육과정 운영 시 1일 바깥놀이를 포함하여 2시간 이상의 놀이시간을 확보한다",
+        "· 매일 5분 안전 교육 【오전 간식】 【자유놀이 및 바깥놀이】 【대·소집단 활동】 【점심 】  협력수업  12:2",
+        "나) 교육과정은 1일 바깥 놀이를 포함하여 2시간 이상의 충분한 놀이시간을 운영한다",
+        "3) 바깥놀이는 매일 1시간 이상, 날씨를 고려하여 실시하며 미세먼"
+      ],
+      "focusCount": 1,
+      "chars": 65456,
+      "note": null
+    },
+    "kinder:1ecec08d-0c5e-b044-e053-0a32095ab044": {
+      "name": "동덕초등학교병설유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-29",
+      "source": {
+        "title": "2026학년도 동덕초등학교병설유치원 교육과정운영계획(최종).hwpx",
+        "registered": "2026-07-07",
+        "round": "2026년 1차"
+      },
+      "scores": {
+        "nature": 17.6,
+        "play": 7.3,
+        "reading": 14.9,
+        "body": 12.2,
+        "arts": 14.2,
+        "character": 16.8,
+        "learning": 12.3
+      },
+      "tags": [
+        {
+          "key": "nature",
+          "label": "자연·생태 체험",
+          "level": "강조",
+          "score": 17.6
+        },
+        {
+          "key": "character",
+          "label": "인성·예절",
+          "level": "강조",
+          "score": 16.8
+        },
+        {
+          "key": "reading",
+          "label": "독서·말·글(문해)",
+          "level": "강조",
+          "score": 14.9
+        },
+        {
+          "key": "arts",
+          "label": "예술·표현",
+          "level": "언급",
+          "score": 14.2
+        },
+        {
+          "key": "learning",
+          "label": "학습·기초교육 (한글·수·영어·AI)",
+          "level": "언급",
+          "score": 12.3
+        },
+        {
+          "key": "body",
+          "label": "신체·운동",
+          "level": "언급",
+          "score": 12.2
+        },
+        {
+          "key": "play",
+          "label": "놀이·프로젝트 (아이 주도)",
+          "level": "적음",
+          "score": 7.3
+        }
+      ],
+      "outdoor": [
+        "매일 2시간 이상 바깥놀이 실시 및 특색교육인 생태교육과 연계하여 운영하여 유아",
+        "매일 1시간 이상 바깥놀이 및 신체활동 연중 담임",
+        "숲해설가와 함께하는 찾아오는 숲놀이 월1회 담당자",
+        "신나는 바깥놀이  - 1일 1시간 이상 바깥놀이 운영  - 유치원 주",
+        "8) 1일 4시간 교육과정 내 바깥놀이(대근육 놀이 포함)를 포함하는 2시간 이상의 놀이 시",
+        "※1일 2시간 이상  놀이시간 확보  자유놀이 및 바깥놀이  · 함께 만들어가는 자유놀이  · 자연체험, 생태,"
+      ],
+      "focusCount": 15,
+      "chars": 83597,
+      "note": null
+    },
+    "kinder:1ecec08d-02ad-b044-e053-0a32095ab044": {
+      "name": "배방유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-29",
+      "source": {
+        "title": "2026학년도 배방유치원 교육계획.pdf",
+        "registered": "2026-07-07",
+        "round": "2026년 1차"
+      },
+      "scores": {
+        "nature": 16.8,
+        "play": 11.4,
+        "reading": 8.9,
+        "body": 10.3,
+        "arts": 6.4,
+        "character": 13.7,
+        "learning": 11
+      },
+      "tags": [
+        {
+          "key": "nature",
+          "label": "자연·생태 체험",
+          "level": "강조",
+          "score": 16.8
+        },
+        {
+          "key": "character",
+          "label": "인성·예절",
+          "level": "강조",
+          "score": 13.7
+        },
+        {
+          "key": "play",
+          "label": "놀이·프로젝트 (아이 주도)",
+          "level": "언급",
+          "score": 11.4
+        },
+        {
+          "key": "learning",
+          "label": "학습·기초교육 (한글·수·영어·AI)",
+          "level": "언급",
+          "score": 11
+        },
+        {
+          "key": "body",
+          "label": "신체·운동",
+          "level": "언급",
+          "score": 10.3
+        },
+        {
+          "key": "reading",
+          "label": "독서·말·글(문해)",
+          "level": "언급",
+          "score": 8.9
+        },
+        {
+          "key": "arts",
+          "label": "예술·표현",
+          "level": "적음",
+          "score": 6.4
+        }
+      ],
+      "outdoor": [
+        "4) 하루 일과에서 유아의 놀이가 충분히 이루어지도록 바깥놀이를 포함하여 1일 2시간 이상 의 놀이시간을 확보한다"
+      ],
+      "focusCount": 8,
+      "chars": 80332,
+      "note": null
+    },
+    "kinder:1ecec08c-effe-b044-e053-0a32095ab044": {
+      "name": "삼성샛별유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-29",
+      "source": {
+        "title": "2026학년도 삼성샛별유치원 교육과정 운영계획_최종.pdf",
+        "registered": "2026-03-27",
+        "round": "2026년 1차"
+      },
+      "scores": {
+        "nature": 8.9,
+        "play": 4.3,
+        "reading": 4.8,
+        "body": 17.1,
+        "arts": 4.7,
+        "character": 5.3,
+        "learning": 9
+      },
+      "tags": [
+        {
+          "key": "body",
+          "label": "신체·운동",
+          "level": "강조",
+          "score": 17.1
+        },
+        {
+          "key": "learning",
+          "label": "학습·기초교육 (한글·수·영어·AI)",
+          "level": "언급",
+          "score": 9
+        },
+        {
+          "key": "nature",
+          "label": "자연·생태 체험",
+          "level": "언급",
+          "score": 8.9
+        },
+        {
+          "key": "character",
+          "label": "인성·예절",
+          "level": "적음",
+          "score": 5.3
+        },
+        {
+          "key": "reading",
+          "label": "독서·말·글(문해)",
+          "level": "적음",
+          "score": 4.8
+        },
+        {
+          "key": "arts",
+          "label": "예술·표현",
+          "level": "적음",
+          "score": 4.7
+        },
+        {
+          "key": "play",
+          "label": "놀이·프로젝트 (아이 주도)",
+          "level": "적음",
+          "score": 4.3
+        }
+      ],
+      "outdoor": [
+        "규칙적인 하루 1시간 이상의 신체활동 및  ․ 매일  바깥놀이 활동  체  ․ 모닝스파크(아침운동)  ․ 매일  體",
+        "․ 연중  ․ 동물체험(4, 5세)  ․ 매월  ․ 숲 체험 활동(5세)  ․ 매월  ․ 아빠와 함께 하는 어촌",
+        "운동하기 (바깥놀이 포함) ① 신체 활동을 주 3회 이상 하도록 한다"
+      ],
+      "focusCount": 10,
+      "chars": 161812,
+      "note": null
+    },
+    "kinder:2ef67bb6-a387-427d-a273-3d101215e9a1": {
+      "name": "세종유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-29",
+      "source": {
+        "title": "2026세종유치원 교육과정 운영계획-탑재용.pdf",
+        "registered": "2026-07-07",
+        "round": "2026년 1차"
+      },
+      "scores": {
+        "nature": 7.6,
+        "play": 4.3,
+        "reading": 12.9,
+        "body": 4.3,
+        "arts": 7.4,
+        "character": 7.6,
+        "learning": 4.9
+      },
+      "tags": [
+        {
+          "key": "reading",
+          "label": "독서·말·글(문해)",
+          "level": "강조",
+          "score": 12.9
+        },
+        {
+          "key": "nature",
+          "label": "자연·생태 체험",
+          "level": "언급",
+          "score": 7.6
+        },
+        {
+          "key": "character",
+          "label": "인성·예절",
+          "level": "언급",
+          "score": 7.6
+        },
+        {
+          "key": "arts",
+          "label": "예술·표현",
+          "level": "언급",
+          "score": 7.4
+        },
+        {
+          "key": "learning",
+          "label": "학습·기초교육 (한글·수·영어·AI)",
+          "level": "적음",
+          "score": 4.9
+        },
+        {
+          "key": "play",
+          "label": "놀이·프로젝트 (아이 주도)",
+          "level": "적음",
+          "score": 4.3
+        },
+        {
+          "key": "body",
+          "label": "신체·운동",
+          "level": "적음",
+          "score": 4.3
+        }
+      ],
+      "outdoor": [
+        "바깥 놀이를 포함한 자유 놀이를 교육과 정 내 1일 2시간 이상"
+      ],
+      "focusCount": 3,
+      "chars": 115924,
+      "note": null
+    },
+    "kinder:77522a5c-0ff4-4eb4-9648-33ebaf7740af": {
+      "name": "아산갈산초등학교병설유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-29",
+      "source": {
+        "title": "2026학년도 유치원 교육과정 운영 계획(아산갈산초병설유치원).hwp",
+        "registered": "2026-07-07",
+        "round": "2026년 1차"
+      },
+      "scores": {
+        "nature": 17.2,
+        "play": 6.3,
+        "reading": 11.2,
+        "body": 10.9,
+        "arts": 9.9,
+        "character": 14.4,
+        "learning": 9.6
+      },
+      "tags": [
+        {
+          "key": "nature",
+          "label": "자연·생태 체험",
+          "level": "강조",
+          "score": 17.2
+        },
+        {
+          "key": "character",
+          "label": "인성·예절",
+          "level": "강조",
+          "score": 14.4
+        },
+        {
+          "key": "reading",
+          "label": "독서·말·글(문해)",
+          "level": "언급",
+          "score": 11.2
+        },
+        {
+          "key": "body",
+          "label": "신체·운동",
+          "level": "언급",
+          "score": 10.9
+        },
+        {
+          "key": "arts",
+          "label": "예술·표현",
+          "level": "언급",
+          "score": 9.9
+        },
+        {
+          "key": "learning",
+          "label": "학습·기초교육 (한글·수·영어·AI)",
+          "level": "언급",
+          "score": 9.6
+        },
+        {
+          "key": "play",
+          "label": "놀이·프로젝트 (아이 주도)",
+          "level": "적음",
+          "score": 6.3
+        }
+      ],
+      "outdoor": [
+        "4) 하루 일과에서 유아의 놀이가 충분히 이루어지도록 바깥 놀이를 포함하여 1일 2시간 이상의 놀이시간을 확보한다"
+      ],
+      "focusCount": 8,
+      "chars": 81196,
+      "note": null
+    },
+    "kinder:e398a626-69a4-47d8-aac6-b3a1918e5cc0": {
+      "name": "아산공수초등학교병설유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-29",
+      "source": {
+        "title": "2026학년도 유치원 교육과정 운영계획 (아산공수초병설유).hwp",
+        "registered": "2026-03-24",
+        "round": "2026년 1차"
+      },
+      "scores": {
+        "nature": 14.6,
+        "play": 9.6,
+        "reading": 14.9,
+        "body": 12.1,
+        "arts": 11.1,
+        "character": 13.9,
+        "learning": 10.6
+      },
+      "tags": [
+        {
+          "key": "reading",
+          "label": "독서·말·글(문해)",
+          "level": "강조",
+          "score": 14.9
+        },
+        {
+          "key": "nature",
+          "label": "자연·생태 체험",
+          "level": "강조",
+          "score": 14.6
+        },
+        {
+          "key": "character",
+          "label": "인성·예절",
+          "level": "강조",
+          "score": 13.9
+        },
+        {
+          "key": "body",
+          "label": "신체·운동",
+          "level": "언급",
+          "score": 12.1
+        },
+        {
+          "key": "arts",
+          "label": "예술·표현",
+          "level": "언급",
+          "score": 11.1
+        },
+        {
+          "key": "learning",
+          "label": "학습·기초교육 (한글·수·영어·AI)",
+          "level": "언급",
+          "score": 10.6
+        },
+        {
+          "key": "play",
+          "label": "놀이·프로젝트 (아이 주도)",
+          "level": "언급",
+          "score": 9.6
+        }
+      ],
+      "outdoor": [
+        "바깥놀이를 포함한 자유놀이를 교육과정 내 1일 2시간 이상 우"
+      ],
+      "focusCount": 8,
+      "chars": 87823,
+      "note": null
+    },
+    "kinder:374b81d9-547b-4c71-b289-13b3c277b753": {
+      "name": "아산세교유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-29",
+      "source": {
+        "title": "2026년 아산세교유치원 운영계획(연간).pdf",
+        "registered": "2026-09-14",
+        "round": "2026년 1차"
+      },
+      "scores": {
+        "nature": 8.7,
+        "play": 5.6,
+        "reading": 11.6,
+        "body": 10.5,
+        "arts": 3.6,
+        "character": 10.1,
+        "learning": 3.5
+      },
+      "tags": [
+        {
+          "key": "reading",
+          "label": "독서·말·글(문해)",
+          "level": "강조",
+          "score": 11.6
+        },
+        {
+          "key": "body",
+          "label": "신체·운동",
+          "level": "강조",
+          "score": 10.5
+        },
+        {
+          "key": "character",
+          "label": "인성·예절",
+          "level": "강조",
+          "score": 10.1
+        },
+        {
+          "key": "nature",
+          "label": "자연·생태 체험",
+          "level": "언급",
+          "score": 8.7
+        },
+        {
+          "key": "play",
+          "label": "놀이·프로젝트 (아이 주도)",
+          "level": "적음",
+          "score": 5.6
+        },
+        {
+          "key": "arts",
+          "label": "예술·표현",
+          "level": "적음",
+          "score": 3.6
+        },
+        {
+          "key": "learning",
+          "label": "학습·기초교육 (한글·수·영어·AI)",
+          "level": "적음",
+          "score": 3.5
+        }
+      ],
+      "outdoor": [
+        "∘바깥놀이를 포함하여 1일 2시간 이상의 놀이시간을 충분히 확보"
+      ],
+      "focusCount": 2,
+      "chars": 21000,
+      "note": null
+    },
+    "kinder:1ecec08d-09f8-b044-e053-0a32095ab044": {
+      "name": "아산용연초등학교병설유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-29",
+      "source": {
+        "title": "2026 유치원 만들어가는 교육과정 운영 계획.hwp",
+        "registered": "2026-07-08",
+        "round": "2026년 1차"
+      },
+      "scores": {
+        "nature": 10.2,
+        "play": 4.3,
+        "reading": 4.7,
+        "body": 9.7,
+        "arts": 5,
+        "character": 7.1,
+        "learning": 9.6
+      },
+      "tags": [
+        {
+          "key": "nature",
+          "label": "자연·생태 체험",
+          "level": "강조",
+          "score": 10.2
+        },
+        {
+          "key": "body",
+          "label": "신체·운동",
+          "level": "강조",
+          "score": 9.7
+        },
+        {
+          "key": "learning",
+          "label": "학습·기초교육 (한글·수·영어·AI)",
+          "level": "강조",
+          "score": 9.6
+        },
+        {
+          "key": "character",
+          "label": "인성·예절",
+          "level": "언급",
+          "score": 7.1
+        },
+        {
+          "key": "arts",
+          "label": "예술·표현",
+          "level": "적음",
+          "score": 5
+        },
+        {
+          "key": "reading",
+          "label": "독서·말·글(문해)",
+          "level": "적음",
+          "score": 4.7
+        },
+        {
+          "key": "play",
+          "label": "놀이·프로젝트 (아이 주도)",
+          "level": "적음",
+          "score": 4.3
+        }
+      ],
+      "outdoor": [
+        "> 숲선생님) ②매주 금요일 숲데이 37",
+        "린이 구현 중점 주요 활동 내용 건강교육 ㆍ1일 1회 바깥놀이와 대근육, 신체활동 실시 ㆍ매주 금요일 숲데이 실시",
+        "놀이하는 기회 제공 ㆍ생활주제와 연계하여 1일 1회 바깥놀이 실시 Ⅰ",
+        "4) 주 1회 숲데이를 운영하여 유아가 지역사회 자연에 친숙해질 수 있는",
+        "바깥놀이를 포함한 자유놀이를 교육과정 내 1일 2시간 이상 우"
+      ],
+      "focusCount": 2,
+      "chars": 93246,
+      "note": null
+    },
+    "kinder:4ff533dd-6361-41c3-8e04-456ed82f18ef": {
+      "name": "아산월천유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-29",
+      "source": {
+        "title": "2026학년도 아산월천유치원 교육과정(최종).pdf",
+        "registered": "2026-03-25",
+        "round": "2026년 1차"
+      },
+      "scores": {
+        "nature": 17.3,
+        "play": 9.3,
+        "reading": 15.1,
+        "body": 11.8,
+        "arts": 9.7,
+        "character": 16.1,
+        "learning": 8.9
+      },
+      "tags": [
+        {
+          "key": "nature",
+          "label": "자연·생태 체험",
+          "level": "강조",
+          "score": 17.3
+        },
+        {
+          "key": "character",
+          "label": "인성·예절",
+          "level": "강조",
+          "score": 16.1
+        },
+        {
+          "key": "reading",
+          "label": "독서·말·글(문해)",
+          "level": "강조",
+          "score": 15.1
+        },
+        {
+          "key": "body",
+          "label": "신체·운동",
+          "level": "언급",
+          "score": 11.8
+        },
+        {
+          "key": "arts",
+          "label": "예술·표현",
+          "level": "언급",
+          "score": 9.7
+        },
+        {
+          "key": "play",
+          "label": "놀이·프로젝트 (아이 주도)",
+          "level": "언급",
+          "score": 9.3
+        },
+        {
+          "key": "learning",
+          "label": "학습·기초교육 (한글·수·영어·AI)",
+          "level": "언급",
+          "score": 8.9
+        }
+      ],
+      "outdoor": [
+        "‣매월 자연 숲 체험 운영, 흙놀이, 딸기 농장, 동물 관찰 체험 등 다양",
+        "4) 하루 일과에서 유아의 놀이가 충분히 이루어지도록 바깥놀이를 포함하여 1일 2시간 이상의 놀이시간을 확보한다"
+      ],
+      "focusCount": 10,
+      "chars": 93039,
+      "note": null
+    },
+    "kinder:1ecec08d-0b34-b044-e053-0a32095ab044": {
+      "name": "아주나유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-29",
+      "source": {
+        "title": "2026 아주나유치원 교육과정 운영계획.pdf",
+        "registered": "2026-03-20",
+        "round": "2026년 1차"
+      },
+      "scores": {
+        "nature": 15.7,
+        "play": 9.4,
+        "reading": 8,
+        "body": 7,
+        "arts": 8.8,
+        "character": 11.1,
+        "learning": 10.2
+      },
+      "tags": [
+        {
+          "key": "nature",
+          "label": "자연·생태 체험",
+          "level": "강조",
+          "score": 15.7
+        },
+        {
+          "key": "character",
+          "label": "인성·예절",
+          "level": "언급",
+          "score": 11.1
+        },
+        {
+          "key": "learning",
+          "label": "학습·기초교육 (한글·수·영어·AI)",
+          "level": "언급",
+          "score": 10.2
+        },
+        {
+          "key": "play",
+          "label": "놀이·프로젝트 (아이 주도)",
+          "level": "언급",
+          "score": 9.4
+        },
+        {
+          "key": "arts",
+          "label": "예술·표현",
+          "level": "언급",
+          "score": 8.8
+        },
+        {
+          "key": "reading",
+          "label": "독서·말·글(문해)",
+          "level": "언급",
+          "score": 8
+        },
+        {
+          "key": "body",
+          "label": "신체·운동",
+          "level": "적음",
+          "score": 7
+        }
+      ],
+      "outdoor": [
+        "밭 등 지역 생태 자원을 활용하여 하루 1시간 이 상 바깥놀이 및 오감 체험 활동을 운영한다",
+        "하루 일과에서는 바깥놀이를 포함하여 유아의 놀이 시간이 2시간 이상 확보되도록",
+        "바깥놀이를 포함한 자유놀이를 교육과정 내 1일 2 시간 이상"
+      ],
+      "focusCount": 7,
+      "chars": 87366,
+      "note": null
+    },
+    "kinder:1ecec08c-fb37-b044-e053-0a32095ab044": {
+      "name": "연화초등학교병설유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-29",
+      "source": {
+        "title": "2026 유치원 교육과정 운영계획.pdf",
+        "registered": "2026-07-08",
+        "round": "2026년 1차"
+      },
+      "scores": {
+        "nature": 19.6,
+        "play": 12.8,
+        "reading": 16.8,
+        "body": 13,
+        "arts": 15.1,
+        "character": 18.1,
+        "learning": 15.5
+      },
+      "tags": [
+        {
+          "key": "nature",
+          "label": "자연·생태 체험",
+          "level": "강조",
+          "score": 19.6
+        },
+        {
+          "key": "character",
+          "label": "인성·예절",
+          "level": "강조",
+          "score": 18.1
+        },
+        {
+          "key": "reading",
+          "label": "독서·말·글(문해)",
+          "level": "강조",
+          "score": 16.8
+        },
+        {
+          "key": "learning",
+          "label": "학습·기초교육 (한글·수·영어·AI)",
+          "level": "언급",
+          "score": 15.5
+        },
+        {
+          "key": "arts",
+          "label": "예술·표현",
+          "level": "언급",
+          "score": 15.1
+        },
+        {
+          "key": "body",
+          "label": "신체·운동",
+          "level": "언급",
+          "score": 13
+        },
+        {
+          "key": "play",
+          "label": "놀이·프로젝트 (아이 주도)",
+          "level": "언급",
+          "score": 12.8
+        }
+      ],
+      "outdoor": [
+        "바깥놀이 1일 1시간 이상 운영  다양한 신체활동  ▣ 전통놀",
+        "초록의 숲 탄소중립 월 1회 7월 재잘재잘 숲 곤충 숲체험활동 9월 폴짝폴짝 숲 곤충 (3, 8월 제외) 10월",
+        "5) 하루일과에서 유아의 놀이가 충분히 이루어지도록 바깥놀이를 포함하여 1일 2시간 이상의 놀이시간을 확 보한다"
+      ],
+      "focusCount": 28,
+      "chars": 70903,
+      "note": null
+    },
+    "kinder:ec46de33-c0ff-4a36-809d-978f0354f801": {
+      "name": "이순신초등학교병설유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-29",
+      "source": {
+        "title": "2026학년도 유치원교육과정 편성 운영 계획(안).hwp",
+        "registered": "2026-07-13",
+        "round": "2026년 1차"
+      },
+      "scores": {
+        "nature": 2.9,
+        "play": 1.1,
+        "reading": 0.7,
+        "body": 1.1,
+        "arts": 1.1,
+        "character": 1.6,
+        "learning": 1.6
+      },
+      "tags": [],
+      "outdoor": [],
+      "focusCount": 0,
+      "chars": 3652,
+      "note": "교육방침·중점교육이 없는 문서(학사일정 등) — 분류하지 않음"
+    },
+    "kinder:fa7e3e5c-5921-4647-9fcc-4ec79c68420b": {
+      "name": "일심유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-29",
+      "source": {
+        "title": "2026 일심유치원 교육과정 운영계획 수정중3.30.pdf",
+        "registered": "2026-03-31",
+        "round": "2026년 1차"
+      },
+      "scores": {
+        "nature": 11.6,
+        "play": 13.6,
+        "reading": 14.3,
+        "body": 6.3,
+        "arts": 11.3,
+        "character": 13.9,
+        "learning": 13.2
+      },
+      "tags": [
+        {
+          "key": "reading",
+          "label": "독서·말·글(문해)",
+          "level": "강조",
+          "score": 14.3
+        },
+        {
+          "key": "character",
+          "label": "인성·예절",
+          "level": "강조",
+          "score": 13.9
+        },
+        {
+          "key": "play",
+          "label": "놀이·프로젝트 (아이 주도)",
+          "level": "강조",
+          "score": 13.6
+        },
+        {
+          "key": "learning",
+          "label": "학습·기초교육 (한글·수·영어·AI)",
+          "level": "언급",
+          "score": 13.2
+        },
+        {
+          "key": "nature",
+          "label": "자연·생태 체험",
+          "level": "언급",
+          "score": 11.6
+        },
+        {
+          "key": "arts",
+          "label": "예술·표현",
+          "level": "언급",
+          "score": 11.3
+        },
+        {
+          "key": "body",
+          "label": "신체·운동",
+          "level": "적음",
+          "score": 6.3
+        }
+      ],
+      "outdoor": [
+        "바깥놀이 1일 1시간 활용하기 기초체력 증진  (미세먼지, 우"
+      ],
+      "focusCount": 17,
+      "chars": 109803,
+      "note": null
+    },
+    "kinder:1ecec08c-f25c-b044-e053-0a32095ab044": {
+      "name": "자연유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-29",
+      "source": {
+        "title": "2026년 자연유치원 연간교육계획.pdf",
+        "registered": "2026-07-07",
+        "round": "2026년 1차"
+      },
+      "scores": {
+        "nature": 1.1,
+        "play": 0,
+        "reading": 1.1,
+        "body": 1.1,
+        "arts": 0,
+        "character": 0.7,
+        "learning": 0.7
+      },
+      "tags": [],
+      "outdoor": [],
+      "focusCount": 0,
+      "chars": 2986,
+      "note": "교육방침·중점교육이 없는 문서(학사일정 등) — 분류하지 않음"
+    },
+    "kinder:1ecec08d-0e59-b044-e053-0a32095ab044": {
+      "name": "탕정미래초등학교병설유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-29",
+      "source": {
+        "title": "2026 유치원 교육과정 운영 계획(최종).pdf",
+        "registered": "2026-07-13",
+        "round": "2026년 1차"
+      },
+      "scores": {
+        "nature": 15.3,
+        "play": 9.1,
+        "reading": 14.8,
+        "body": 13.1,
+        "arts": 15.7,
+        "character": 15.5,
+        "learning": 13.9
+      },
+      "tags": [
+        {
+          "key": "arts",
+          "label": "예술·표현",
+          "level": "강조",
+          "score": 15.7
+        },
+        {
+          "key": "character",
+          "label": "인성·예절",
+          "level": "강조",
+          "score": 15.5
+        },
+        {
+          "key": "nature",
+          "label": "자연·생태 체험",
+          "level": "강조",
+          "score": 15.3
+        },
+        {
+          "key": "reading",
+          "label": "독서·말·글(문해)",
+          "level": "언급",
+          "score": 14.8
+        },
+        {
+          "key": "learning",
+          "label": "학습·기초교육 (한글·수·영어·AI)",
+          "level": "언급",
+          "score": 13.9
+        },
+        {
+          "key": "body",
+          "label": "신체·운동",
+          "level": "언급",
+          "score": 13.1
+        },
+        {
+          "key": "play",
+          "label": "놀이·프로젝트 (아이 주도)",
+          "level": "언급",
+          "score": 9.1
+        }
+      ],
+      "outdoor": [
+        "추진과제  연중  1일 1시간 이상 바깥 놀이 및 신체활동, 산책 활동  연중  물놀이(여름) 및",
+        "6) 교육과정 운영 시 1일 바깥 놀이를 포함하는 2시간 이상의 놀이시간을 충분히 확보한다"
+      ],
+      "focusCount": 16,
+      "chars": 92850,
+      "note": null
+    },
+    "kinder:1ecec08d-0c5d-b044-e053-0a32095ab044": {
+      "name": "탕정초등학교병설유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-29",
+      "source": {
+        "title": "2026학년도 유치원 교육과정 운영계획.pdf",
+        "registered": "2026-07-13",
+        "round": "2026년 1차"
+      },
+      "scores": {
+        "nature": 13,
+        "play": 7.1,
+        "reading": 7.9,
+        "body": 12.3,
+        "arts": 11.7,
+        "character": 11.3,
+        "learning": 9.3
+      },
+      "tags": [
+        {
+          "key": "nature",
+          "label": "자연·생태 체험",
+          "level": "강조",
+          "score": 13
+        },
+        {
+          "key": "body",
+          "label": "신체·운동",
+          "level": "강조",
+          "score": 12.3
+        },
+        {
+          "key": "arts",
+          "label": "예술·표현",
+          "level": "강조",
+          "score": 11.7
+        },
+        {
+          "key": "character",
+          "label": "인성·예절",
+          "level": "언급",
+          "score": 11.3
+        },
+        {
+          "key": "learning",
+          "label": "학습·기초교육 (한글·수·영어·AI)",
+          "level": "언급",
+          "score": 9.3
+        },
+        {
+          "key": "reading",
+          "label": "독서·말·글(문해)",
+          "level": "언급",
+          "score": 7.9
+        },
+        {
+          "key": "play",
+          "label": "놀이·프로젝트 (아이 주도)",
+          "level": "언급",
+          "score": 7.1
+        }
+      ],
+      "outdoor": [
+        "매일 바깥놀이 실시(미세먼지 시 실내에서 진행) - 연 1회 체격검",
+        "7) 교육과정 운영 시 바깥놀이를 포함하여 1일 2시간 이상의 놀이시간을 충분히 확보"
+      ],
+      "focusCount": 8,
+      "chars": 62464,
+      "note": null
+    },
+    "kinder:1ecec08c-f25b-b044-e053-0a32095ab044": {
+      "name": "프라임유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-29",
+      "source": {
+        "title": "2026학년도 학사운영일정.hwp",
+        "registered": "2026-07-08",
+        "round": "2026년 1차"
+      },
+      "scores": {
+        "nature": 3.2,
+        "play": 0,
+        "reading": 2.2,
+        "body": 0.7,
+        "arts": 1.1,
+        "character": 2.1,
+        "learning": 1.4
+      },
+      "tags": [],
+      "outdoor": [],
+      "focusCount": 0,
+      "chars": 3419,
+      "note": "교육방침·중점교육이 없는 문서(학사일정 등) — 분류하지 않음"
+    },
+    "kinder:1ecec08c-fd35-b044-e053-0a32095ab044": {
+      "name": "하나유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-29",
+      "source": {
+        "title": "2026 하나교육과정 운영계획서.pdf",
+        "registered": "2026-07-07",
+        "round": "2026년 1차"
+      },
+      "scores": {
+        "nature": 13.6,
+        "play": 8.6,
+        "reading": 4.3,
+        "body": 10.2,
+        "arts": 4,
+        "character": 12.2,
+        "learning": 3.2
+      },
+      "tags": [
+        {
+          "key": "nature",
+          "label": "자연·생태 체험",
+          "level": "강조",
+          "score": 13.6
+        },
+        {
+          "key": "character",
+          "label": "인성·예절",
+          "level": "강조",
+          "score": 12.2
+        },
+        {
+          "key": "body",
+          "label": "신체·운동",
+          "level": "언급",
+          "score": 10.2
+        },
+        {
+          "key": "play",
+          "label": "놀이·프로젝트 (아이 주도)",
+          "level": "언급",
+          "score": 8.6
+        },
+        {
+          "key": "reading",
+          "label": "독서·말·글(문해)",
+          "level": "적음",
+          "score": 4.3
+        },
+        {
+          "key": "arts",
+          "label": "예술·표현",
+          "level": "적음",
+          "score": 4
+        },
+        {
+          "key": "learning",
+          "label": "학습·기초교육 (한글·수·영어·AI)",
+          "level": "적음",
+          "score": 3.2
+        }
+      ],
+      "outdoor": [
+        "다) 하루일과에서 바깥놀이를 포함하여 유아의 놀이가 2시간 이상 이루어지도록 하"
+      ],
+      "focusCount": 4,
+      "chars": 48924,
+      "note": null
+    },
+    "kinder:7bd3563c-ce2b-4161-ae7e-3a43a150bba5": {
+      "name": "한들물빛유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-29",
+      "source": {
+        "title": "2026학년도 한들물빛유치원 교육과정 운영계획(탑재용).pdf",
+        "registered": "2026-03-17",
+        "round": "2026년 1차"
+      },
+      "scores": {
+        "nature": 11.9,
+        "play": 11.1,
+        "reading": 8.7,
+        "body": 8.4,
+        "arts": 7.6,
+        "character": 16.1,
+        "learning": 9.7
+      },
+      "tags": [
+        {
+          "key": "character",
+          "label": "인성·예절",
+          "level": "강조",
+          "score": 16.1
+        },
+        {
+          "key": "nature",
+          "label": "자연·생태 체험",
+          "level": "언급",
+          "score": 11.9
+        },
+        {
+          "key": "play",
+          "label": "놀이·프로젝트 (아이 주도)",
+          "level": "언급",
+          "score": 11.1
+        },
+        {
+          "key": "learning",
+          "label": "학습·기초교육 (한글·수·영어·AI)",
+          "level": "언급",
+          "score": 9.7
+        },
+        {
+          "key": "reading",
+          "label": "독서·말·글(문해)",
+          "level": "언급",
+          "score": 8.7
+        },
+        {
+          "key": "body",
+          "label": "신체·운동",
+          "level": "언급",
+          "score": 8.4
+        },
+        {
+          "key": "arts",
+          "label": "예술·표현",
+          "level": "적음",
+          "score": 7.6
+        }
+      ],
+      "outdoor": [
+        "6) 하루 일과에서 유아의 놀이가 충분히 이루어지도록 바깥놀이를 포함하여 1일 2시간 이상의 놀이시간을 확보한다"
+      ],
+      "focusCount": 10,
+      "chars": 78509,
+      "note": null
+    },
+    "kinder:34c99504-a2d5-40bf-ae5d-5aea98593599": {
+      "name": "한들물빛초등학교병설유치원",
+      "status": "확인",
+      "checkedAt": "2026-10-29",
+      "source": {
+        "title": "2026학년도 한들물빛초등학교병설유치원 교육과정 운영계획.hwp",
+        "registered": "2026-07-13",
+        "round": "2026년 1차"
+      },
+      "scores": {
+        "nature": 16.8,
+        "play": 12.7,
+        "reading": 18.9,
+        "body": 12.3,
+        "arts": 10.1,
+        "character": 14.2,
+        "learning": 13.7
+      },
+      "tags": [
+        {
+          "key": "reading",
+          "label": "독서·말·글(문해)",
+          "level": "강조",
+          "score": 18.9
+        },
+        {
+          "key": "nature",
+          "label": "자연·생태 체험",
+          "level": "강조",
+          "score": 16.8
+        },
+        {
+          "key": "character",
+          "label": "인성·예절",
+          "level": "언급",
+          "score": 14.2
+        },
+        {
+          "key": "learning",
+          "label": "학습·기초교육 (한글·수·영어·AI)",
+          "level": "언급",
+          "score": 13.7
+        },
+        {
+          "key": "play",
+          "label": "놀이·프로젝트 (아이 주도)",
+          "level": "언급",
+          "score": 12.7
+        },
+        {
+          "key": "body",
+          "label": "신체·운동",
+          "level": "언급",
+          "score": 12.3
+        },
+        {
+          "key": "arts",
+          "label": "예술·표현",
+          "level": "언급",
+          "score": 10.1
+        }
+      ],
+      "outdoor": [
+        "몰입하면서 의미 있는 배움의 기회를 가질 수 있도록 바깥놀이를 포함한 1일 2시간 이상의 놀이 시간을 운영한다"
+      ],
+      "focusCount": 16,
+      "chars": 67470,
+      "note": null
+    }
+  }
+}
