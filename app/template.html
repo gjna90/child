@@ -13,6 +13,7 @@
   --line: #d6ddd7;
   --land: #e6ece4;
   --land-focus: #d5e6d8;
+  --road: #ffffff; --road-major: #f3d9a4; --road-edge: #c9cfc6; --water: #b9d8ea; --park: #c6e3c0; --wood: #b7d6ae; --res: #ebe6dc; --rail: #7d8580; --label: #3d4a45;
   --accent: #0e6a62;
   --accent-ink: #ffffff;
   --public: #0e6a62;
@@ -33,6 +34,7 @@
   :root:not([data-theme="light"]) {
     --bg: #121816; --surface: #1a2220; --ink: #e5ece8; --muted: #9aa9a2; --line: #2e3a36;
     --land: #1e2724; --land-focus: #223a31; --accent: #4fb8a9; --accent-ink: #0b1513;
+    --road: #3a4642; --road-major: #6b5a36; --road-edge: #26302d; --water: #1f3f52; --park: #22402c; --wood: #1d3a26; --res: #2a302d; --rail: #8f9a95; --label: #c8d4cf;
     --public: #4fb8a9; --private: #e09a4e; --academy: #a291e0; --daycare: #7fb0e6;
     --warn-bg: #3a2e14; --warn-ink: #f2cc80; --ok-bg: #173527; --ok-ink: #8fd9b2; --unk-bg: #252d2a; --unk-ink: #9aa9a2;
     color-scheme: dark;
@@ -41,6 +43,7 @@
 :root[data-theme="dark"] {
   --bg: #121816; --surface: #1a2220; --ink: #e5ece8; --muted: #9aa9a2; --line: #2e3a36;
   --land: #1e2724; --land-focus: #223a31; --accent: #4fb8a9; --accent-ink: #0b1513;
+  --road: #3a4642; --road-major: #6b5a36; --road-edge: #26302d; --water: #1f3f52; --park: #22402c; --wood: #1d3a26; --res: #2a302d; --rail: #8f9a95; --label: #c8d4cf;
   --public: #4fb8a9; --private: #e09a4e; --academy: #a291e0; --daycare: #7fb0e6;
   --warn-bg: #3a2e14; --warn-ink: #f2cc80; --ok-bg: #173527; --ok-ink: #8fd9b2; --unk-bg: #252d2a; --unk-ink: #9aa9a2;
   color-scheme: dark;
@@ -70,7 +73,15 @@ select { max-width: 100%; padding: 4px 8px; border-radius: 6px; border: 1px soli
 @media (max-width: 860px) { .layout { grid-template-columns: minmax(0, 1fr); } }
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px; min-width: 0; }
 .stack { display: grid; gap: 14px; min-width: 0; }
-.mapbox svg { width: 100%; height: auto; display: block; touch-action: manipulation; cursor: crosshair; border-radius: 8px; background: var(--bg); }
+.mapbox svg { width: 100%; height: auto; display: block; touch-action: none; cursor: crosshair; border-radius: 8px; background: var(--bg); user-select: none; -webkit-user-select: none; }
+.mapwrap { position: relative; }
+.mapctl { position: absolute; right: 8px; top: 8px; display: grid; gap: 4px; z-index: 2; }
+.mapctl button { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font: 600 18px/1 system-ui, sans-serif; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,.15); }
+.mapctl button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.maphint { position: absolute; left: 8px; bottom: 6px; font-size: .7rem; color: var(--muted); background: var(--surface); opacity: .9; padding: 1px 6px; border-radius: 4px; pointer-events: none; }
+@media (max-width: 700px) { .mapbox svg { height: min(64vh, 520px); } }
+#svgmap .rd { fill: none; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+#svgmap .lbl { font-family: system-ui, sans-serif; fill: var(--label); stroke: var(--surface); paint-order: stroke; stroke-linejoin: round; pointer-events: none; }
 .maphead { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 8px; }
 .legend { display: flex; flex-wrap: wrap; gap: 10px; font-size: .8rem; color: var(--muted); }
 .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: -1px; }
@@ -243,7 +254,9 @@ svg text { font-family: var(--font-body); }
             <button class="btn" id="clearOrigin" type="button" hidden>출발지 지우기</button>
           </div>
         </div>
-        <div id="map"></div>
+        <div class="mapwrap"><div id="map"></div>
+          <div class="mapctl" role="group" aria-label="지도 확대·축소"><button type="button" id="zin" aria-label="확대">+</button><button type="button" id="zout" aria-label="축소">−</button><button type="button" id="zreset" aria-label="처음 크기" style="font-size:13px">⟲</button></div>
+          <div class="maphint">휠·두 손가락으로 확대, 끌어서 이동 · 지도 © OpenStreetMap</div></div>
         <div class="legend" style="margin-top:8px">
           <span><span class="dot" style="background:var(--public)"></span>공립 유치원</span>
           <span><span class="dot" style="background:var(--private)"></span>사립 유치원</span>
@@ -505,50 +518,166 @@ const MAP = (() => {
 
 function centroid(ring) { let x = 0, y = 0; for (const p of ring) { x += p[0]; y += p[1]; } return [x / ring.length, y / ring.length]; }
 
-function drawMap(list) {
-  const { W, H, px, py } = MAP;
-  const path = (ring) => 'M' + ring.map(([x, y]) => `${px(x).toFixed(1)},${py(y).toFixed(1)}`).join('L') + 'Z';
-  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="배방읍·탕정면 지도. 지도를 누르면 출발지가 정해집니다" id="svgmap">`;
-  s += `<rect x="0" y="0" width="${W}" height="${H}" fill="var(--bg)"/>`;
-  for (const a of DATA.map.areas) {
-    for (const r of a.rings) s += `<path d="${path(r)}" fill="${a.focus ? 'var(--land-focus)' : 'var(--land)'}" stroke="var(--line)" stroke-width="${a.focus ? 2 : 1}"/>`;
+// 바탕 지도: OpenStreetMap 도로·하천·공원(빌드 때 줄여 넣음, scripts/osm-extract.py) + 행정동 경계
+const VIEW = { x: 0, y: 0, w: MAP.W, h: MAP.H };
+const zoomLevel = () => MAP.W / VIEW.w;
+/** 화면 1px이 지도 좌표로 얼마인지 — 글자·점을 화면에서 늘 같은 크기로 보이게 */
+function pxUnit() { const r = $('#svgmap')?.getBoundingClientRect(); if (!r || !r.width) return VIEW.w / 600; return Math.min(VIEW.w / r.width, VIEW.h / r.height); }
+function decodeLine(p) { const out = []; let la = p[0], ln = p[1]; out.push([ln / 1e5, la / 1e5]); for (let i = 2; i < p.length; i += 2) { la += p[i]; ln += p[i + 1]; out.push([ln / 1e5, la / 1e5]); } return out; }
+const BASE = (() => {
+  const B = DATA.basemap; if (!B) return { roads: [], rails: [], waters: [], areas: [], pois: [] };
+  const P = (arr) => arr.map((o) => ({ ...o, pts: decodeLine(o.p) }));
+  return { roads: P(B.roads), rails: P(B.rails), waters: P(B.waters), areas: P(B.areas), pois: B.pois, source: B.source };
+})();
+function svgPath(pts, close) { const { px, py } = MAP; return 'M' + pts.map(([x, y]) => `${px(x).toFixed(1)},${py(y).toFixed(1)}`).join('L') + (close ? 'Z' : ''); }
+function baseSvg() {
+  const { W, H } = MAP;
+  let s = `<rect x="-${W}" y="-${H}" width="${W * 3}" height="${H * 3}" fill="var(--bg)"/>`;
+  for (const a of DATA.map.areas) for (const r of a.rings) s += `<path d="${svgPath(r, true)}" fill="${a.focus ? 'var(--land-focus)' : 'var(--land)'}" stroke="none"/>`;
+  const AF = { park: 'var(--park)', wood: 'var(--wood)', school: 'var(--res)', res: 'var(--res)' };
+  for (const a of BASE.areas) s += `<path d="${svgPath(a.pts, true)}" fill="${AF[a.k]}" opacity="${a.k === 'res' ? .8 : .9}"/>`;
+  for (const w of BASE.waters) s += w.t === 'a' ? `<path d="${svgPath(w.pts, true)}" fill="var(--water)"/>` : `<path class="rd" d="${svgPath(w.pts)}" stroke="var(--water)" stroke-width="${w.w === 2 ? 5 : 2}"/>`;
+  const width = { 1: 6, 2: 4.5, 3: 3, 4: 1.6 };
+  for (const c of [4, 3, 2, 1]) {
+    const rs = BASE.roads.filter((r) => r.c === c); if (!rs.length) continue;
+    const d = rs.map((r) => svgPath(r.pts)).join('');
+    s += `<path class="rd" d="${d}" stroke="var(--road-edge)" stroke-width="${width[c] + 1.4}"/><path class="rd" d="${d}" stroke="${c <= 2 ? 'var(--road-major)' : 'var(--road)'}" stroke-width="${width[c]}"/>`;
   }
-  for (const a of DATA.map.areas) {
-    const big = a.rings.reduce((m, r) => (r.length > m.length ? r : m), a.rings[0]);
-    const [cx, cy] = centroid(big);
-    const x = px(cx), y = py(cy);
-    if (x < 20 || x > W - 20 || y < 20 || y > H - 20) continue;
-    s += `<text x="${x.toFixed(0)}" y="${y.toFixed(0)}" text-anchor="middle" font-size="${a.focus ? 30 : 20}" fill="var(--muted)" opacity="${a.focus ? .75 : .5}" pointer-events="none">${esc(a.name)}</text>`;
+  if (BASE.rails.length) { const d = BASE.rails.map((r) => svgPath(r.pts)).join(''); s += `<path class="rd" d="${d}" stroke="var(--rail)" stroke-width="2.4"/><path class="rd" d="${d}" stroke="var(--surface)" stroke-width="1" stroke-dasharray="6 6"/>`; }
+  for (const a of DATA.map.areas) for (const r of a.rings) s += `<path class="rd" d="${svgPath(r, true)}" stroke="var(--muted)" stroke-width="${a.focus ? 2 : 1}" ${a.focus ? '' : 'stroke-dasharray="4 3"'} opacity=".6"/>`;
+  return s;
+}
+/** 확대 정도에 따라 보일 이름표 (겹치면 생략) */
+function labelSvg() {
+  const { px, py } = MAP; const z = zoomLevel(); const unit = pxUnit();
+  const items = [];
+  // 핀 이름표 자리를 먼저 비워 둠(겹침 방지)
+  const reserved = [];
+  if (z >= 2.5 || state.sel) for (const it of mapList) { if (!it.lat || (z < 2.5 && it.id !== state.sel)) continue; const x = px(it.lng), y = py(it.lat), fs = 12 * unit, w = it.name.length * fs * .8; reserved.push([x - w / 2, y - fs * 2.6, x + w / 2, y + fs * .6]); }
+  for (const a of DATA.map.areas) { const big = a.rings.reduce((m, r) => (r.length > m.length ? r : m), a.rings[0]); const [cx, cy] = centroid(big); items.push({ x: px(cx), y: py(cy), t: a.name, size: a.focus ? 17 : 13, pri: 0, op: a.focus ? .8 : .55, weight: 600 }); }
+  if (z >= 1.6) for (const pz of BASE.pois) if (/station|halt/.test(pz.kind)) items.push({ x: px(pz.lng), y: py(pz.lat), t: '🚉 ' + pz.name, size: 12, pri: 1, weight: 600 });
+  if (z >= 1.6) for (const ap of DATA.apartments) items.push({ x: px(ap.lng), y: py(ap.lat), t: ap.name, size: 11, pri: 2, weight: 500 });
+  if (z >= 2.5) for (const pz of BASE.pois) if (!/station|halt/.test(pz.kind)) items.push({ x: px(pz.lng), y: py(pz.lat), t: pz.name, size: 10.5, pri: 3, weight: 400 });
+  if (z >= 2.5) for (const a of BASE.areas) if (a.n && a.k !== 'wood') { const c = a.pts.reduce((m, p) => [m[0] + p[0] / a.pts.length, m[1] + p[1] / a.pts.length], [0, 0]); items.push({ x: px(c[0]), y: py(c[1]), t: a.n, size: 10.5, pri: 3, weight: 400 }); }
+  // 도로 이름: 큰 길은 1.6배부터, 중간 길은 2.5배, 동네 길은 4배부터 — 같은 이름은 화면에 한 번만
+  const seen = new Set();
+  if (z >= 1.6) for (const r of BASE.roads) {
+    if (!r.n || seen.has(r.n) || (r.c >= 4 && z < 4) || (r.c === 3 && z < 2.5)) continue;
+    const m = r.pts[Math.floor(r.pts.length / 2)]; const x = px(m[0]), y = py(m[1]);
+    if (x < VIEW.x || x > VIEW.x + VIEW.w || y < VIEW.y || y > VIEW.y + VIEW.h) continue;
+    seen.add(r.n); items.push({ x, y, t: r.n, size: 10, pri: 4, weight: 400, road: true });
   }
-  const shown = new Set(list.map((x) => x.id));
-  const pts = DATA.institutions.filter((it) => it.lat);
-  for (const it of pts) {
+  const placed = [...reserved]; let out = '';
+  for (const it of items) {
+    if (it.x < VIEW.x - 20 || it.x > VIEW.x + VIEW.w + 20 || it.y < VIEW.y - 10 || it.y > VIEW.y + VIEW.h + 10) continue;
+    const fs = it.size * unit; const w = it.t.length * fs * 0.95, h = fs * 1.3;
+    const box = [it.x - w / 2, it.y - h, it.x + w / 2, it.y + h * .3];
+    if (placed.some((b) => !(box[2] < b[0] || box[0] > b[2] || box[3] < b[1] || box[1] > b[3]))) continue;
+    placed.push(box);
+    out += `<text class="lbl" x="${it.x.toFixed(1)}" y="${it.y.toFixed(1)}" text-anchor="middle" font-size="${fs.toFixed(2)}" font-weight="${it.weight}" stroke-width="${(fs * .28).toFixed(2)}"${it.op ? ` opacity="${it.op}"` : ''}${it.road ? ' font-style="italic"' : ''}>${esc(it.t)}</text>`;
+  }
+  return out;
+}
+function pinSvg(list) {
+  const { W, H, px, py } = MAP; const z = zoomLevel(); const k = pxUnit() * Math.min(1.5, 1 + (z - 1) * 0.08) * 0.75;
+  const shown = new Set(list.map((x) => x.id)); let s = ''; const placed = [];
+  const order = DATA.institutions.filter((x) => x.lat).sort((a, b) => (b.id === state.sel) - (a.id === state.sel));
+  for (const it of order) {
     const x = px(it.lng), y = py(it.lat);
     if (x < 0 || x > W || y < 0 || y > H) continue;
     const col = isDc(it) ? 'var(--daycare)' : it.kind !== '유치원' ? 'var(--academy)' : it.isPublic ? 'var(--public)' : 'var(--private)';
     const on = shown.has(it.id), sel = state.sel === it.id;
+    const r = (sel ? 14 : 9) * k, fs = 19 * k;
+    let showName = sel || (z >= 2.5 && on);
+    if (showName) { const f = sel ? fs : fs * .8, w = it.name.replace('초등학교병설유치원', '초 병설').length * f * .95, box = [x - w / 2, y - r - f * 1.4, x + w / 2, y - r]; if (!sel && placed.some((b) => !(box[2] < b[0] || box[0] > b[2] || box[3] < b[1] || box[1] > b[3]))) showName = false; else placed.push(box); }
     s += `<g class="pin" data-id="${esc(it.id)}" tabindex="0" role="button" aria-label="${esc(it.name)}" style="cursor:pointer" opacity="${on ? 1 : .25}">`
-      + `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${sel ? 15 : 10}" fill="${col}" stroke="var(--surface)" stroke-width="3"/>`
-      + (sel ? `<text x="${x.toFixed(1)}" y="${(y - 22).toFixed(1)}" text-anchor="middle" font-size="24" font-weight="600" fill="var(--ink)" stroke="var(--surface)" stroke-width="6" paint-order="stroke">${esc(it.name.replace('초등학교병설유치원', '초 병설'))}</text>` : '')
+      + `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(2)}" fill="${col}" stroke="var(--surface)" stroke-width="${(3 * k).toFixed(2)}"/>`
+      + (showName ? `<text x="${x.toFixed(1)}" y="${(y - r - 5 * k).toFixed(1)}" text-anchor="middle" font-size="${(sel ? fs : fs * .8).toFixed(2)}" font-weight="${sel ? 700 : 600}" fill="var(--ink)" stroke="var(--surface)" stroke-width="${(5 * k).toFixed(2)}" paint-order="stroke">${esc(it.name.replace('초등학교병설유치원', '초 병설'))}</text>` : '')
       + `<title>${esc(it.name)}</title></g>`;
   }
   if (state.origin) {
     const x = px(state.origin.lng), y = py(state.origin.lat);
-    s += `<g pointer-events="none"><circle cx="${x}" cy="${y}" r="13" fill="none" stroke="var(--ink)" stroke-width="4"/><circle cx="${x}" cy="${y}" r="4" fill="var(--ink)"/></g>`;
+    s += `<g pointer-events="none"><circle cx="${x}" cy="${y}" r="${13 * k}" fill="none" stroke="var(--ink)" stroke-width="${4 * k}"/><circle cx="${x}" cy="${y}" r="${4 * k}" fill="var(--ink)"/></g>`;
   }
-  s += '</svg>';
-  $('#map').innerHTML = s;
-  const svg = $('#svgmap');
-  svg.addEventListener('click', (e) => {
-    const pin = e.target.closest('.pin');
-    if (pin) { select(pin.dataset.id, true); return; }
-    const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
-    const p = pt.matrixTransform(svg.getScreenCTM().inverse());
-    setOrigin({ ...MAP.inv(p.x, p.y), how: '지도에서 지정' });
-  });
-  svg.addEventListener('keydown', (e) => { const pin = e.target.closest('.pin'); if (pin && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); select(pin.dataset.id, true); } });
+  return s;
+}
+let mapList = [];
+function applyView(now) {
+  const svg = $('#svgmap'); if (!svg) return;
+  svg.setAttribute('viewBox', `${VIEW.x.toFixed(1)} ${VIEW.y.toFixed(1)} ${VIEW.w.toFixed(1)} ${VIEW.h.toFixed(1)}`);
+  clearTimeout(applyView.t);
+  const redo = () => { $('#mapLabels').innerHTML = labelSvg(); $('#mapPins').innerHTML = pinSvg(mapList); };
+  if (now) redo(); else applyView.t = setTimeout(redo, 80);
+}
+function clampView() {
+  VIEW.x = Math.min(Math.max(VIEW.x, -VIEW.w * .3), MAP.W - VIEW.w * .7);
+  VIEW.y = Math.min(Math.max(VIEW.y, -VIEW.h * .3), MAP.H - VIEW.h * .7);
+}
+function zoomAt(f, cx, cy) {
+  const z = Math.min(16, Math.max(1, zoomLevel() * f));
+  const nw = MAP.W / z, nh = MAP.H / z;
+  if (cx === undefined) { cx = VIEW.x + VIEW.w / 2; cy = VIEW.y + VIEW.h / 2; }
+  VIEW.x = cx - (cx - VIEW.x) * (nw / VIEW.w); VIEW.y = cy - (cy - VIEW.y) * (nh / VIEW.h); VIEW.w = nw; VIEW.h = nh;
+  if (z === 1) { VIEW.x = 0; VIEW.y = 0; }
+  clampView(); applyView();
+}
+/** 한 지점을 화면 가운데로 (minZoom보다 작으면 그만큼 확대) */
+function centerOn(lat, lng, minZoom = 3) {
+  if (zoomLevel() < minZoom) { VIEW.w = MAP.W / minZoom; VIEW.h = MAP.H / minZoom; }
+  VIEW.x = MAP.px(lng) - VIEW.w / 2; VIEW.y = MAP.py(lat) - VIEW.h / 2; clampView(); applyView(true);
+}
+function svgPoint(svg, e) { const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY; return pt.matrixTransform(svg.getScreenCTM().inverse()); }
+function drawMap(list) {
+  mapList = list;
+  if (!$('#svgmap')) {
+    $('#map').innerHTML = `<svg viewBox="${VIEW.x} ${VIEW.y} ${VIEW.w} ${VIEW.h}" role="img" aria-label="배방읍·탕정면 지도. 지도를 누르면 출발지가 정해집니다" id="svgmap" preserveAspectRatio="xMidYMid slice"><g id="mapBase">${baseSvg()}</g><g id="mapLabels"></g><g id="mapPins"></g></svg>`;
+    const svg = $('#svgmap');
+    const ptrs = new Map(); let drag = null, pinch = null, moved = false;
+    svg.addEventListener('wheel', (e) => { e.preventDefault(); const p = svgPoint(svg, e); zoomAt(e.deltaY < 0 ? 1.25 : 0.8, p.x, p.y); }, { passive: false });
+    svg.addEventListener('pointerdown', (e) => {
+      ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (ptrs.size === 1) { moved = false; drag = { x: e.clientX, y: e.clientY, vx: VIEW.x, vy: VIEW.y }; }
+      if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch = { d: Math.hypot(a.x - b.x, a.y - b.y) || 1, z: zoomLevel() }; drag = null; moved = true; }
+    });
+    svg.addEventListener('pointermove', (e) => {
+      if (!ptrs.has(e.pointerId)) return; ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pinch && ptrs.size === 2) {
+        const [a, b] = [...ptrs.values()]; const d = Math.hypot(a.x - b.x, a.y - b.y);
+        const mid = svgPoint(svg, { clientX: (a.x + b.x) / 2, clientY: (a.y + b.y) / 2 });
+        zoomAt((pinch.z * d / pinch.d) / zoomLevel(), mid.x, mid.y); return;
+      }
+      if (drag) {
+        const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+        if (!moved && Math.abs(dx) + Math.abs(dy) > 5) { moved = true; try { svg.setPointerCapture(e.pointerId); } catch {} }
+        if (moved) { const scale = pxUnit(); VIEW.x = drag.vx - dx * scale; VIEW.y = drag.vy - dy * scale; clampView(); applyView(); }
+      }
+    });
+    const up = (e) => { ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null; if (!ptrs.size) drag = null; };
+    svg.addEventListener('pointerup', up); svg.addEventListener('pointercancel', up);
+    svg.addEventListener('dblclick', (e) => { e.preventDefault(); const p = svgPoint(svg, e); zoomAt(2, p.x, p.y); });
+    svg.addEventListener('click', (e) => {
+      if (moved) { moved = false; return; }
+      const pin = e.target.closest('.pin');
+      if (pin) { select(pin.dataset.id, true); return; }
+      const p = svgPoint(svg, e);
+      setOrigin({ ...MAP.inv(p.x, p.y), how: '지도에서 지정' });
+    });
+    svg.addEventListener('keydown', (e) => { const pin = e.target.closest('.pin'); if (pin && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); select(pin.dataset.id, true); } });
+    $('#zin').onclick = () => zoomAt(1.6); $('#zout').onclick = () => zoomAt(1 / 1.6);
+    $('#zreset').onclick = () => { VIEW.x = 0; VIEW.y = 0; VIEW.w = MAP.W; VIEW.h = MAP.H; applyView(true); };
+  }
+  $('#mapLabels').innerHTML = labelSvg();
+  $('#mapPins').innerHTML = pinSvg(list);
   const noLoc = DATA.institutions.filter((it) => !it.lat);
   $('#mapNote').textContent = `${state.origin?.aptId ? `출발지: ${state.origin.name} — 도보·자동차 시간은 카카오 경로로 미리 계산한 값입니다. ` : '아파트 단지를 고르면 도보·자동차 시간이 나옵니다. 지도를 눌러도 출발지가 되지만 그때는 직선거리만 계산합니다. '}점은 유치원알리미 공시 좌표(없으면 주소로 찾은 좌표)입니다.${noLoc.length ? ` 위치를 못 찾은 곳 ${noLoc.length}곳.` : ''}`;
+}
+
+/** 진짜 카카오맵으로 열기 (새 탭) */
+function kakaoLinks(it) {
+  if (!it.lat) return '';
+  const to = `${encodeURIComponent(it.name)},${it.lat},${it.lng}`;
+  const route = state.origin?.aptId ? `https://map.kakao.com/link/from/${encodeURIComponent(state.origin.name)},${state.origin.lat},${state.origin.lng}/to/${to}` : `https://map.kakao.com/link/to/${to}`;
+  return `<a class="btn" href="https://map.kakao.com/link/map/${to}" target="_blank" rel="noopener">카카오맵에서 보기 ↗</a><a class="btn" href="${route}" target="_blank" rel="noopener">${state.origin?.aptId ? `${esc(state.origin.name)}에서 길찾기` : '카카오맵 길찾기'} ↗</a>`;
 }
 
 // 아파트 → 기관 도보·자동차 (미리 계산한 값). 아파트를 고르지 않았으면 null
@@ -694,7 +823,7 @@ function detail(it) {
       <section><h3>아직 모르는 것</h3><div>2027 모집 일정·설명회, 대상 출생연도, 원어민·한국인 교사 배치, 하루 일과·바깥놀이, 급식·차량, 방학</div></section>`;
   }
   const inCmp = state.compare.includes(it.id);
-  h += `<div class="acts" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"><button class="btn primary" type="button" data-cmp="${esc(it.id)}" data-insheet="1" ${!inCmp && state.compare.length >= 4 ? 'disabled' : ''}>${inCmp ? '비교함에서 빼기' : '비교함에 담기'}</button>${!inCmp && state.compare.length >= 4 ? '<span class="small muted">비교함은 4곳까지 — 하나를 빼고 담으세요</span>' : ''}</div>`;
+  h += `<div class="acts" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"><button class="btn primary" type="button" data-cmp="${esc(it.id)}" data-insheet="1" ${!inCmp && state.compare.length >= 4 ? 'disabled' : ''}>${inCmp ? '비교함에서 빼기' : '비교함에 담기'}</button>${!inCmp && state.compare.length >= 4 ? '<span class="small muted">비교함은 4곳까지 — 하나를 빼고 담으세요</span>' : ''}${kakaoLinks(it)}</div>`;
   return h + '</div>';
 }
 
@@ -1558,6 +1687,8 @@ function render() {
 
 function select(id, scroll) {
   state.sel = id; render();
+  const it = DATA.institutions.find((x) => x.id === id);
+  if (it?.lat && typeof zoomLevel === 'function' && zoomLevel() > 1.2) { const x = MAP.px(it.lng), y = MAP.py(it.lat); if (x < VIEW.x || x > VIEW.x + VIEW.w || y < VIEW.y || y > VIEW.y + VIEW.h) { VIEW.x = x - VIEW.w / 2; VIEW.y = y - VIEW.h / 2; clampView(); applyView(true); } }
   if (scroll) document.getElementById('c-' + id)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 

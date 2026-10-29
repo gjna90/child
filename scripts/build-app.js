@@ -204,6 +204,7 @@ const data = {
   apartments,
   aptRoutes,
   routeInfo: RT ? { walk: RT.source?.walk, car: RT.source?.car, rules: RT.rules, checkedAt: RT.log?.at(-1)?.at, remaining: RT.log?.at(-1)?.remaining, aptSource: APT?.source, aptCheckedAt: APT?.checkedAt } : null,
+  basemap: readOpt('data/geo/osm_basemap.json'),
   map: { areas, source: '행정동 경계: vuski/admdongkor ver20261001 (통계청 경계 정리 공개 자료)' },
 };
 
