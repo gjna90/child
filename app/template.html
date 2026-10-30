@@ -93,8 +93,11 @@ select { max-width: 100%; padding: 4px 8px; border-radius: 6px; border: 1px soli
 .filters { display: grid; gap: 10px; }
 .fgroup { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .fgroup > .glabel { font-size: .78rem; color: var(--muted); width: 3.6rem; flex: none; letter-spacing: .02em; }
-.chip { font: inherit; font-size: .84rem; padding: 4px 11px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
-.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.chip { font: inherit; font-size: .84rem; min-height: 32px; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.chip[aria-pressed="true"]::before { content: "✓ "; }
+@media (hover: hover) { .chip[aria-pressed="false"]:hover { border-color: var(--accent); } }
+button, .btn, input, select { touch-action: manipulation; }
 .rule { font-size: .8rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 8px; }
 .listhead { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 .cards { display: grid; gap: 10px; }
@@ -1594,7 +1597,10 @@ async function cloudSave() {
     cloud.err = e?.code ?? 'error';
   } finally { cloud.saving = false; drawSaveState(); if (cloud.again) { cloud.again = false; cloudSave(); } }
 }
-window.__cloudMark = () => { if (!cloud.ref || cloud.applying) return; clearTimeout(cloud.timer); cloud.timer = setTimeout(cloudSave, 1500); };
+const UI_KEYS = new Set(['filters', 'tab', 'sort', 'calMine']); // 화면 설정만 — 개인 기록은 항상 계정 값을 따름
+document.addEventListener('pointerdown', () => { cloud.userActed = true; }, { capture: true, once: true });
+document.addEventListener('keydown', () => { cloud.userActed = true; }, { capture: true, once: true });
+window.__cloudMark = (k) => { if (!cloud.ref && !cloud.applying && cloud.userActed && UI_KEYS.has(k)) (cloud.touched ??= new Set()).add(k); if (!cloud.ref || cloud.applying) return; clearTimeout(cloud.timer); cloud.timer = setTimeout(cloudSave, 1500); };
 async function cloudInit() {
   try {
     const [user, db] = await Promise.all([window.claude?.use?.('user'), window.claude?.use?.('db')]);
@@ -1605,8 +1611,12 @@ async function cloudInit() {
     const snap = await ref.get();
     cloud.ref = ref; cloud.mode = 'cloud';
     if (snap.exists && snap.data()?.data) {
-      applyData(snap.data().data);
-      cloud.lastBody = JSON.stringify(snapshotData());
+      // 불러오는 동안 사용자가 바꾼 항목(필터·탭 등)은 덮어쓰지 않음
+      const d = { ...snap.data().data };
+      for (const k of cloud.touched ?? []) delete d[k];
+      applyData(d);
+      if (cloud.touched?.size) setTimeout(cloudSave, 300);
+      cloud.lastBody = cloud.touched?.size ? null : JSON.stringify(snapshotData()); // 바꾼 화면 설정이 있으면 계정에도 저장
       cloud.lastAt = snap.data().savedAt ? new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(snap.data().savedAt)) : null;
     } else if (hasPersonal(snapshotData())) {
       await cloudSave(); // 처음 한 번: 이 기기 기록을 내 계정 비공개 공간으로 옮김
