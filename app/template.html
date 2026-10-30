@@ -80,6 +80,7 @@ select { max-width: 100%; padding: 4px 8px; border-radius: 6px; border: 1px soli
 .mapctl button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .maphint { position: absolute; left: 8px; bottom: 6px; font-size: .7rem; color: var(--muted); background: var(--surface); opacity: .9; padding: 1px 6px; border-radius: 4px; pointer-events: none; }
 @media (max-width: 700px) { .mapbox svg { height: min(64vh, 520px); } }
+.savewho { display: inline; } .savewho summary { display: inline; cursor: pointer; text-decoration: underline dotted; } .savewho[open] span { display: block; margin-top: 2px; }
 #svgmap .rd { fill: none; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
 #svgmap .lbl { font-family: system-ui, sans-serif; fill: var(--label); stroke: var(--surface); paint-order: stroke; stroke-linejoin: round; pointer-events: none; }
 .maphead { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 8px; }
@@ -222,7 +223,6 @@ svg text { font-family: var(--font-body); }
       <select id="birth"></select>
       <span id="childLabel" class="small"></span>
       <span id="saveState" class="small muted" style="width:100%"></span>
-      <div id="visNotice" class="small" hidden style="width:100%;padding:6px 10px;border-radius:8px;background:var(--warn-bg);color:var(--warn-ink)">이 페이지 관리자는 내 <b>지원할 3곳·비교함·추천 설정·꼭 필요한 조건·아이 출생연도</b>를 볼 수 있습니다. 아이 설문·상담 기록·메모·출발지·가족 조건은 나만 봅니다. <button class="btn" type="button" id="visOk" style="margin-left:4px">확인</button></div>
     </div>
   </header>
 
@@ -1584,7 +1584,10 @@ function drawVisNotice() {
 function drawSaveState() {
   drawVisNotice();
   const el = $('#saveState'); if (!el) return;
-  el.textContent = cloud.mode === 'cloud' ? `저장: 내 claude.ai 계정 (희망 순서·비교함·추천 설정·출생연도는 관리자도 봄)${cloud.saving ? ' · 저장 중…' : cloud.lastAt ? ' · 저장됨 ' + cloud.lastAt : ''}` : cloud.mode === 'readonly' ? '저장: 이 기기만 (이 페이지에서 계정 저장 권한이 없음)' : '저장: 이 기기 브라우저만';
+  if (cloud.mode !== 'cloud') { el.textContent = cloud.mode === 'readonly' ? '저장: 이 기기만 (이 페이지에서 계정 저장 권한이 없음)' : '저장: 이 기기 브라우저만'; return; }
+  const st = cloud.saving ? '저장 중…' : cloud.lastAt ? '저장됨 ' + cloud.lastAt : '내 계정에 저장';
+  const open = el.querySelector('details')?.open ? ' open' : '';
+  el.innerHTML = `${st} · <details class="savewho"${open}><summary>희망 순서·비교함은 관리자가 봅니다</summary><span>관리자가 보는 것: 지원할 3곳, 비교함, 꼭 필요한 조건, 추천 설정, 아이 출생연도. 아이 설문·상담 기록·메모·출발지·가족 조건은 나만 봅니다.</span></details>`;
 }
 // 관리자가 자동으로 보는 기록 (덜 민감한 것만): visible/<id> — 주인만 읽음. 나머지는 본인만 보는 개인 공간에만.
 const VISIBLE_KEYS = ['birth', 'plan', 'compare', 'reco', 'must'];
@@ -1647,10 +1650,8 @@ function drawMe() {
   const d = snapshotData();
   const n = { kids: d.kids?.length ?? 0, recs: (d.kids ?? []).reduce((a, k) => a + k.records.length, 0), consult: Object.keys(d.consult ?? {}).length, events: d.myEvents?.length ?? 0, archive: d.archive?.length ?? 0, memo: Object.values(d.memo ?? {}).filter(Boolean).length };
   $('#view-me').innerHTML = `<div class="cols2">
-    <div class="panel" style="display:grid;gap:10px"><h2>어디에 저장되나요</h2>
-      ${cloud.mode === 'cloud' ? '<p style="margin:0"><span class="state ok">내 claude.ai 계정</span> 이 페이지를 연 사람마다 따로 있는 공간에 저장됩니다. 휴대폰과 PC에서 같은 계정으로 열면 이어서 쓸 수 있습니다.</p><ul class="rlist small" style="margin:0"><li><b>나만 봄</b>: 아이 설문·생활 정보, 상담 기록·진행 상태, 메모, 출발지, 가족 조건(다자녀·저소득 등), 직접 넣은 일정·보관한 공지</li><li><b>페이지 관리자도 봄</b>: 지원할 3곳, 비교함, 꼭 필요한 조건, 추천 설정(기준·원하는 교육 방향), 아이 출생연도</li></ul>' : cloud.mode === 'readonly' ? '<p style="margin:0"><span class="state warn">이 기기만</span> 이 페이지에서 계정 저장 권한이 없습니다(보기 전용 공유). 페이지 주인에게 "참여자(Contributor)"로 공유해 달라고 하세요.</p>' : '<p style="margin:0"><span class="state unk">이 기기만</span> 지금 보는 화면에서는 계정 저장을 쓸 수 없어 이 브라우저에만 저장됩니다. claude.ai에 로그인한 상태로 페이지를 열면 계정에 저장됩니다.</p>'}
-      <p class="small muted" style="margin:0">유치원 정보(공시·요강)는 모든 사람이 같은 공개 자료를 봅니다. 정확한 주소·생년월일·건강정보는 받지 않습니다(별명·출생연도만).</p>
-      <h3>지금 저장된 내 기록</h3>
+    <div class="panel" style="display:grid;gap:10px"><h2>지금 저장된 내 기록</h2>
+      ${cloud.mode === 'readonly' ? '<p class="small" style="margin:0"><span class="state warn">이 기기만</span> 보기 전용으로 공유된 화면이라 계정에 저장되지 않습니다. 페이지 주인에게 참여자(Contributor) 권한을 요청하세요.</p>' : cloud.mode === 'cloud' ? '' : '<p class="small" style="margin:0"><span class="state unk">이 기기만</span> claude.ai에 로그인한 상태로 열면 계정에 저장되어 휴대폰·PC에서 이어서 쓸 수 있습니다.</p>'}
       <ul class="rlist"><li>아이 ${n.kids}명 · 설문 기록 ${n.recs}개</li><li>상담 결과 기록 ${n.consult}곳 · 메모 ${n.memo}곳</li><li>직접 넣은 일정 ${n.events}개 · 보관한 공지 ${n.archive}개</li><li>희망 순서 ${d.plan?.length ?? 0}곳 · 비교함 ${d.compare?.length ?? 0}곳 · 출발지 ${d.origin ? '있음' : '없음'}</li></ul>
     </div>
     <div class="stack">
