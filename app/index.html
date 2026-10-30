@@ -1847,7 +1847,7 @@ function drawMe() {
     <div id="adminPanel" style="margin-top:14px"></div>`;
   drawInbox();
 }
-// ── 관리자에게 보내기 (inbox/<보낸 사람 id>) ──
+// ── 관리자 보기 (visible 표). '관리자에게 보내기'(inbox)는 2026-10-30 사용자 요청으로 화면에서 뺌 — 아래 send/unsend 함수는 쓰지 않음 ──
 // 개인 기록(data/users/<id>)은 플랫폼 규칙상 페이지 주인도 못 봄. 사용자가 고른 항목만 사본으로 inbox에 보냄.
 // 규칙: inbox는 페이지 주인만 읽음, 각자 자기 문서(inbox/<본인>)만 쓰고 지움.
 const INBOX = { vis: [], visUnsub: null, ready: false, db: null, user: null, me: null, owner: false, mine: null, list: [], unsub: null, names: {}, msg: '' };
@@ -1865,13 +1865,7 @@ async function inboxInit() {
     if (!db || !user) return;
     INBOX.db = db; INBOX.user = user;
     INBOX.me = await user.id(); INBOX.owner = await user.isOwner(); window.__isOwner = INBOX.owner; drawVisNotice();
-    if (INBOX.me) { const s = await db.doc('inbox/' + INBOX.me).get(); INBOX.mine = s.exists ? s.data() : null; }
-    if (INBOX.owner && !INBOX.unsub) {
-      INBOX.unsub = db.collection('inbox').onSnapshot(async (snap) => {
-        INBOX.list = snap.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => String(b.sentAt).localeCompare(String(a.sentAt)));
-        try { const ps = await user.profiles(INBOX.list.map((x) => x.id)); for (const x of INBOX.list) INBOX.names[x.id] = ps?.[x.id]?.name || ''; } catch {}
-        if (state.tab === 'me') drawInbox();
-      }, () => {});
+    if (INBOX.owner && !INBOX.visUnsub) {
       INBOX.visUnsub = db.collection('visible').onSnapshot(async (snap) => {
         INBOX.vis = snap.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => String(b.savedAt).localeCompare(String(a.savedAt)));
         try { const ps = await user.profiles(INBOX.vis.map((x) => x.id)); for (const x of INBOX.vis) INBOX.names[x.id] = ps?.[x.id]?.name || INBOX.names[x.id] || ''; } catch {}
@@ -1896,14 +1890,7 @@ function inboxSummary(d) {
 function drawInbox() {
   const sp = $('#sendPanel'), ap = $('#adminPanel'); if (!sp) return;
   if (!INBOX.ready || !INBOX.me) { sp.innerHTML = ''; ap.innerHTML = ''; return; }
-  const m = INBOX.mine;
-  sp.innerHTML = `<div class="panel" style="display:grid;gap:8px"><h2>관리자에게 보내기</h2>
-    <p class="small muted" style="margin:0">고른 항목의 <b>사본</b>을 페이지 주인(관리자)에게 보냅니다. 보내지 않은 기록은 지금처럼 나만 봅니다. 보낸 사본은 관리자와 나만 볼 수 있고, 언제든 아래 버튼으로 지울 수 있습니다.</p>
-    <div class="checks">${SEND_PARTS.map(([k, l]) => `<label><input type="checkbox" id="sp-${k}" data-sendpart="${k}"> ${esc(l)}</label>`).join('')}</div>
-    <label for="sp-msg" class="small">관리자에게 남길 말 (문의·오류 신고·의견, 선택)</label>
-    <textarea id="sp-msg" maxlength="2000" placeholder="예) 우리 아파트가 목록에 없어요 / 세종유치원 버스 노선이 바뀌었어요">${esc(m?.message ?? '')}</textarea>
-    <div class="fgroup"><button class="btn primary" type="button" id="sendInbox">보내기</button>${m ? '<button class="btn" type="button" id="unsendInbox">보낸 내용 지우기</button>' : ''}</div>
-    <div class="small" id="sendMsg">${esc(INBOX.msg || (m ? `마지막으로 보냄: ${new Date(m.sentAt).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })} — ${inboxSummary(m)}${m.message ? ' · 메시지 있음' : ''}` : '아직 보낸 내용이 없습니다.'))}</div></div>`;
+  sp.innerHTML = ''; // '관리자에게 보내기'는 없앰 (2026-10-30)
   if (!INBOX.owner) { ap.innerHTML = ''; return; }
   const L = INBOX.list, V = INBOX.vis;
   const nm = (id) => INBOX.names[id] || (id === INBOX.me ? '나' : '이름 비공개 사용자');
@@ -1912,11 +1899,7 @@ function drawInbox() {
     <p class="small muted" style="margin:0">사용자가 앱을 쓰면 자동으로 저장되는 덜 민감한 항목입니다: 출생연도, 지원할 3곳, 비교함, 꼭 필요한 조건, 추천 설정. 아이 설문·상담 기록·메모·출발지·가족 조건은 여기에 없습니다.</p>
     ${V.length ? `<div class="tablewrap"><table><thead><tr><th>사용자</th><th>출생연도</th><th>지원할 3곳</th><th>비교함</th><th>꼭 필요한 조건</th><th>원하는 교육 방향</th><th>마지막 저장</th></tr></thead><tbody>
     ${V.map((x) => { const d = x.data ?? {}; return `<tr><td>${esc(nm(x.id))}</td><td class="num">${esc(d.birth ?? '')}</td><td>${esc((d.plan ?? []).map(inst).map((n, i) => `${i + 1}. ${n}`).join(' / ') || '-')}</td><td>${esc((d.compare ?? []).map(inst).join(', ') || '-')}</td><td>${esc((d.must ?? []).map((k) => MUSTS.find((m) => m.key === k)?.label.replace(/ \(.*\)$/, '') ?? k).join(', ') || '-')}</td><td>${esc((d.reco?.styles ?? []).map(styleShort).join(', ') || '-')}</td><td class="small">${esc(x.savedAt ? new Date(x.savedAt).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '')}</td></tr>`; }).join('')}</tbody></table></div>` : '<p class="small muted" style="margin:0">아직 저장된 사용자 선택이 없습니다.</p>'}</div>`;
-  ap.innerHTML = visHtml + `<div class="panel" style="display:grid;gap:8px"><h2>관리자: 받은 기록 <span class="cnt">${L.length}</span></h2>
-    <p class="small muted" style="margin:0">페이지 주인에게만 보이는 칸입니다. 사용자가 '관리자에게 보내기'로 보낸 사본만 있습니다(보내지 않은 개인 기록은 볼 수 없음). 아이 정보가 들어 있으니 다른 곳에 옮기거나 공유하지 마세요.</p>
-    ${L.length ? `<div class="fgroup"><button class="btn" type="button" id="inboxExport">전체 파일로 받기</button></div>` : ''}
-    ${L.map((x) => `<details class="pickrow"><summary><b>${esc(nm(x.id))}</b> <span class="small muted">${esc(new Date(x.sentAt).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }))}</span><div class="small">${esc(inboxSummary(x))}</div>${x.message ? `<div class="small" style="white-space:pre-wrap">💬 ${esc(x.message)}</div>` : ''}</summary>
-      <pre class="small" style="white-space:pre-wrap;max-height:320px;overflow:auto;background:var(--bg);padding:8px;border-radius:6px">${esc(JSON.stringify(x.parts ?? {}, null, 2))}</pre></details>`).join('') || '<p class="small muted" style="margin:0">아직 받은 기록이 없습니다.</p>'}</div>`;
+  ap.innerHTML = visHtml;
 }
 async function sendInbox() {
   if (!INBOX.db || !INBOX.me) return;
