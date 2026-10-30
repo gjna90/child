@@ -1587,7 +1587,7 @@ function drawSaveState() {
   if (cloud.mode !== 'cloud') { el.textContent = cloud.mode === 'readonly' ? '저장: 이 기기만 (이 페이지에서 계정 저장 권한이 없음)' : '저장: 이 기기 브라우저만'; return; }
   const st = cloud.saving ? '저장 중…' : cloud.lastAt ? '저장됨 ' + cloud.lastAt : '내 계정에 저장';
   const open = el.querySelector('details')?.open ? ' open' : '';
-  el.innerHTML = `${st} · <details class="savewho"${open}><summary>희망 순서·비교함은 관리자가 봅니다</summary><span>관리자가 보는 것: 지원할 3곳, 비교함, 꼭 필요한 조건, 추천 설정, 아이 출생연도. 아이 설문·상담 기록·메모·출발지·가족 조건은 나만 봅니다.</span></details>`;
+  el.innerHTML = `${st} · <details class="savewho"${open}><summary>희망 순서·비교함은 서비스 운영 목적으로만 확인됩니다</summary><span>운영자가 확인하는 것: 지원할 3곳, 비교함, 꼭 필요한 조건, 추천 설정, 아이 출생연도. 아이 설문·상담 기록·메모·출발지·가족 조건은 나만 봅니다.</span></details>`;
 }
 // 관리자가 자동으로 보는 기록 (덜 민감한 것만): visible/<id> — 주인만 읽음. 나머지는 본인만 보는 개인 공간에만.
 const VISIBLE_KEYS = ['birth', 'plan', 'compare', 'reco', 'must'];
