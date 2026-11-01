@@ -213,26 +213,16 @@ const json = JSON.stringify(data).replace(/</g, '\\u003c');
 const lib = (f) => fs.readFileSync(path.join(ROOT, 'src', 'lib', f), 'utf8').replace(/^export /gm, '');
 // 추천 계산 규칙(recommend.js)·교육 방향 맞춤(profile.js)·설문 문항과 해석(survey.js)을 화면에 그대로 넣는다 — 테스트한 코드와 화면 코드가 같도록
 const reco = [lib('recommend.js'), lib('profile.js'), lib('survey.js')].join('\n');
-const page = (web) => tpl.replace('/*__DATA__*/null', () => json).replace('/*__WEB__*/null', () => JSON.stringify(web).replace(/</g, '\\u003c')).replace('/*__RECO__*/', () => reco);
-fs.writeFileSync(process.env.APP_OUT ?? path.join(ROOT, 'app', 'index.html'), page(null));
+const page = () => tpl.replace('/*__DATA__*/null', () => json).replace('/*__RECO__*/', () => reco);
+fs.writeFileSync(process.env.APP_OUT ?? path.join(ROOT, 'app', 'index.html'), page());
 
-// 일반 웹(Netlify) 판 → public/ : 같은 화면 + 결과 보내기, 관리자 화면, 개인정보 안내
-// config/web.json 에는 공개해도 되는 값만 둔다 (Supabase 주소·공개 키). 비밀 키는 절대 넣지 않음.
+// 일반 웹(Netlify) 판 → public/index.html : claude.ai 판과 같은 화면. 기록은 각자 기기에만 저장(서버로 보내는 기능 없음)
+// claude.ai 는 문서 뼈대(doctype·charset·viewport)를 자동으로 붙이지만 일반 웹은 아니므로 직접 붙임
 if (!process.env.APP_OUT) {
-  const cfgPath = path.join(ROOT, 'config', 'web.json');
-  const cfg = fs.existsSync(cfgPath) ? JSON.parse(fs.readFileSync(cfgPath, 'utf8')) : {};
-  if (cfg.supabaseKey && /service_role|^sb_secret_/.test(cfg.supabaseKey + (() => { try { return atob(cfg.supabaseKey.split('.')[1] ?? ''); } catch { return ''; } })())) throw new Error('config/web.json 에 비밀 키가 들어 있음 — 공개 키(anon/publishable)만 넣을 것');
-  const web = cfg.supabaseUrl && cfg.supabaseKey ? { url: cfg.supabaseUrl.replace(/\/$/, ''), key: cfg.supabaseKey, keepUntil: cfg.keepUntilText ?? '2027년 3월 31일' } : null;
   const pub = path.join(ROOT, 'public');
   fs.mkdirSync(pub, { recursive: true });
-  // claude.ai 는 문서 뼈대(doctype·charset·viewport)를 자동으로 붙이지만 일반 웹은 아니므로 직접 붙임
   const skeleton = '<!doctype html>\n<html lang="ko">\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n';
-  fs.writeFileSync(path.join(pub, 'index.html'), skeleton + page(web));
-  const admin = fs.readFileSync(path.join(ROOT, 'app', 'admin.html'), 'utf8')
-    .replace('/*__WEB__*/null', () => JSON.stringify(web))
-    .replace('/*__LIB__*/', () => [lib('profile.js'), lib('survey.js')].join('\n'));
-  fs.writeFileSync(path.join(pub, 'admin.html'), admin);
-  fs.copyFileSync(path.join(ROOT, 'app', 'privacy.html'), path.join(pub, 'privacy.html'));
-  console.log(`public/: 일반 웹 판 ${web ? '(결과 보내기 켜짐)' : '(config/web.json 없음 — 결과 보내기 숨김)'}`);
+  fs.writeFileSync(path.join(pub, 'index.html'), skeleton + page());
+  console.log('public/index.html: 일반 웹 판');
 }
 console.log(`아파트 ${apartments.length}곳 · 경로 ${Object.values(aptRoutes).reduce((a, x) => a + Object.keys(x).length, 0)}쌍 · app/index.html: 기관 ${data.institutions.length}곳 (유치원 ${kinder.length}, 어린이집 ${daycares.length}, 영어유치원·유아 영어학원 ${academies.length}), ${(json.length / 1024).toFixed(0)}KB`);

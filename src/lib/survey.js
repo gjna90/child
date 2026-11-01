@@ -1,6 +1,5 @@
 // 우리 아이 성향·생활 설문 — 문항과 해석 규칙 (자체 설문 초안. 표준화 검사·진단이 아님)
-// 앱 화면(app/template.html), 관리자 화면(public/admin.html)이 같은 코드를 쓴다 (빌드 때 끼워 넣음).
-// 서버 검사(supabase/functions/submit)는 문항 번호·답 보기·지원 키만 따로 확인한다 — 문항을 바꾸면 거기도 맞출 것.
+// 앱 화면(app/template.html)에 빌드 때 끼워 넣는다. 답과 결과는 각자 기기(또는 claude.ai 계정)에만 저장된다.
 
 export const SCALE = ['거의 없음', '가끔', '자주', '대부분', '관찰 기회 없음'];
 export const HIGH = new Set(['자주', '대부분']);

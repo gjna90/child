@@ -1,8 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import fs from 'node:fs';
-import { ITEMS, SCALE, SUPPORTS, analyze } from '../src/lib/survey.js';
-import { STYLE_KEYS } from '../src/lib/profile.js';
+import { ITEMS, SUPPORTS, analyze } from '../src/lib/survey.js';
 
 test('설문 24문항, 지원 키는 모두 SUPPORTS에 있음', () => {
   assert.equal(ITEMS.length, 24);
@@ -18,10 +16,3 @@ test('analyze: 높게 답한 문항은 해석·지원으로, 관찰 못함은 �
   assert.equal(an.unseen[0].n, 3);
 });
 
-test('서버 검사(supabase/functions/submit)의 보기·지원·방향 목록이 앱과 같음', () => {
-  const src = fs.readFileSync(new URL('../supabase/functions/submit/index.ts', import.meta.url), 'utf8');
-  const arr = (name) => JSON.parse(src.match(new RegExp(`const ${name} = (\\[[^\\]]*\\])`))[1].replace(/'/g, '"'));
-  assert.deepEqual(arr('SCALE'), SCALE);
-  assert.deepEqual(arr('SUPPORT_KEYS'), Object.keys(SUPPORTS));
-  assert.deepEqual(arr('STYLE_KEYS'), STYLE_KEYS);
-});
