@@ -1782,16 +1782,22 @@ const planSync = {
     return { id, token };
   },
   body(plan) { return (plan ?? state.plan).slice(0, 3).map((id) => ({ id, name: DATA.institutions.find((x) => x.id === id)?.name ?? '' })).filter((x) => x.name); },
+  busy: false, again: false,
   async send(plan) {
     if (!WEB?.url) return;
+    if (this.busy && plan === undefined) { this.again = true; return; } // 보내는 중이면 끝난 뒤 한 번 더
     const items = this.body(plan), key = JSON.stringify(items);
-    const sent = store.get('webPlanSent', null);
-    if (plan === undefined && (key === sent || (sent === null && !items.length))) return; // 바뀐 게 없거나 처음부터 비어 있으면 안 보냄
+    const sent = store.get('webPlanSent', null), ever = store.get('webPlanEver', false);
+    if (plan === undefined && (key === sent || (!ever && !items.length))) return; // 바뀐 게 없거나, 한 번도 고른 적 없이 비어 있으면 안 보냄
+    if (items.length) store.set('webPlanEver', true);
     const { id, token } = this.ident();
+    this.busy = true;
     try {
       const r = await fetch(`${WEB.url}/functions/v1/plan`, { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json', apikey: WEB.key, ...(WEB.key.startsWith('eyJ') ? { Authorization: `Bearer ${WEB.key}` } : {}) }, body: JSON.stringify({ id, token, plan: items }) });
       if (r.ok) store.set('webPlanSent', key);
-    } catch { /* 연결 안 되면 다음 변경 때 다시 보냄 */ }
+    } catch { /* 연결 안 되면 다음 변경·다음 방문 때 다시 보냄 */ }
+    this.busy = false;
+    if (this.again) { this.again = false; this.send(); }
   },
   mark() { clearTimeout(this.timer); this.timer = setTimeout(() => this.send(), 1500); },
 };
