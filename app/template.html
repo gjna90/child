@@ -187,6 +187,9 @@ textarea { font: inherit; width: 100%; min-height: 70px; border: 1px solid var(-
 .res { display: grid; gap: 12px; }
 .res section { border-top: 1px solid var(--line); padding-top: 10px; display: grid; gap: 4px; }
 .res ul { margin: 0; padding-left: 1.1rem; }
+.res .subbox { gap: 8px; }
+.subbox label { display: flex; gap: 8px; align-items: flex-start; }
+.subbox input[type=checkbox] { width: 20px; height: 20px; flex: none; margin: 1px 0 0; }
 .diff { font-size: .82rem; color: var(--warn-ink); }
 .progress { font-size: .82rem; color: var(--muted); }
 .crits { display: grid; gap: 6px; }
@@ -311,6 +314,8 @@ svg text { font-family: var(--font-body); }
 
 <script>
 const DATA = /*__DATA__*/null;
+// 일반 웹(Netlify) 판에서만 값이 들어감: 결과 보내기 서버 주소 등 (공개 값). claude.ai 판은 null → 보내기 기능 숨김
+const WEB = /*__WEB__*/null;
 /*__RECO__*/
 const U = '미확인';
 const isAca = (it) => it.kind === '영어유치원(학원)';
@@ -1194,50 +1199,7 @@ function drawAsk() {
 
 // ── 3단계: 우리 아이 성향·생활 알아보기 ───────────────────
 // 자체 설문 초안. 표준화 검사·진단이 아님. 답은 이 기기 브라우저에만 저장.
-const SCALE = ['거의 없음', '가끔', '자주', '대부분', '관찰 기회 없음'];
-const HIGH = new Set(['자주', '대부분']);
-const LOW = new Set(['거의 없음', '가끔']);
-const SUPPORTS = {
-  gradual_adapt: { name: '적응 지원', q: '처음 적응 기간에 단계적 등원이나 보호자 동반, 사전 방문이 가능한가요?' },
-  transition_notice: { name: '활동 전환 안내', q: '활동을 바꿀 때 미리 알려 주시나요? 하던 놀이를 마무리할 시간을 주시나요?' },
-  movement: { name: '움직임 기회', q: '하루에 바깥놀이·신체활동 시간은 얼마나 되고, 앉아서 하는 활동 중 잠깐 움직이거나 쉴 수 있나요?' },
-  choice_play: { name: '자유놀이·선택', q: '자유놀이 시간은 하루에 얼마나 되고, 아이가 놀이를 고르고 오래 이어 갈 수 있나요?' },
-  quiet_space: { name: '조용한 휴식 공간', q: '시끄럽거나 지칠 때 쉴 수 있는 조용한 공간이 있나요? 참여 방식을 조정해 주시나요?' },
-  sensory: { name: '재료·촉감 배려', q: '싫어하는 촉감·재료 활동은 다른 활동을 고를 수 있나요?' },
-  small_group: { name: '친구 사귀기 도움', q: '소그룹 활동이 있나요? 처음에 친구와 이어지도록 도와주시나요?' },
-  express_help: { name: '도움 요청 살피기', q: '아이가 불편을 말로 잘 표현하지 못할 때 선생님이 어떻게 알아채고 도와주시나요?' },
-  conflict: { name: '갈등·감정 지원', q: '친구와 의견이 부딪치면 어떻게 중재하고, 감정 표현을 어떻게 도와주시나요?' },
-  retry: { name: '재도전 지원', q: '뜻대로 안 돼서 그만두려 할 때 어떻게 격려하시나요? 결과보다 과정을 말해 주시나요?' },
-  presentation: { name: '발표 부담 조정', q: '발표·공연처럼 여러 사람 앞에서 하는 활동은 참여 방식을 조정해 줄 수 있나요?' },
-  hands_on: { name: '직접 해보는 활동', q: '설명 위주보다 직접 보고 해보는 활동이 많은 편인가요?' },
-};
-// type: strength(강점·선호) comfort(편안한 조건) help(도움이 필요한 상황). low: 낮게 답했을 때의 해석(있는 문항만)
-const ITEMS = [
-  [1, '새로운 장소에서 먼저 지켜본 뒤 참여한다.', 'comfort', '새 장소에서는 먼저 지켜볼 시간이 있으면 편안해한다', 'gradual_adapt'],
-  [2, '낯선 어른과 있을 때 보호자 가까이에 머무르려 한다.', 'help', '낯선 어른과 있을 때 보호자 곁을 찾는다 — 익숙해질 시간이 필요할 수 있다', 'gradual_adapt'],
-  [3, '보호자와 헤어진 뒤 익숙한 어른의 도움을 받아 놀이한다.', 'strength', '헤어진 뒤 익숙한 어른의 도움으로 놀이를 이어 간다', 'gradual_adapt'],
-  [4, '새로운 활동을 미리 설명하면 참여하기 수월해진다.', 'comfort', '새 활동을 미리 설명해 주면 참여가 수월하다', 'transition_notice'],
-  [5, '달리기·오르기 등 움직이는 놀이를 스스로 찾는다.', 'strength', '몸을 움직이는 놀이를 스스로 찾는다', 'movement'],
-  [6, '앉아서 하는 활동 중 움직이거나 쉬고 싶어 한다.', 'help', '앉아서 하는 활동 중에 움직이거나 쉴 기회가 필요하다', 'movement'],
-  [7, '좋아하는 놀이를 오래 이어가려 한다.', 'strength', '좋아하는 놀이에 오래 몰입한다', 'choice_play'],
-  [8, '여러 활동 중 자신이 할 활동을 고르려 한다.', 'strength', '할 활동을 스스로 고르려 한다', 'choice_play'],
-  [9, '놀이가 갑자기 끝나면 불편함을 표현한다.', 'help', '놀이가 갑자기 끝나면 힘들어한다', 'transition_notice'],
-  [10, '전환을 미리 알려주면 다음 활동으로 이동하기 수월하다.', 'comfort', '다음 활동을 미리 알려 주면 옮겨 가기 수월하다', 'transition_notice'],
-  [11, '소리나 사람이 많은 공간에서 물러나거나 쉬려 한다.', 'help', '소리나 사람이 많은 곳에서는 물러나 쉬려 한다', 'quiet_space'],
-  [12, '특정 촉감이나 재료의 활동을 피한다.', 'help', '특정 촉감이나 재료를 피한다', 'sensory'],
-  [13, '단체활동 후 조용한 곳에서 쉬려 한다.', 'comfort', '단체활동 뒤 조용히 쉬면 회복한다', 'quiet_space'],
-  [14, '휴식 후 다시 활동에 참여한다.', 'strength', '쉬고 나면 다시 활동에 참여한다', 'quiet_space'],
-  [15, '처음 만난 또래보다 익숙한 한두 명과 먼저 놀이한다.', 'comfort', '익숙한 한두 명과 먼저 놀며 시작한다', 'small_group'],
-  [16, '놀이에 참여할 때 어른의 소개나 도움을 활용한다.', 'comfort', '어른의 소개·도움이 있으면 놀이에 들어가기 쉽다', 'small_group'],
-  [17, '불편하거나 도움이 필요할 때 어른에게 표현한다.', 'strength', '불편하거나 도움이 필요할 때 어른에게 말한다', 'express_help', '도움이 필요할 때 표현하는 것을 어른이 먼저 살펴 줄 필요가 있을 수 있다'],
-  [18, '친구와 의견이 다를 때 어른의 중재가 필요하다.', 'help', '친구와 의견이 다를 때 어른의 중재가 도움이 된다', 'conflict'],
-  [19, '활동이 뜻대로 되지 않으면 그만하려 한다.', 'help', '뜻대로 안 되면 그만두려 한다', 'retry'],
-  [20, '과정을 격려하거나 도와주면 다시 시도한다.', 'comfort', '과정을 격려하거나 도와주면 다시 시도한다', 'retry'],
-  [21, '여러 사람 앞에서 말하거나 보여주는 활동을 부담스러워한다.', 'help', '여러 사람 앞에서 말하거나 보여 주는 활동을 부담스러워한다', 'presentation'],
-  [22, '자신의 방식으로 만들거나 탐색하는 활동을 즐긴다.', 'strength', '자기 방식으로 만들고 탐색하는 것을 즐긴다', 'choice_play'],
-  [23, '긴 설명보다 직접 보고 해볼 때 참여하기 수월하다.', 'comfort', '긴 설명보다 직접 보고 해볼 때 수월하다', 'hands_on'],
-  [24, '관심 있는 주제로 질문하거나 놀이를 확장한다.', 'strength', '관심 있는 주제로 질문하고 놀이를 넓혀 간다', 'choice_play'],
-].map(([n, text, type, hi, sup, lo]) => ({ n, text, type, hi, sup, lo }));
+// 설문 문항·해석 규칙: src/lib/survey.js (빌드 때 위에 끼워 넣음)
 const LIFE = [
   ['rhythm', '기상·취침·등하원 시간 (평소 생활 패턴)', '예) 7시 기상, 9시 취침, 9시 등원'],
   ['nap', '낮잠 (필요 여부·횟수·시간)', '예) 매일 1시간, 안 자면 저녁에 힘들어함'],
@@ -1262,22 +1224,6 @@ const saveKids = () => store.set('kids', state.kids);
 const curKid = () => state.kids.find((k) => k.id === state.kidSel) ?? null;
 const curRec = () => curKid()?.records.find((r) => r.id === state.recSel) ?? null;
 
-function analyze(rec) {
-  const out = { strength: [], comfort: [], help: [], unseen: [], sup: {} };
-  for (const it of ITEMS) {
-    const a = rec.answers[it.n];
-    if (!a) continue;
-    if (a === '관찰 기회 없음') { out.unseen.push(it); continue; }
-    const note = rec.notes?.[it.n] ? ` (예: ${rec.notes[it.n]})` : '';
-    if (HIGH.has(a)) {
-      out[it.type].push(it.hi + note);
-      if (it.type !== 'strength' || it.sup === 'quiet_space') (out.sup[it.sup] ??= []).push(it.n);
-    } else if (it.lo && LOW.has(a)) {
-      out.help.push(it.lo + note); (out.sup[it.sup] ??= []).push(it.n);
-    }
-  }
-  return out;
-}
 function lifeQuestions(life) {
   const q = [];
   if (life?.nap) q.push(['nap', '낮잠 시간은 언제·얼마나이고, 낮잠을 안 자는 아이는 그동안 무엇을 하나요?']);
@@ -1303,7 +1249,7 @@ function drawKid() {
   const k = curKid();
   const left = `<div class="stack">
     <div class="panel" style="display:grid;gap:10px"><h2>아이</h2>
-      <p class="small muted" style="margin:0">별명과 출생연도만 있으면 됩니다. 아이마다 따로 답하고 날짜별로 다시 작성할 수 있습니다. 답은 <b>이 기기 브라우저에만</b> 저장되고 어디로도 보내지 않습니다.</p>
+      <p class="small muted" style="margin:0">별명과 출생연도만 있으면 됩니다. 아이마다 따로 답하고 날짜별로 다시 작성할 수 있습니다. 답은 <b>이 기기 브라우저에만</b> 저장되고 ${WEB?.url ? '직접 「동의하고 보내기」를 누르지 않으면 ' : ''}어디로도 보내지 않습니다.</p>
       <div class="kidlist">${state.kids.map((x) => `<button class="kidbtn" type="button" data-kid="${x.id}" aria-pressed="${x.id === state.kidSel}"><b>${esc(x.nick)}</b> <span class="small muted">${x.birth}년생 · 기록 ${x.records.length}개</span></button>`).join('') || '<p class="small muted" style="margin:0">아직 없음 — 아래에서 추가하세요</p>'}</div>
       <form class="kidform" id="kidAdd"><div><label for="kidNick" class="small">별명</label><input id="kidNick" placeholder="예) 첫째" maxlength="12" required></div>
         <div><label for="kidBirth" class="small">출생연도</label><input id="kidBirth" type="number" min="${SY - 7}" max="${SY - 1}" value="${state.birth}" required></div>
@@ -1366,9 +1312,71 @@ function kidResult(k, rec) {
     <section><h3>아직 관찰하지 못한 부분</h3>${an.unseen.length ? `<ul>${an.unseen.map((it) => `<li>${esc(it.text)}</li>`).join('')}</ul>` : ''}${24 - Object.keys(rec.answers).length ? `<div class="small muted">답하지 않은 문항 ${24 - Object.keys(rec.answers).length}개</div>` : ''}${!an.unseen.length && Object.keys(rec.answers).length === 24 ? '<p class="small muted" style="margin:0">없음</p>' : ''}</section>
     ${rec.life?.parentWant || rec.life?.childLikes ? `<section><h3>부모의 바람과 아이의 실제 선호</h3><div>부모가 원하는 교육: ${esc(rec.life.parentWant || U)}</div><div>아이가 보이는 선호: ${esc(rec.life.childLikes || U)}</div><div class="small muted">둘을 따로 두고 봅니다. 성향 하나로 특정 교육 방식(예: 숲·몬테소리)을 정답으로 정하지 않습니다.</div></section>` : ''}
     ${other ? `<section><h3>${esc(other.by)} 관찰(${esc(other.date)})과 다른 부분</h3>${diffs.length ? `<ul>${diffs.map((it) => `<li class="diff">${it.n}. ${esc(it.text)} — ${esc(rec.by)}: ${esc(rec.answers[it.n])} / ${esc(other.by)}: ${esc(other.answers[it.n])}</li>`).join('')}</ul><div class="small muted">집과 기관처럼 환경이 다르면 다르게 보일 수 있습니다. 어느 쪽이 맞다고 정하지 않습니다.</div>` : '<p class="small muted" style="margin:0">크게 다른 답 없음</p>'}</section>` : ''}
+    ${submitSection(k, rec)}
   </div>`;
 }
 
+
+// ── 결과 보내기 (일반 웹 판 전용, 선택) — 규칙: docs/11_테스트판_운영.md ──
+// 보내는 것: 출생연도·관찰자·24문항 답·고른 지원·지원할 3곳·원하는 교육 방향. 이름·연락처·메모·생활 질문·출발지는 보내지 않음.
+const CONSENT_VER = 'v1-2026-11';
+const SUB = { busy: false, msg: '' };
+function submitPayload(k, rec) {
+  const answers = {}; for (const it of ITEMS) if (SCALE.includes(rec.answers[it.n])) answers[it.n] = rec.answers[it.n];
+  const plan = state.plan.slice(0, 3).map((id) => ({ id, name: DATA.institutions.find((x) => x.id === id)?.name ?? '' })).filter((x) => x.name);
+  return { consent: CONSENT_VER, birth: +k.birth, by: rec.by, answers, picks: (rec.picks ?? []).filter((p) => SUPPORTS[p]), plan, recoStyles: (state.reco.styles ?? []).filter((x) => DATA.styles[x]) };
+}
+function submitSection(k, rec) {
+  if (!WEB?.url) return '';
+  const s = rec.submitted;
+  const msg = SUB.msg ? `<div class="small" role="status">${esc(SUB.msg)}</div>` : '';
+  if (s) return `<section class="subbox"><h3>운영자에게 보낸 결과</h3>
+    <div>${esc(s.at)}에 보냄 · 응답번호 <b>${esc(s.rid)}</b> · 삭제코드 <b>${esc(s.code)}</b></div>
+    <div class="small muted">응답번호와 삭제코드는 이 기기에만 저장돼 있습니다. 다른 기기에서 지우려면 둘 다 필요하니 적어 두세요. 운영자도 삭제코드는 알 수 없습니다.</div>
+    <div class="fgroup"><button class="btn" type="button" id="subRedo" ${SUB.busy ? 'disabled' : ''}>지금 내용으로 다시 보내기</button><button class="btn" type="button" id="subDel" ${SUB.busy ? 'disabled' : ''}>보낸 결과 지우기</button></div>${msg}</section>`;
+  const pl = submitPayload(k, rec);
+  return `<section class="subbox"><h3>운영자에게 결과 보내기 <span class="small muted">(선택)</span></h3>
+    <div class="small">보내지 않아도 모든 기능을 그대로 쓸 수 있습니다. 보낸 결과는 서비스 개선과 기관별 희망·필요 지원 집계에만 쓰고 ${esc(WEB.keepUntil)}에 자동으로 지웁니다.</div>
+    <details><summary class="small">보내는 것 / 보내지 않는 것</summary><div class="small">
+      <div><b>보내는 것</b>: 아이 출생연도(${esc(String(pl.birth))}년), 관찰자(${esc(pl.by)}), 설문 답 ${Object.keys(pl.answers).length}개, 고른 지원 ${pl.picks.length}개, 지원할 곳 ${pl.plan.length ? pl.plan.map((x, i) => `${i + 1}.${esc(x.name)}`).join(' ') : '없음'}, 원하는 교육 방향 ${pl.recoStyles.length}개</div>
+      <div><b>보내지 않는 것</b>: 아이 별명, 이름·연락처, 문항별 예시 메모, 생활 질문(건강·알레르기 포함), 상담 기록, 출발지(집 위치)</div></div></details>
+    <label class="small"><input type="checkbox" id="subC1"><span>이 아이의 보호자(부모 등)입니다. <span class="muted">(필수)</span></span></label>
+    <label class="small"><input type="checkbox" id="subC2"><span><a href="privacy.html" target="_blank" rel="noopener">개인정보 수집·이용 안내</a>를 읽었고 동의합니다. <span class="muted">(필수)</span></span></label>
+    <div><button class="btn primary" type="button" id="subGo" ${SUB.busy ? 'disabled' : ''}>동의하고 보내기</button></div>${msg}</section>`;
+}
+async function webCall(fn, body) {
+  const r = await fetch(`${WEB.url}/functions/v1/${fn}`, { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: WEB.key, ...(WEB.key.startsWith('eyJ') ? { Authorization: `Bearer ${WEB.key}` } : {}) }, body: JSON.stringify(body) });
+  let j = {}; try { j = await r.json(); } catch { /* 빈 응답 */ }
+  return { ok: r.ok, status: r.status, ...j };
+}
+const SUB_ERR = { rate: '잠시 뒤에 다시 시도해 주세요 (짧은 시간에 너무 많이 보냄).', dup: '같은 내용을 이미 보냈습니다.', code: '응답번호나 삭제코드가 맞지 않습니다.', invalid: '보낼 내용이 올바르지 않습니다. 설문을 확인해 주세요.', consent: '동의 버전이 맞지 않습니다. 새로고침 후 다시 시도해 주세요.' };
+async function doSubmit(redo) {
+  const k = curKid(), rec = curRec(); if (!k || !rec) return;
+  if (!redo && (!$('#subC1')?.checked || !$('#subC2')?.checked)) { SUB.msg = '두 가지 동의에 모두 체크해야 보낼 수 있습니다.'; drawKid(); return; }
+  const pl = submitPayload(k, rec);
+  if (!Object.keys(pl.answers).length) { SUB.msg = '설문에 답한 문항이 없습니다.'; drawKid(); return; }
+  SUB.busy = true; SUB.msg = '보내는 중…'; drawKid();
+  try {
+    const r = await webCall('submit', redo ? { ...pl, rid: rec.submitted.rid, code: rec.submitted.code } : pl);
+    if (r.ok && r.rid) { rec.submitted = { rid: r.rid, code: redo ? rec.submitted.code : r.code, at: today() }; saveKids(); SUB.msg = redo ? '지금 내용으로 바꿨습니다.' : '보냈습니다. 응답번호와 삭제코드를 적어 두세요.'; }
+    else SUB.msg = SUB_ERR[r.error] ?? `보내지 못했습니다 (${r.status}). 잠시 뒤 다시 시도해 주세요.`;
+  } catch { SUB.msg = '인터넷 연결을 확인해 주세요.'; }
+  SUB.busy = false; drawKid();
+}
+async function doUnsubmit(rid, code) {
+  try {
+    const r = await webCall('delete', { rid, code });
+    if (r.ok) return { ok: true, msg: '보낸 결과를 서버에서 지웠습니다.' };
+    return { ok: false, msg: SUB_ERR[r.error] ?? `지우지 못했습니다 (${r.status}).` };
+  } catch { return { ok: false, msg: '인터넷 연결을 확인해 주세요.' }; }
+}
+function meSubmitPanel() {
+  if (!WEB?.url) return '';
+  return `<div class="panel" style="display:grid;gap:8px"><h2>보낸 설문 결과 지우기</h2>
+    <p class="small muted" style="margin:0">다른 기기에서 보낸 결과도 응답번호와 삭제코드로 지울 수 있습니다. <a href="privacy.html" target="_blank" rel="noopener">개인정보 안내</a></p>
+    <input id="delRid" placeholder="응답번호 (예: R-ABCD2345)" autocomplete="off"><input id="delCode" placeholder="삭제코드 (예: ABCDE-23456)" autocomplete="off">
+    <button class="btn" type="button" id="delOther">지우기</button><div id="delMsg" class="small" role="status"></div></div>`;
+}
 
 // ── 4단계: 맞춤 추천 (규칙: docs/07_추천_규칙.md, 계산 함수: src/lib/recommend.js) ──
 const LEVELS = ['매우 중요', '중요', '참고'];
@@ -1667,6 +1675,7 @@ function drawMe() {
       <div class="panel" style="display:grid;gap:8px"><h2>내 기록 모두 지우기</h2>
         <p class="small muted" style="margin:0">계정의 비공개 공간과 이 기기에 저장된 개인 기록을 모두 지웁니다. 되돌릴 수 없으니 먼저 내보내기를 권합니다.</p>
         <button class="btn" type="button" id="wipeBtn">모두 지우기…</button><div id="wipeAsk" class="small" hidden></div></div>
+      ${meSubmitPanel()}
       <div id="sendPanel"></div>
     </div></div>
     <div id="adminPanel" style="margin-top:14px"></div>`;
@@ -1807,6 +1816,9 @@ document.addEventListener('click', (e) => {
   const t = e.target.closest('button'); if (!t) return;
   if (t.dataset.tab) { showTab(t.dataset.tab); return; }
   if (t.id === 'exportBtn') { doExport(); return; }
+  if (t.id === 'subGo' || t.id === 'subRedo') { doSubmit(t.id === 'subRedo'); return; }
+  if (t.id === 'subDel') { const rec = curRec(); if (!rec?.submitted || SUB.busy) return; SUB.busy = true; drawKid(); doUnsubmit(rec.submitted.rid, rec.submitted.code).then((r) => { if (r.ok) { delete rec.submitted; saveKids(); } SUB.busy = false; SUB.msg = r.msg; drawKid(); }); return; }
+  if (t.id === 'delOther') { const rid = $('#delRid').value.trim().toUpperCase(), code = $('#delCode').value.trim().toUpperCase(); if (!rid || !code) { $('#delMsg').textContent = '응답번호와 삭제코드를 모두 넣어 주세요.'; return; } t.disabled = true; doUnsubmit(rid, code).then((r) => { $('#delMsg').textContent = r.msg; t.disabled = false; if (r.ok) for (const k of state.kids) for (const x of k.records) if (x.submitted?.rid === rid) { delete x.submitted; saveKids(); } }); return; }
   if (t.id === 'exportShow') { const ta = $('#exportText'); ta.hidden = false; ta.value = JSON.stringify({ app: '배방·탕정 유치원 지도', exportedAt: new Date().toISOString(), data: snapshotData() }, null, 2); ta.select(); return; }
   if (t.id === 'importBtn') { const f = $('#importFile').files?.[0]; if (f) { const r = new FileReader(); r.onload = () => doImport(String(r.result)); r.readAsText(f); } else doImport($('#importText').value); return; }
   if (t.id === 'wipeBtn') { const b = $('#wipeAsk'); b.hidden = false; b.innerHTML = '정말 모두 지울까요? <button class="btn" type="button" id="wipeYes">지우기</button> <button class="btn" type="button" id="wipeNo">취소</button>'; return; }
@@ -1829,8 +1841,8 @@ document.addEventListener('click', (e) => {
   if (t.dataset.rmode) { state.reco.mode = t.dataset.rmode; saveReco(); drawReco(); return; }
   if (t.dataset.cup || t.dataset.cdown) { const c = state.reco.crit; const i = +(t.dataset.cup ?? t.dataset.cdown); const j = t.dataset.cup ? i - 1 : i + 1; if (j >= 0 && j < c.length) [c[i], c[j]] = [c[j], c[i]]; saveReco(); drawReco(); return; }
   if (t.dataset.kid) { state.kidSel = t.dataset.kid; state.recSel = curKid()?.records.at(-1)?.id ?? null; store.set('kidSel', state.kidSel); store.set('recSel', state.recSel); drawKid(); return; }
-  if (t.dataset.rec) { state.recSel = t.dataset.rec; store.set('recSel', state.recSel); drawKid(); return; }
-  if (t.dataset.kmode) { state.kidMode = t.dataset.kmode; store.set('kidMode', state.kidMode); drawKid(); window.scrollTo({ top: 0 }); return; }
+  if (t.dataset.rec) { SUB.msg = ''; state.recSel = t.dataset.rec; store.set('recSel', state.recSel); drawKid(); return; }
+  if (t.dataset.kmode) { SUB.msg = ''; state.kidMode = t.dataset.kmode; store.set('kidMode', state.kidMode); drawKid(); window.scrollTo({ top: 0 }); return; }
   if (t.id === 'recNew' || t.id === 'recNewT') { const k = curKid(); const prev = [...k.records].filter((r) => r.by === t.dataset.by).at(-1); const r = { id: uid(), date: today(), by: t.dataset.by, answers: {}, notes: {}, life: prev ? { ...prev.life } : {}, picks: prev ? [...(prev.picks ?? [])] : [] }; k.records.push(r); state.recSel = r.id; state.kidMode = 'form'; saveKids(); store.set('recSel', r.id); drawKid(); return; }
   if (t.id === 'kidUse') { state.birth = curKid().birth; store.set('birth', state.birth); $('#birth').value = state.birth; render(); return; }
   if (t.id === 'recDel' || t.id === 'kidDel') { const box = $('#delAsk'); box.hidden = false; box.innerHTML = `${t.id === 'kidDel' ? '아이와 모든 기록을' : '이 기록을'} 지울까요? 되돌릴 수 없습니다. <button class="btn" type="button" id="${t.id}Yes">지우기</button> <button class="btn" type="button" id="delNo">취소</button>`; return; }
