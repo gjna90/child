@@ -1244,7 +1244,7 @@ function drawKid() {
   const k = curKid();
   const left = `<div class="stack">
     <div class="panel" style="display:grid;gap:10px"><h2>아이</h2>
-      <p class="small muted" style="margin:0">별명과 출생연도만 있으면 됩니다. 아이마다 따로 답하고 날짜별로 다시 작성할 수 있습니다. 답은 <b>이 기기 브라우저에만</b> 저장되고 어디로도 보내지 않습니다.</p>
+      <p class="small muted" style="margin:0">별명과 출생연도만 있으면 됩니다. 아이마다 따로 답하고 날짜별로 다시 작성할 수 있습니다. ${cloud.mode === 'cloud' ? '내 계정에만 저장됩니다.' : '이 기기에만 저장됩니다.'}</p>
       <div class="kidlist">${state.kids.map((x) => `<button class="kidbtn" type="button" data-kid="${x.id}" aria-pressed="${x.id === state.kidSel}"><b>${esc(x.nick)}</b> <span class="small muted">${x.birth}년생 · 기록 ${x.records.length}개</span></button>`).join('') || '<p class="small muted" style="margin:0">아직 없음 — 아래에서 추가하세요</p>'}</div>
       <form class="kidform" id="kidAdd"><div><label for="kidNick" class="small">별명</label><input id="kidNick" placeholder="예) 첫째" maxlength="12" required></div>
         <div><label for="kidBirth" class="small">출생연도</label><input id="kidBirth" type="number" min="${SY - 7}" max="${SY - 1}" value="${state.birth}" required></div>
