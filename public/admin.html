@@ -424,7 +424,7 @@ function bars(list, total) {
 function drawSum() {
   const rows = filtered(), n = rows.length;
   const week = rows.filter((r) => Date.now() - new Date(r.created_at) < 7 * 864e5).length;
-  if (!S.rows.length) return '<div class="panel">아직 받은 응답이 없습니다. 부모가 앱에서 「동의하고 보내기」를 누르면 여기에 나타납니다.</div>';
+  if (!S.rows.length) return '<div class="panel">아직 받은 응답이 없습니다. 부모가 앱에서 「동의하고 제출하기」를 누르면 여기에 나타납니다.</div>';
   return `<div class="tiles">
       <div class="tile"><b>${n}</b><span>응답${activeFilters() ? ' (조건 적용)' : ''}</span></div>
       <div class="tile"><b>${week}</b><span>최근 7일</span></div>

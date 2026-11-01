@@ -1490,7 +1490,7 @@ function drawKid() {
   const k = curKid();
   const left = `<div class="stack">
     <div class="panel" style="display:grid;gap:10px"><h2>아이</h2>
-      <p class="small muted" style="margin:0">별명과 출생연도만 있으면 됩니다. 아이마다 따로 답하고 날짜별로 다시 작성할 수 있습니다. 답은 <b>이 기기 브라우저에만</b> 저장되고 ${WEB?.url ? '직접 「동의하고 보내기」를 누르지 않으면 ' : ''}어디로도 보내지 않습니다.</p>
+      <p class="small muted" style="margin:0">별명과 출생연도만 있으면 됩니다. 아이마다 따로 답하고 날짜별로 다시 작성할 수 있습니다. 답은 <b>이 기기 브라우저에만</b> 저장되고 ${WEB?.url ? '직접 「동의하고 제출하기」를 누르지 않으면 ' : ''}어디로도 보내지 않습니다.</p>
       <div class="kidlist">${state.kids.map((x) => `<button class="kidbtn" type="button" data-kid="${x.id}" aria-pressed="${x.id === state.kidSel}"><b>${esc(x.nick)}</b> <span class="small muted">${x.birth}년생 · 기록 ${x.records.length}개</span></button>`).join('') || '<p class="small muted" style="margin:0">아직 없음 — 아래에서 추가하세요</p>'}</div>
       <form class="kidform" id="kidAdd"><div><label for="kidNick" class="small">별명</label><input id="kidNick" placeholder="예) 첫째" maxlength="12" required></div>
         <div><label for="kidBirth" class="small">출생연도</label><input id="kidBirth" type="number" min="${SY - 7}" max="${SY - 1}" value="${state.birth}" required></div>
@@ -1571,35 +1571,35 @@ function submitSection(k, rec) {
   if (!WEB?.url) return '';
   const s = rec.submitted;
   const msg = SUB.msg ? `<div class="small" role="status">${esc(SUB.msg)}</div>` : '';
-  if (s) return `<section class="subbox"><h3>운영자에게 보낸 결과</h3>
-    <div>${esc(s.at)}에 보냄 · 응답번호 <b>${esc(s.rid)}</b> · 삭제코드 <b>${esc(s.code)}</b></div>
+  if (s) return `<section class="subbox"><h3>제출한 결과</h3>
+    <div>${esc(s.at)}에 제출 · 응답번호 <b>${esc(s.rid)}</b> · 삭제코드 <b>${esc(s.code)}</b></div>
     <div class="small muted">응답번호와 삭제코드는 이 기기에만 저장돼 있습니다. 다른 기기에서 지우려면 둘 다 필요하니 적어 두세요. 운영자도 삭제코드는 알 수 없습니다.</div>
-    <div class="fgroup"><button class="btn" type="button" id="subRedo" ${SUB.busy ? 'disabled' : ''}>지금 내용으로 다시 보내기</button><button class="btn" type="button" id="subDel" ${SUB.busy ? 'disabled' : ''}>보낸 결과 지우기</button></div>${msg}</section>`;
+    <div class="fgroup"><button class="btn" type="button" id="subRedo" ${SUB.busy ? 'disabled' : ''}>지금 내용으로 다시 제출</button><button class="btn" type="button" id="subDel" ${SUB.busy ? 'disabled' : ''}>제출한 결과 지우기</button></div>${msg}</section>`;
   const pl = submitPayload(k, rec);
-  return `<section class="subbox"><h3>운영자에게 결과 보내기 <span class="small muted">(선택)</span></h3>
-    <div class="small">보내지 않아도 모든 기능을 그대로 쓸 수 있습니다. 보낸 결과는 서비스 개선과 기관별 희망·필요 지원 집계에만 쓰고 ${esc(WEB.keepUntil)}에 자동으로 지웁니다.</div>
-    <details><summary class="small">보내는 것 / 보내지 않는 것</summary><div class="small">
-      <div><b>보내는 것</b>: 아이 출생연도(${esc(String(pl.birth))}년), 관찰자(${esc(pl.by)}), 설문 답 ${Object.keys(pl.answers).length}개, 고른 지원 ${pl.picks.length}개, 지원할 곳 ${pl.plan.length ? pl.plan.map((x, i) => `${i + 1}.${esc(x.name)}`).join(' ') : '없음'}, 원하는 교육 방향 ${pl.recoStyles.length}개</div>
-      <div><b>보내지 않는 것</b>: 아이 별명, 이름·연락처, 문항별 예시 메모, 생활 질문(건강·알레르기 포함), 상담 기록, 출발지(집 위치)</div></div></details>
+  return `<section class="subbox"><h3>결과 제출하기 <span class="small muted">(선택)</span></h3>
+    <div class="small">제출된 결과는 관리자가 확인하며, 서비스 운영 및 개선을 위한 분석 자료로 활용됩니다. 제출하지 않아도 모든 기능을 그대로 쓸 수 있고, 제출한 결과는 ${esc(WEB.keepUntil)}에 자동으로 지워집니다.</div>
+    <details><summary class="small">제출되는 것 / 제출되지 않는 것</summary><div class="small">
+      <div><b>제출되는 것</b>: 아이 출생연도(${esc(String(pl.birth))}년), 관찰자(${esc(pl.by)}), 설문 답 ${Object.keys(pl.answers).length}개, 고른 지원 ${pl.picks.length}개, 지원할 곳 ${pl.plan.length ? pl.plan.map((x, i) => `${i + 1}.${esc(x.name)}`).join(' ') : '없음'}, 원하는 교육 방향 ${pl.recoStyles.length}개</div>
+      <div><b>제출되지 않는 것</b>: 아이 별명, 이름·연락처, 문항별 예시 메모, 생활 질문(건강·알레르기 포함), 상담 기록, 출발지(집 위치)</div></div></details>
     <label class="small"><input type="checkbox" id="subC1"><span>이 아이의 보호자(부모 등)입니다. <span class="muted">(필수)</span></span></label>
     <label class="small"><input type="checkbox" id="subC2"><span><a href="privacy.html" target="_blank" rel="noopener">개인정보 수집·이용 안내</a>를 읽었고 동의합니다. <span class="muted">(필수)</span></span></label>
-    <div><button class="btn primary" type="button" id="subGo" ${SUB.busy ? 'disabled' : ''}>동의하고 보내기</button></div>${msg}</section>`;
+    <div><button class="btn primary" type="button" id="subGo" ${SUB.busy ? 'disabled' : ''}>동의하고 제출하기</button></div>${msg}</section>`;
 }
 async function webCall(fn, body) {
   const r = await fetch(`${WEB.url}/functions/v1/${fn}`, { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: WEB.key, ...(WEB.key.startsWith('eyJ') ? { Authorization: `Bearer ${WEB.key}` } : {}) }, body: JSON.stringify(body) });
   let j = {}; try { j = await r.json(); } catch { /* 빈 응답 */ }
   return { ok: r.ok, status: r.status, ...j };
 }
-const SUB_ERR = { rate: '잠시 뒤에 다시 시도해 주세요 (짧은 시간에 너무 많이 보냄).', dup: '같은 내용을 이미 보냈습니다.', code: '응답번호나 삭제코드가 맞지 않습니다.', invalid: '보낼 내용이 올바르지 않습니다. 설문을 확인해 주세요.', consent: '동의 버전이 맞지 않습니다. 새로고침 후 다시 시도해 주세요.' };
+const SUB_ERR = { rate: '잠시 뒤에 다시 시도해 주세요 (짧은 시간에 너무 많이 제출함).', dup: '같은 내용을 이미 제출했습니다.', code: '응답번호나 삭제코드가 맞지 않습니다.', invalid: '보낼 내용이 올바르지 않습니다. 설문을 확인해 주세요.', consent: '동의 버전이 맞지 않습니다. 새로고침 후 다시 시도해 주세요.' };
 async function doSubmit(redo) {
   const k = curKid(), rec = curRec(); if (!k || !rec) return;
-  if (!redo && (!$('#subC1')?.checked || !$('#subC2')?.checked)) { SUB.msg = '두 가지 동의에 모두 체크해야 보낼 수 있습니다.'; drawKid(); return; }
+  if (!redo && (!$('#subC1')?.checked || !$('#subC2')?.checked)) { SUB.msg = '두 가지 동의에 모두 체크해야 제출할 수 있습니다.'; drawKid(); return; }
   const pl = submitPayload(k, rec);
   if (!Object.keys(pl.answers).length) { SUB.msg = '설문에 답한 문항이 없습니다.'; drawKid(); return; }
-  SUB.busy = true; SUB.msg = '보내는 중…'; drawKid();
+  SUB.busy = true; SUB.msg = '제출하는 중…'; drawKid();
   try {
     const r = await webCall('submit', redo ? { ...pl, rid: rec.submitted.rid, code: rec.submitted.code } : pl);
-    if (r.ok && r.rid) { rec.submitted = { rid: r.rid, code: redo ? rec.submitted.code : r.code, at: today() }; saveKids(); SUB.msg = redo ? '지금 내용으로 바꿨습니다.' : '보냈습니다. 응답번호와 삭제코드를 적어 두세요.'; }
+    if (r.ok && r.rid) { rec.submitted = { rid: r.rid, code: redo ? rec.submitted.code : r.code, at: today() }; saveKids(); SUB.msg = redo ? '지금 내용으로 바꿨습니다.' : '제출했습니다. 응답번호와 삭제코드를 적어 두세요.'; }
     else SUB.msg = SUB_ERR[r.error] ?? `보내지 못했습니다 (${r.status}). 잠시 뒤 다시 시도해 주세요.`;
   } catch { SUB.msg = '인터넷 연결을 확인해 주세요.'; }
   SUB.busy = false; drawKid();
@@ -1607,14 +1607,14 @@ async function doSubmit(redo) {
 async function doUnsubmit(rid, code) {
   try {
     const r = await webCall('delete', { rid, code });
-    if (r.ok) return { ok: true, msg: '보낸 결과를 서버에서 지웠습니다.' };
+    if (r.ok) return { ok: true, msg: '제출한 결과를 지웠습니다.' };
     return { ok: false, msg: SUB_ERR[r.error] ?? `지우지 못했습니다 (${r.status}).` };
   } catch { return { ok: false, msg: '인터넷 연결을 확인해 주세요.' }; }
 }
 function meSubmitPanel() {
   if (!WEB?.url) return '';
-  return `<div class="panel" style="display:grid;gap:8px"><h2>보낸 설문 결과 지우기</h2>
-    <p class="small muted" style="margin:0">다른 기기에서 보낸 결과도 응답번호와 삭제코드로 지울 수 있습니다. <a href="privacy.html" target="_blank" rel="noopener">개인정보 안내</a></p>
+  return `<div class="panel" style="display:grid;gap:8px"><h2>제출한 설문 결과 지우기</h2>
+    <p class="small muted" style="margin:0">다른 기기에서 제출한 결과도 응답번호와 삭제코드로 지울 수 있습니다. <a href="privacy.html" target="_blank" rel="noopener">개인정보 안내</a></p>
     <input id="delRid" placeholder="응답번호 (예: R-ABCD2345)" autocomplete="off"><input id="delCode" placeholder="삭제코드 (예: ABCDE-23456)" autocomplete="off">
     <button class="btn" type="button" id="delOther">지우기</button><div id="delMsg" class="small" role="status"></div></div>`;
 }
