@@ -2,64 +2,105 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
 <title>운영자 화면</title>
 <style>
-/* 운영자(관리자) 전용 화면. 로그인한 관리자만 자료를 볼 수 있음 — 막는 일은 DB 접근 규칙(RLS)이 하고, 이 화면은 보여 주기만 한다 */
+/* 운영자(관리자) 전용 화면 — 모든 일상 관리를 여기서 한다 (Supabase 콘솔에 들어가지 않아도 되게).
+   자료를 막는 일은 DB 접근 규칙(RLS)이 한다: 이 화면은 공개 키만 쓰고, 관리자로 등록된 로그인 계정만 읽기·삭제가 된다. */
 :root {
   --bg: #f4f6f2; --surface: #ffffff; --ink: #1d2925; --muted: #5d6b65; --line: #d6ddd7;
   --accent: #0e6a62; --accent-ink: #ffffff; --bar: #0e6a62; --track: #e6ece4;
-  --warn-bg: #fff4dc; --warn-ink: #7a4b00; --sel: #e2f2ea;
+  --warn-bg: #fff4dc; --warn-ink: #7a4b00; --ok-bg: #e2f2ea; --ok-ink: #135c3a; --danger: #b3261e; --sel: #e2f2ea;
   --font: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --bg: #141a18; --surface: #1c2421; --ink: #e8eeeb; --muted: #a3b1ab; --line: #34413c; --accent: #4fb3a8; --accent-ink: #0b1513; --bar: #4fb3a8; --track: #26302c; --warn-bg: #3a2e14; --warn-ink: #f2cf8a; --sel: #1f3a32; }
+  :root:not([data-theme="light"]) { --bg: #141a18; --surface: #1c2421; --ink: #e8eeeb; --muted: #a3b1ab; --line: #34413c; --accent: #4fb3a8; --accent-ink: #0b1513; --bar: #4fb3a8; --track: #26302c; --warn-bg: #3a2e14; --warn-ink: #f2cf8a; --ok-bg: #173327; --ok-ink: #9fdcbc; --danger: #f2827a; --sel: #1f3a32; }
 }
-:root[data-theme="dark"] { --bg: #141a18; --surface: #1c2421; --ink: #e8eeeb; --muted: #a3b1ab; --line: #34413c; --accent: #4fb3a8; --accent-ink: #0b1513; --bar: #4fb3a8; --track: #26302c; --warn-bg: #3a2e14; --warn-ink: #f2cf8a; --sel: #1f3a32; }
+:root[data-theme="dark"] { --bg: #141a18; --surface: #1c2421; --ink: #e8eeeb; --muted: #a3b1ab; --line: #34413c; --accent: #4fb3a8; --accent-ink: #0b1513; --bar: #4fb3a8; --track: #26302c; --warn-bg: #3a2e14; --warn-ink: #f2cf8a; --ok-bg: #173327; --ok-ink: #9fdcbc; --danger: #f2827a; --sel: #1f3a32; }
 * { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 var(--font); }
-main { max-width: 1180px; margin: 0 auto; padding: 16px; display: grid; gap: 14px; }
-header { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
-h1 { font-size: 1.25rem; margin: 0; } h2 { font-size: 1.05rem; margin: 0 0 8px; } h3 { font-size: .95rem; margin: 10px 0 4px; }
-.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; min-width: 0; }
-.grid2 { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+main { max-width: 1180px; margin: 0 auto; padding: 12px 16px 40px; display: grid; gap: 12px; }
+main > *, .grid2 > *, .tiles > * { min-width: 0; }
+header.top { position: sticky; top: 0; z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+header.top .in { max-width: 1180px; margin: 0 auto; padding: 10px 16px 0; }
+.titlebar { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+h1 { font-size: 1.15rem; margin: 0; } h2 { font-size: 1.05rem; margin: 0 0 8px; } h3 { font-size: .95rem; margin: 12px 0 4px; }
+nav.tabs { display: flex; gap: 4px; overflow-x: auto; margin-top: 8px; scrollbar-width: none; }
+nav.tabs button { flex: 1 0 auto; border: 0; background: none; color: var(--muted); font: inherit; font-weight: 500; padding: 10px 12px; border-bottom: 3px solid transparent; cursor: pointer; min-height: 44px; }
+nav.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+.grid2 { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); }
 .tiles { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
 .tile { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
-.tile b { display: block; font-size: 1.6rem; font-variant-numeric: tabular-nums; }
+.tile b { display: block; font-size: 1.6rem; font-variant-numeric: tabular-nums; line-height: 1.2; }
 .tile span { color: var(--muted); font-size: .85rem; }
 .small { font-size: .85rem; } .muted { color: var(--muted); }
-.btn { font: inherit; padding: 7px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; min-height: 36px; }
+.btn { font: inherit; padding: 8px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; min-height: 44px; touch-action: manipulation; }
 .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
-.btn.danger { border-color: #b3261e; color: #b3261e; }
-input, select { font: inherit; padding: 7px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); min-height: 36px; max-width: 100%; }
-form.login { display: grid; gap: 8px; max-width: 360px; }
-.warn { background: var(--warn-bg); color: var(--warn-ink); padding: 8px 10px; border-radius: 8px; }
+.btn.danger { border-color: var(--danger); color: var(--danger); }
+.btn.sm { min-height: 36px; padding: 5px 10px; font-size: .9rem; }
+.btn:disabled { opacity: .5; cursor: default; }
+input, select { font: inherit; font-size: 16px; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); min-height: 44px; max-width: 100%; }
+input[type=checkbox] { width: 22px; height: 22px; min-height: 0; accent-color: var(--accent); }
+label.f { display: grid; gap: 4px; font-size: .85rem; color: var(--muted); }
+form.stack { display: grid; gap: 10px; max-width: 380px; }
+.note { padding: 10px 12px; border-radius: 10px; }
+.note.warn { background: var(--warn-bg); color: var(--warn-ink); }
+.note.ok { background: var(--ok-bg); color: var(--ok-ink); }
 .tablewrap { overflow-x: auto; }
-main > *, .grid2 > *, .tiles > * { min-width: 0; }
-td.wrap { white-space: normal; min-width: 11em; }
-.grid2 { grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); }
 table { border-collapse: collapse; width: 100%; font-size: .9rem; }
-th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th, td { text-align: left; padding: 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 th { color: var(--muted); font-weight: 500; }
 td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
-tbody tr.click { cursor: pointer; } tbody tr.click:hover, tbody tr.sel { background: var(--sel); }
+td.wrap { white-space: normal; min-width: 11em; }
+tr.click { cursor: pointer; } tr.click:hover { background: var(--sel); }
 .bars { display: grid; gap: 6px; }
-.bar { display: grid; grid-template-columns: minmax(90px, 38%) 1fr 3.2em; gap: 8px; align-items: center; font-size: .9rem; }
+.bar { display: grid; grid-template-columns: minmax(90px, 38%) 1fr 4.2em; gap: 8px; align-items: center; font-size: .9rem; }
 .bar .tr { background: var(--track); border-radius: 4px; height: 14px; position: relative; }
 .bar .fl { position: absolute; inset: 0 auto 0 0; background: var(--bar); border-radius: 0 4px 4px 0; min-width: 2px; }
 .bar .v { text-align: right; font-variant-numeric: tabular-nums; }
-.filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; }
-.detail ul { margin: 0; padding-left: 1.1rem; }
+.filters { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); align-items: end; }
+.filters > * { min-width: 0; }
+.filters select, .filters input { width: 100%; min-width: 0; }
+.filterbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.filterbar input[type=search] { flex: 1 1 200px; }
+.badge { display: inline-block; min-width: 1.4em; padding: 0 6px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font-size: .8rem; text-align: center; }
+.cards { display: grid; gap: 8px; }
+.card { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; align-items: start; background: var(--surface); }
+.card.sel { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+.card .body { cursor: pointer; min-width: 0; }
+.card .l1 { display: flex; gap: 8px; flex-wrap: wrap; align-items: baseline; }
+.card .l2 { color: var(--muted); font-size: .88rem; overflow: hidden; text-overflow: ellipsis; }
 .chips span { display: inline-block; border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; margin: 2px 4px 2px 0; font-size: .85rem; }
-@media (max-width: 560px) { .bar { grid-template-columns: minmax(80px, 42%) 1fr 2.6em; } }
+.detail ul, .detail ol { margin: 0; padding-left: 1.2rem; }
+.toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.split { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+.split .detail { position: sticky; top: 112px; max-height: calc(100vh - 124px); overflow: auto; }
+.sheet-back { display: none; }
+.toast { position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; z-index: 30; max-width: calc(100vw - 32px); font-size: .92rem; }
+details > summary { cursor: pointer; padding: 8px 0; }
+@media (max-width: 760px) {
+  .split { grid-template-columns: 1fr; }
+  .split .detail.open { position: fixed; inset: 0; z-index: 20; max-height: none; border-radius: 0; overflow: auto; padding: 12px 16px calc(24px + env(safe-area-inset-bottom)); }
+  .split .detail:not(.open) { display: none; }
+  .sheet-back { display: inline-flex; }
+  .bar { grid-template-columns: minmax(80px, 42%) 1fr 3.6em; }
+  .hide-m { display: none; }
+  th, td { padding: 8px 5px; }
+  td.wrap { min-width: 7em; }
+}
 </style>
 </head>
 <body>
-<main>
-  <header><h1>운영자 화면 <span class="small muted">· 테스트판</span></h1><div id="who" class="small"></div></header>
-  <div id="app"><div class="panel">불러오는 중…</div></div>
-</main>
+<header class="top"><div class="in">
+  <div class="titlebar"><h1>운영자 화면 <span class="small muted">· 테스트판</span></h1><span id="who" class="small muted"></span></div>
+  <nav class="tabs" id="tabs" role="tablist" hidden></nav>
+</div></header>
+<main id="app"><div class="panel">불러오는 중…</div></main>
+<div id="toast" class="toast" role="status" hidden></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 const WEB = null;
@@ -218,149 +259,364 @@ function analyze(rec) {
 }
 
 const $ = (s) => document.querySelector(s);
+const $$ = (s) => [...document.querySelectorAll(s)];
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const fmt = (d) => new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Seoul', dateStyle: 'short', timeStyle: 'short' }).format(new Date(d));
-const S = { rows: [], q: '', birth: '', style: '', inst: '', sel: null, msg: '' };
-let sb = null;
-
-function bars(list, total) {
-  const max = Math.max(1, ...list.map((x) => x[1]));
-  return list.length ? `<div class="bars">${list.map(([label, n]) => `<div class="bar" title="${esc(label)}: ${n}명${total ? ` (${Math.round(n / total * 100)}%)` : ''}"><span>${esc(label)}</span><span class="tr"><span class="fl" style="width:${n / max * 100}%"></span></span><span class="v">${n}</span></div>`).join('')}</div>` : '<p class="small muted">자료 없음</p>';
-}
-const tally = (arr) => { const m = new Map(); for (const k of arr) m.set(k, (m.get(k) ?? 0) + 1); return [...m].sort((a, b) => b[1] - a[1]); };
+const KST = (d, o) => new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', ...o }).format(new Date(d));
+const fmt = (d) => KST(d, { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false });
+const ymd = (d) => new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Seoul' }).format(new Date(d));
 const styleLabel = (k) => STYLES[k]?.short ?? k;
-// 아이 답 → 분석 (앱과 같은 규칙: src/lib/survey.js, src/lib/profile.js)
-function derive(r) {
-  const an = analyze({ answers: r.answers });
-  return { an, styles: Object.keys(kidStyles(r.answers)), needs: Object.keys(an.sup) };
-}
+const supName = (k) => SUPPORTS[k]?.name ?? k;
+const IDLE_MIN = 30; // 이 시간 동안 아무 조작이 없으면 자동 로그아웃
+const PAGE = 50;     // 응답 목록 한 번에 보여 줄 개수
+const TABS = [['sum', '한눈에'], ['rank', '희망 순위'], ['list', '응답'], ['acct', '내 계정']];
 
-async function start() {
-  if (!WEB?.url) { $('#app').innerHTML = '<div class="panel warn">아직 서버(Supabase) 설정 전입니다. config/web.json 을 넣고 다시 빌드하면 켜집니다.</div>'; return; }
-  sb = supabase.createClient(WEB.url, WEB.key, { auth: { persistSession: true, storageKey: 'kinder-admin' } });
-  const { data } = await sb.auth.getSession();
-  if (!data.session) return drawLogin();
-  await afterLogin(data.session.user);
+const S = { tab: 'sum', rows: [], loadedAt: null, sel: null, picked: new Set(), show: PAGE, filtOpen: false,
+  f: { q: '', birth: '', obs: '', style: '', inst: '', from: '', to: '', sort: 'new' } };
+let sb = null, user = null, idleTimer = null;
+
+// ── 오류 메시지를 한국어로 ──
+function koErr(e) {
+  const m = String(e?.message ?? e ?? '');
+  const st = e?.status ?? e?.code;
+  if (/Invalid login credentials/i.test(m)) return '이메일 또는 비밀번호가 맞지 않습니다.';
+  if (/Email not confirmed/i.test(m)) return '이메일 인증이 끝나지 않은 계정입니다. 계정 만들 때 자동 인증(Auto Confirm)을 켜야 합니다.';
+  if (/rate limit|too many/i.test(m) || st === 429) return '짧은 시간에 너무 많이 시도했습니다. 몇 분 뒤 다시 해 주세요.';
+  if (/JWT expired|invalid JWT|session.*(missing|expired)|refresh token/i.test(m) || st === 401) return '로그인 시간이 지났습니다. 다시 로그인해 주세요.';
+  if (/permission denied|row-level security|not allowed/i.test(m) || st === 403 || st === '42501') return '권한이 없습니다. 관리자로 등록된 계정인지 확인해 주세요.';
+  if (/Password should be at least|weak password/i.test(m)) return '비밀번호가 너무 짧거나 쉽습니다. 8자 이상, 영문·숫자를 섞어 주세요.';
+  if (/same.*password|different from the old/i.test(m)) return '지금 비밀번호와 다른 비밀번호를 넣어 주세요.';
+  if (/reauthentication|nonce/i.test(m)) return '보안을 위해 다시 로그인한 뒤 비밀번호를 바꿔 주세요.';
+  if (/Failed to fetch|NetworkError|Load failed|network/i.test(m)) return '서버에 연결하지 못했습니다. 인터넷 연결을 확인해 주세요. 계속 안 되면 서버(Supabase 무료판)가 1주일 동안 쓰이지 않아 일시정지됐을 수 있습니다.';
+  if (/timeout|timed out/i.test(m)) return '서버 응답이 늦습니다. 잠시 뒤 다시 시도해 주세요.';
+  return '처리하지 못했습니다. 잠시 뒤 다시 시도해 주세요.' + (m ? ` (참고: ${m.slice(0, 80)})` : '');
 }
-function drawLogin(msg = '') {
-  $('#who').textContent = '';
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), 3200); }
+
+// ── 시작·로그인 ──
+async function start() {
+  if (!WEB?.url) { $('#app').innerHTML = '<div class="panel note warn">아직 서버 연결 설정 전입니다. 개발 담당에게 서버 주소와 공개 키 설정을 요청하세요.</div>'; return; }
+  if (!window.supabase?.createClient) { $('#app').innerHTML = '<div class="panel note warn">화면 구성 파일을 불러오지 못했습니다. 인터넷 연결을 확인하고 새로고침해 주세요.</div>'; return; }
+  sb = supabase.createClient(WEB.url, WEB.key, { auth: { persistSession: true, storageKey: 'kinder-admin', autoRefreshToken: true } });
+  try {
+    const { data } = await sb.auth.getSession();
+    if (!data?.session) return drawLogin();
+    await afterLogin(data.session.user);
+  } catch (e) { drawLogin(koErr(e)); }
+}
+function drawLogin(msg = '', ok = false) {
+  user = null; $('#who').textContent = ''; $('#tabs').hidden = true; stopIdle();
   $('#app').innerHTML = `<div class="panel"><h2>관리자 로그인</h2>
-    <form class="login" id="login"><input id="em" type="email" placeholder="이메일" autocomplete="username" required><input id="pw" type="password" placeholder="비밀번호" autocomplete="current-password" required><button class="btn primary">로그인</button>
-    ${msg ? `<div class="warn small">${esc(msg)}</div>` : ''}<p class="small muted">관리자로 등록된 계정만 자료를 볼 수 있습니다. 부모 이용자는 로그인하지 않습니다.</p></form></div>`;
+    <form class="stack" id="login" novalidate>
+      <label class="f">이메일<input id="em" type="email" inputmode="email" autocomplete="username" required></label>
+      <label class="f">비밀번호<input id="pw" type="password" autocomplete="current-password" required></label>
+      <button class="btn primary" id="loginBtn">로그인</button>
+      ${msg ? `<div class="note ${ok ? 'ok' : 'warn'} small" role="alert">${esc(msg)}</div>` : ''}
+      <p class="small muted" style="margin:0">관리자로 등록된 계정만 들어올 수 있습니다. 부모 이용자는 로그인하지 않습니다. 공용 컴퓨터에서는 다 쓴 뒤 꼭 로그아웃하세요.</p>
+    </form></div>`;
   $('#login').onsubmit = async (e) => {
     e.preventDefault();
-    const { data, error } = await sb.auth.signInWithPassword({ email: $('#em').value.trim(), password: $('#pw').value });
-    if (error) return drawLogin('로그인하지 못했습니다. 이메일·비밀번호를 확인하세요.');
-    await afterLogin(data.user);
+    const em = $('#em').value.trim(), pw = $('#pw').value;
+    if (!em || !pw) return drawLogin('이메일과 비밀번호를 모두 넣어 주세요.');
+    $('#loginBtn').disabled = true; $('#loginBtn').textContent = '확인 중…';
+    try {
+      const { data, error } = await sb.auth.signInWithPassword({ email: em, password: pw });
+      if (error) return drawLogin(koErr(error));
+      await afterLogin(data.user);
+    } catch (err) { drawLogin(koErr(err)); }
   };
 }
-async function afterLogin(user) {
-  $('#who').innerHTML = `${esc(user.email)} <button class="btn" id="out">로그아웃</button>`;
-  $('#out').onclick = async () => { await sb.auth.signOut(); drawLogin(); };
-  const { data: adm } = await sb.from('admins').select('user_id').eq('user_id', user.id).maybeSingle();
-  if (!adm) { $('#app').innerHTML = '<div class="panel warn">이 계정은 관리자로 등록되어 있지 않습니다. (SQL의 6번 관리자 등록을 실행하세요)</div>'; return; }
-  await load();
+async function afterLogin(u) {
+  user = u;
+  $('#who').textContent = u.email ?? '';
+  try {
+    const { data: adm, error } = await sb.from('admins').select('user_id').eq('user_id', u.id).maybeSingle();
+    if (error) throw error;
+    if (!adm) { await sb.auth.signOut(); return drawLogin('이 계정은 관리자로 등록되어 있지 않습니다. 개발 담당에게 관리자 등록을 요청하세요.'); }
+  } catch (e) { return drawLogin(koErr(e)); }
+  startIdle(); drawTabs(); await load();
 }
-async function load() {
-  const { data, error } = await sb.from('submissions').select('rid,consent_ver,birth_year,observer,answers,picks,plan,reco_styles,created_at,updated_at,expires_at').order('created_at', { ascending: false }).limit(2000);
-  if (error) { $('#app').innerHTML = `<div class="panel warn">자료를 불러오지 못했습니다: ${esc(error.message)}</div>`; return; }
-  S.rows = data.map((r) => ({ ...r, ...derive(r) }));
-  draw();
+async function logout(msg = '로그아웃했습니다.', ok = true) { try { await sb.auth.signOut(); } catch { /* 이미 끊김 */ } S.rows = []; S.picked.clear(); S.sel = null; drawLogin(msg, ok); }
+function startIdle() {
+  const reset = () => { clearTimeout(idleTimer); idleTimer = setTimeout(() => logout(`${IDLE_MIN}분 동안 사용하지 않아 자동으로 로그아웃했습니다.`, false), IDLE_MIN * 60e3); };
+  startIdle.reset = reset; ['pointerdown', 'keydown', 'scroll'].forEach((ev) => addEventListener(ev, reset, { passive: true })); reset();
+}
+function stopIdle() { clearTimeout(idleTimer); if (startIdle.reset) ['pointerdown', 'keydown', 'scroll'].forEach((ev) => removeEventListener(ev, startIdle.reset)); }
+
+// ── 자료 불러오기 (서버는 한 번에 1000개까지 → 나눠서) ──
+async function load(silent) {
+  if (!silent) $('#app').innerHTML = '<div class="panel">응답을 불러오는 중…</div>';
+  try {
+    const all = [];
+    for (let from = 0; from < 20000; from += 1000) {
+      const { data, error } = await sb.from('submissions').select('rid,consent_ver,birth_year,observer,answers,picks,plan,reco_styles,created_at,updated_at,expires_at').order('created_at', { ascending: false }).range(from, from + 999);
+      if (error) throw error;
+      all.push(...data); if (data.length < 1000) break;
+    }
+    S.rows = all.map((r) => ({ ...r, ...derive(r) }));
+    S.loadedAt = new Date();
+    for (const rid of [...S.picked]) if (!S.rows.some((r) => r.rid === rid)) S.picked.delete(rid);
+    if (S.sel && !S.rows.some((r) => r.rid === S.sel)) S.sel = null;
+    draw();
+  } catch (e) {
+    const m = koErr(e);
+    if (/로그인 시간이 지났/.test(m)) return logout(m, false);
+    $('#app').innerHTML = `<div class="panel note warn" role="alert">응답을 불러오지 못했습니다. ${esc(m)}</div><div><button class="btn" id="retry">다시 시도</button></div>`;
+    $('#retry').onclick = () => load();
+  }
+}
+// 아이 답 → 분석 (앱과 같은 규칙: src/lib/survey.js, src/lib/profile.js)
+function derive(r) {
+  const an = analyze({ answers: r.answers ?? {} });
+  return { an, styles: Object.keys(kidStyles(r.answers ?? {})), needs: Object.keys(an.sup) };
 }
 
+// ── 조건(필터) ──
 function filtered() {
-  const q = S.q.trim().toUpperCase();
-  return S.rows.filter((r) => (!q || r.rid.includes(q) || r.plan.some((p) => p.name.toUpperCase().includes(q)))
-    && (!S.birth || String(r.birth_year) === S.birth) && (!S.style || r.styles.includes(S.style))
-    && (!S.inst || r.plan.some((p) => p.id === S.inst)));
+  const f = S.f, q = f.q.trim().toUpperCase();
+  const out = S.rows.filter((r) => (!q || r.rid.includes(q) || r.plan.some((p) => p.name.toUpperCase().includes(q)))
+    && (!f.birth || String(r.birth_year) === f.birth) && (!f.obs || r.observer === f.obs)
+    && (!f.style || r.styles.includes(f.style) || r.reco_styles.includes(f.style))
+    && (!f.inst || r.plan.some((p) => p.id === f.inst))
+    && (!f.from || ymd(r.created_at) >= f.from) && (!f.to || ymd(r.created_at) <= f.to));
+  return f.sort === 'old' ? out.reverse() : out;
+}
+const activeFilters = () => Object.entries(S.f).filter(([k, v]) => k !== 'sort' && v).length;
+function filterUI() {
+  const f = S.f, n = activeFilters();
+  const births = [...new Set(S.rows.map((r) => r.birth_year))].sort();
+  const insts = [...new Map(S.rows.flatMap((r) => r.plan.map((p) => [p.id, p.name])))].sort((a, b) => a[1].localeCompare(b[1], 'ko'));
+  return `<div class="panel" style="display:grid;gap:10px">
+    <div class="filterbar"><input type="search" id="fq" placeholder="응답번호 또는 기관 이름으로 찾기" value="${esc(f.q)}" enterkeyhint="search" aria-label="검색">
+      <button class="btn" id="fopen" aria-expanded="${S.filtOpen}">조건 ${n ? `<span class="badge">${n}</span>` : ''}</button>
+      ${n ? '<button class="btn" id="fclear">조건 지우기</button>' : ''}</div>
+    <div class="filters" id="fbox" ${S.filtOpen ? '' : 'hidden'}>
+      <label class="f">출생연도<select id="f-birth"><option value="">전체</option>${births.map((b) => `<option ${String(b) === f.birth ? 'selected' : ''}>${b}</option>`).join('')}</select></label>
+      <label class="f">관찰자<select id="f-obs"><option value="">전체</option>${['부모', '교사'].map((o) => `<option ${o === f.obs ? 'selected' : ''}>${o}</option>`).join('')}</select></label>
+      <label class="f">교육 방향<select id="f-style"><option value="">전체</option>${STYLE_KEYS.map((k) => `<option value="${k}" ${k === f.style ? 'selected' : ''}>${esc(STYLES[k].label)}</option>`).join('')}</select></label>
+      <label class="f">지원할 기관<select id="f-inst"><option value="">전체</option>${insts.map(([id, nm]) => `<option value="${esc(id)}" ${id === f.inst ? 'selected' : ''}>${esc(nm)}</option>`).join('')}</select></label>
+      <label class="f">받은 날 (부터)<input type="date" id="f-from" value="${esc(f.from)}"></label>
+      <label class="f">받은 날 (까지)<input type="date" id="f-to" value="${esc(f.to)}"></label>
+      <label class="f">정렬<select id="f-sort"><option value="new" ${f.sort === 'new' ? 'selected' : ''}>최근 받은 순</option><option value="old" ${f.sort === 'old' ? 'selected' : ''}>오래된 순</option></select></label>
+    </div>
+    <div class="small muted">${n ? `조건에 맞는 응답 <b>${filtered().length}</b>개 / 전체 ${S.rows.length}개 — 모든 탭의 집계·목록·내려받기에 이 조건이 적용됩니다.` : `전체 응답 ${S.rows.length}개`}${S.loadedAt ? ` · ${KST(S.loadedAt, { hour: '2-digit', minute: '2-digit', hour12: false })} 불러옴` : ''} <button class="btn sm" id="reload">새로고침</button></div>
+  </div>`;
+}
+
+// ── 화면 그리기 ──
+function drawTabs() {
+  const t = $('#tabs'); t.hidden = false;
+  t.innerHTML = TABS.map(([k, l]) => `<button role="tab" data-tab="${k}" aria-selected="${S.tab === k}">${l}</button>`).join('');
+  t.onclick = (e) => { const b = e.target.closest('[data-tab]'); if (!b) return; S.tab = b.dataset.tab; S.sel = S.tab === 'list' ? S.sel : null; drawTabs(); draw(); scrollTo({ top: 0 }); };
 }
 function draw() {
-  const all = S.rows, rows = filtered(), n = rows.length;
-  const week = all.filter((r) => Date.now() - new Date(r.created_at) < 7 * 864e5).length;
-  // 기관별 1·2·3지망
+  const scroll = scrollY, focus = document.activeElement?.id, pos = document.activeElement?.selectionStart;
+  const body = { sum: drawSum, rank: drawRank, list: drawList, acct: drawAcct }[S.tab]();
+  $('#app').innerHTML = (S.tab === 'acct' ? '' : filterUI()) + body;
+  bind();
+  if (focus === 'fq') { const el = $('#fq'); el.focus(); try { el.setSelectionRange(pos, pos); } catch { /* 무시 */ } }
+  scrollTo({ top: scroll });
+}
+const tally = (arr) => { const m = new Map(); for (const k of arr) m.set(k, (m.get(k) ?? 0) + 1); return [...m].sort((a, b) => b[1] - a[1]); };
+function bars(list, total) {
+  const max = Math.max(1, ...list.map((x) => x[1]));
+  return list.length ? `<div class="bars">${list.map(([label, n]) => `<div class="bar" title="${esc(label)}: ${n}명${total ? ` (전체의 ${Math.round(n / total * 100)}%)` : ''}"><span>${esc(label)}</span><span class="tr"><span class="fl" style="width:${n / max * 100}%"></span></span><span class="v">${n}${total ? ` <span class="small muted">${Math.round(n / total * 100)}%</span>` : ''}</span></div>`).join('')}</div>` : '<p class="small muted" style="margin:0">해당 응답 없음</p>';
+}
+function drawSum() {
+  const rows = filtered(), n = rows.length;
+  const week = rows.filter((r) => Date.now() - new Date(r.created_at) < 7 * 864e5).length;
+  if (!S.rows.length) return '<div class="panel">아직 받은 응답이 없습니다. 부모가 앱에서 「동의하고 보내기」를 누르면 여기에 나타납니다.</div>';
+  return `<div class="tiles">
+      <div class="tile"><b>${n}</b><span>응답${activeFilters() ? ' (조건 적용)' : ''}</span></div>
+      <div class="tile"><b>${week}</b><span>최근 7일</span></div>
+      <div class="tile"><b>${rows.filter((r) => r.plan.length).length}</b><span>지원할 곳을 고른 응답</span></div>
+      <div class="tile"><b>${rows.filter((r) => r.observer === '교사').length}</b><span>교사 관찰 응답</span></div>
+    </div>
+    <div class="grid2">
+      <div class="panel"><h2>출생연도</h2>${bars(tally(rows.map((r) => r.birth_year)).sort((a, b) => a[0] - b[0]).map(([k, v]) => [`${k}년생`, v]), n)}</div>
+      <div class="panel"><h2>아이에게 맞을 수 있는 교육 방향</h2><p class="small muted" style="margin-top:0">설문 답에서 나온 방향 (한 아이가 여러 개일 수 있음). 진단·유형 분류가 아닙니다.</p>${bars(tally(rows.flatMap((r) => r.styles)).map(([k, v]) => [styleLabel(k), v]), n)}</div>
+      <div class="panel"><h2>부모가 원하는 교육 방향</h2><p class="small muted" style="margin-top:0">맞춤 추천에서 고른 방향</p>${bars(tally(rows.flatMap((r) => r.reco_styles)).map(([k, v]) => [styleLabel(k), v]), n)}</div>
+      <div class="panel"><h2>설문에서 나온 필요한 지원</h2>${bars(tally(rows.flatMap((r) => r.needs)).map(([k, v]) => [supName(k), v]), n)}</div>
+      <div class="panel"><h2>부모가 직접 고른 지원</h2>${bars(tally(rows.flatMap((r) => r.picks)).map(([k, v]) => [supName(k), v]), n)}</div>
+    </div>
+    <div class="panel"><h2>문항별 답 분포</h2><p class="small muted" style="margin-top:0">숫자는 그렇게 답한 응답 수. 좁은 화면에서는 표를 옆으로 밀어 보세요.</p><div class="tablewrap"><table><thead><tr><th>문항</th>${SCALE.map((s) => `<th class="num">${esc(s)}</th>`).join('')}</tr></thead><tbody>
+      ${ITEMS.map((it) => `<tr><td class="wrap">${it.n}. ${esc(it.text)}</td>${SCALE.map((s) => `<td class="num">${rows.filter((r) => r.answers[it.n] === s).length}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div>`;
+}
+function rankRows(rows) {
   const inst = new Map();
   for (const r of rows) r.plan.forEach((p, i) => { const o = inst.get(p.id) ?? { name: p.name, c: [0, 0, 0] }; o.c[i]++; inst.set(p.id, o); });
-  const instRows = [...inst].map(([id, o]) => ({ id, ...o, t: o.c[0] + o.c[1] + o.c[2], score: o.c[0] * 3 + o.c[1] * 2 + o.c[2] })).sort((a, b) => b.score - a.score || b.t - a.t);
-  const births = [...new Set(all.map((r) => r.birth_year))].sort();
-  const instOpts = [...new Map(all.flatMap((r) => r.plan.map((p) => [p.id, p.name])))].sort((a, b) => a[1].localeCompare(b[1], 'ko'));
-  const sel = S.sel && all.find((r) => r.rid === S.sel);
-  const filt = S.q || S.birth || S.style || S.inst;
-  $('#app').innerHTML = `
-  <div class="tiles">
-    <div class="tile"><b>${all.length}</b><span>전체 응답</span></div>
-    <div class="tile"><b>${week}</b><span>최근 7일</span></div>
-    <div class="tile"><b>${all.filter((r) => r.plan.length).length}</b><span>지원할 곳을 고른 응답</span></div>
-    <div class="tile"><b>${all.filter((r) => r.observer === '교사').length}</b><span>교사 관찰 응답</span></div>
-  </div>
-  <div class="panel"><div class="filters">
-    <input id="fq" placeholder="응답번호·기관 이름 검색" value="${esc(S.q)}">
-    <select id="fb"><option value="">출생연도 전체</option>${births.map((b) => `<option ${String(b) === S.birth ? 'selected' : ''}>${b}</option>`).join('')}</select>
-    <select id="fs"><option value="">교육 방향 전체</option>${STYLE_KEYS.map((k) => `<option value="${k}" ${k === S.style ? 'selected' : ''}>${esc(styleLabel(k))}</option>`).join('')}</select>
-    <select id="fi"><option value="">지원 기관 전체</option>${instOpts.map(([id, nm]) => `<option value="${esc(id)}" ${id === S.inst ? 'selected' : ''}>${esc(nm)}</option>`).join('')}</select>
-    ${filt ? '<button class="btn" id="fclear">조건 지우기</button>' : ''}
-    <button class="btn" id="csv">CSV 내려받기</button><button class="btn" id="reload">새로고침</button>
-    <span class="small muted">${filt ? `조건에 맞는 응답 ${n}개로 아래 집계` : ''}</span></div>
-    ${S.msg ? `<div class="small warn">${esc(S.msg)}</div>` : ''}</div>
-  <div class="panel"><h2>기관별 희망 순위 <span class="small muted">(점수 = 1지망 3점 · 2지망 2점 · 3지망 1점)</span></h2>
-    <div class="tablewrap"><table><thead><tr><th>기관</th><th class="num">1지망</th><th class="num">2지망</th><th class="num">3지망</th><th class="num">합계</th><th class="num">점수</th></tr></thead>
-    <tbody>${instRows.map((o) => `<tr><td>${esc(o.name)}</td>${o.c.map((x) => `<td class="num">${x}</td>`).join('')}<td class="num">${o.t}</td><td class="num">${o.score}</td></tr>`).join('') || '<tr><td colspan="6" class="muted">아직 없음</td></tr>'}</tbody></table></div></div>
-  <div class="grid2">
-    <div class="panel"><h2>아이에게 맞을 수 있는 교육 방향</h2><p class="small muted" style="margin-top:0">설문 답에서 나온 방향(한 아이가 여러 개 가능). 진단·유형 분류가 아닙니다.</p>${bars(tally(rows.flatMap((r) => r.styles)).map(([k, v]) => [styleLabel(k), v]), n)}</div>
-    <div class="panel"><h2>부모가 원하는 교육 방향</h2><p class="small muted" style="margin-top:0">맞춤 추천에서 고른 방향</p>${bars(tally(rows.flatMap((r) => r.reco_styles)).map(([k, v]) => [styleLabel(k), v]), n)}</div>
-    <div class="panel"><h2>설문에서 나온 필요한 지원</h2>${bars(tally(rows.flatMap((r) => r.needs)).map(([k, v]) => [SUPPORTS[k]?.name ?? k, v]), n)}</div>
-    <div class="panel"><h2>부모가 직접 고른 지원</h2>${bars(tally(rows.flatMap((r) => r.picks)).map(([k, v]) => [SUPPORTS[k]?.name ?? k, v]), n)}</div>
-  </div>
-  <div class="panel"><h2>문항별 답 분포</h2><div class="tablewrap"><table><thead><tr><th>문항</th>${SCALE.map((s) => `<th class="num">${esc(s)}</th>`).join('')}</tr></thead><tbody>
-    ${ITEMS.map((it) => `<tr><td class="wrap" title="${esc(it.text)}">${it.n}. ${esc(it.text.length > 28 ? it.text.slice(0, 28) + '…' : it.text)}</td>${SCALE.map((s) => `<td class="num">${rows.filter((r) => r.answers[it.n] === s).length}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div>
-  <div class="grid2">
-    <div class="panel"><h2>응답 목록 <span class="small muted">${n}개 · 누르면 오른쪽에 자세히</span></h2><div class="tablewrap"><table><thead><tr><th>응답번호</th><th>받은 날</th><th>출생</th><th>관찰</th><th>1지망</th><th>교육 방향</th></tr></thead><tbody>
-      ${rows.map((r) => `<tr class="click${r.rid === S.sel ? ' sel' : ''}" data-rid="${esc(r.rid)}"><td>${esc(r.rid)}</td><td>${esc(fmt(r.created_at))}</td><td>${r.birth_year}</td><td>${esc(r.observer)}</td><td>${esc(r.plan[0]?.name ?? '-')}</td><td>${esc(r.styles.map(styleLabel).join(', ') || '-')}</td></tr>`).join('') || '<tr><td colspan="6" class="muted">없음</td></tr>'}</tbody></table></div></div>
-    <div class="panel detail" id="detail">${sel ? detail(sel) : '<p class="muted">목록에서 응답을 고르세요.</p>'}</div>
-  </div>
-  <p class="small muted">보관 기간이 지난 응답(기본 2027-03-31)은 자동으로 지워집니다. 이름·연락처는 받지 않습니다. 이 화면의 자료를 외부에 공유하지 마세요.</p>`;
-  bind();
+  return [...inst].map(([id, o]) => ({ id, ...o, t: o.c[0] + o.c[1] + o.c[2], score: o.c[0] * 3 + o.c[1] * 2 + o.c[2] })).sort((a, b) => b.score - a.score || b.t - a.t || a.name.localeCompare(b.name, 'ko'));
+}
+function drawRank() {
+  const list = rankRows(filtered());
+  return `<div class="panel"><h2>기관별 희망 순위</h2>
+    <p class="small muted" style="margin-top:0">점수 = 1지망 3점 + 2지망 2점 + 3지망 1점. 기관을 누르면 그 기관을 고른 응답만 볼 수 있습니다.</p>
+    ${list.length ? `<div class="tablewrap"><table><thead><tr><th class="num">순위</th><th>기관</th><th class="num">1지망</th><th class="num">2지망</th><th class="num">3지망</th><th class="num hide-m">합계</th><th class="num">점수</th></tr></thead>
+    <tbody>${list.map((o, i) => `<tr class="click" data-inst="${esc(o.id)}"><td class="num">${i + 1}</td><td class="wrap">${esc(o.name)}</td>${o.c.map((x) => `<td class="num">${x}</td>`).join('')}<td class="num hide-m">${o.t}</td><td class="num"><b>${o.score}</b></td></tr>`).join('')}</tbody></table></div>` : '<p class="muted">지원할 곳을 고른 응답이 아직 없습니다.</p>'}
+    <div class="toolbar" style="margin-top:10px"><button class="btn" id="csvRank">희망 순위 내려받기 (엑셀용 CSV)</button></div></div>`;
+}
+function drawList() {
+  const rows = filtered(), sel = S.sel && S.rows.find((r) => r.rid === S.sel);
+  const shown = rows.slice(0, S.show), np = S.picked.size;
+  const allOn = shown.length && shown.every((r) => S.picked.has(r.rid));
+  return `<div class="split">
+    <div class="panel" style="display:grid;gap:10px">
+      <div class="toolbar"><label class="small" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="pickAll" ${allOn ? 'checked' : ''}> 보이는 것 모두 고르기</label>
+        <span class="small muted">${np ? `${np}개 고름` : ''}</span></div>
+      <div class="toolbar">
+        <button class="btn" id="csvAll">${activeFilters() ? '조건에 맞는' : '전체'} 응답 내려받기 (${rows.length})</button>
+        ${np ? `<button class="btn" id="csvPicked">고른 것 내려받기 (${np})</button><button class="btn danger" id="delPicked">고른 것 지우기 (${np})</button><button class="btn" id="pickNone">고르기 풀기</button>` : ''}
+      </div>
+      <div id="bulkAsk"></div>
+      <div class="cards">${shown.map((r) => `<div class="card${r.rid === S.sel ? ' sel' : ''}">
+          <input type="checkbox" data-pick="${esc(r.rid)}" ${S.picked.has(r.rid) ? 'checked' : ''} aria-label="${esc(r.rid)} 고르기">
+          <div class="body" data-rid="${esc(r.rid)}" role="button" tabindex="0">
+            <div class="l1"><b>${esc(r.rid)}</b><span class="small muted">${esc(fmt(r.created_at))}</span></div>
+            <div>${r.birth_year}년생 · ${esc(r.observer)} 관찰 · 답 ${Object.keys(r.answers).length}/24</div>
+            <div class="l2">1지망 ${esc(r.plan[0]?.name ?? '없음')}${r.styles.length ? ` · ${esc(r.styles.map(styleLabel).join(', '))}` : ''}</div>
+          </div></div>`).join('') || `<p class="muted">${S.rows.length ? '조건에 맞는 응답이 없습니다. 조건을 바꿔 보세요.' : '아직 받은 응답이 없습니다.'}</p>`}</div>
+      ${rows.length > S.show ? `<button class="btn" id="more">더 보기 (${rows.length - S.show}개 남음)</button>` : ''}
+    </div>
+    <div class="panel detail${sel ? ' open' : ''}" id="detail">${sel ? detail(sel) : '<p class="muted hide-m">목록에서 응답을 누르면 여기에 분석 결과가 나옵니다.</p>'}</div>
+  </div>`;
 }
 function detail(r) {
-  const li = (a) => (a.length ? `<ul>${a.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : '<p class="small muted">없음</p>');
-  return `<h2>${esc(r.rid)}</h2>
-    <div class="small muted">받은 날 ${esc(fmt(r.created_at))}${r.updated_at !== r.created_at ? ` · 바꾼 날 ${esc(fmt(r.updated_at))}` : ''} · 지울 날 ${esc(fmt(r.expires_at))} · 동의 ${esc(r.consent_ver)}</div>
-    <div>${r.birth_year}년생 · ${esc(r.observer)} 관찰 · 답 ${Object.keys(r.answers).length}/24</div>
-    <h3>지원할 곳 (희망 순서)</h3>${r.plan.length ? `<ol style="margin:0;padding-left:1.3rem">${r.plan.map((p) => `<li>${esc(p.name)}</li>`).join('')}</ol>` : '<p class="small muted">고르지 않음</p>'}
-    <h3>교육 방향</h3><div class="chips">아이 설문: ${r.styles.map((k) => `<span>${esc(styleLabel(k))}</span>`).join('') || '-'}<br>부모가 원함: ${r.reco_styles.map((k) => `<span>${esc(styleLabel(k))}</span>`).join('') || '-'}</div>
+  const li = (a) => (a.length ? `<ul>${a.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : '<p class="small muted" style="margin:0">해당 답 없음</p>');
+  return `<div class="toolbar" style="justify-content:space-between"><button class="btn sheet-back" id="back">← 목록으로</button><h2 style="margin:0">${esc(r.rid)}</h2></div>
+    <div class="small muted">받은 날 ${esc(fmt(r.created_at))}${r.updated_at && r.updated_at !== r.created_at ? ` · 부모가 다시 보낸 날 ${esc(fmt(r.updated_at))}` : ''}<br>자동 삭제 예정 ${esc(ymd(r.expires_at))} · 동의 버전 ${esc(r.consent_ver)}</div>
+    <div style="margin-top:6px">${r.birth_year}년생 · ${esc(r.observer)} 관찰 · 답한 문항 ${Object.keys(r.answers).length}/24</div>
+    <h3>지원할 곳 (희망 순서)</h3>${r.plan.length ? `<ol>${r.plan.map((p) => `<li>${esc(p.name)}</li>`).join('')}</ol>` : '<p class="small muted" style="margin:0">고르지 않음</p>'}
+    <h3>교육 방향</h3><div class="chips small">아이 설문에서: ${r.styles.map((k) => `<span>${esc(styleLabel(k))}</span>`).join('') || '없음'}<br>부모가 원함: ${r.reco_styles.map((k) => `<span>${esc(styleLabel(k))}</span>`).join('') || '없음'}</div>
     <h3>잘하는 점·좋아하는 것</h3>${li(r.an.strength)}
     <h3>편안해하는 조건</h3>${li(r.an.comfort)}
     <h3>도움이 필요할 수 있는 상황</h3>${li(r.an.help)}
-    <h3>필요한 지원 (설문) / 부모가 고른 지원</h3><div class="chips">${r.needs.map((k) => `<span>${esc(SUPPORTS[k]?.name ?? k)}</span>`).join('') || '-'}<br>${r.picks.map((k) => `<span>${esc(SUPPORTS[k]?.name ?? k)}</span>`).join('') || '-'}</div>
-    <details><summary class="small">문항별 답 보기</summary><table><tbody>${ITEMS.map((it) => `<tr><td class="wrap">${it.n}. ${esc(it.text)}</td><td>${esc(r.answers[it.n] ?? '-')}</td></tr>`).join('')}</tbody></table></details>
-    <p><button class="btn danger" id="del">이 응답 지우기</button> <span id="delAsk" class="small"></span></p>`;
+    <h3>필요한 지원</h3><div class="chips small">설문에서: ${r.needs.map((k) => `<span>${esc(supName(k))}</span>`).join('') || '없음'}<br>부모가 고름: ${r.picks.map((k) => `<span>${esc(supName(k))}</span>`).join('') || '없음'}</div>
+    ${r.an.unseen.length ? `<h3>관찰 기회 없음</h3>${li(r.an.unseen.map((it) => `${it.n}. ${it.text}`))}` : ''}
+    <details><summary class="small">문항별 답 모두 보기</summary><div class="tablewrap"><table><tbody>${ITEMS.map((it) => `<tr><td class="wrap">${it.n}. ${esc(it.text)}</td><td>${esc(r.answers[it.n] ?? '답 안 함')}</td></tr>`).join('')}</tbody></table></div></details>
+    <p class="small muted">자체 설문 해석이며 진단이 아닙니다. 이 내용을 부모 동의 없이 외부에 공유하지 마세요.</p>
+    <div class="toolbar"><button class="btn" id="copyOne">요약 복사</button><button class="btn" id="csvOne">이 응답 내려받기</button><button class="btn danger" id="delOne">이 응답 지우기</button></div>
+    <div id="delAsk"></div>`;
 }
+function drawAcct() {
+  const exp = S.rows.map((r) => r.expires_at).sort()[0];
+  return `<div class="grid2">
+    <div class="panel"><h2>내 계정</h2>
+      <div>로그인: <b>${esc(user?.email ?? '')}</b></div>
+      <p class="small muted">${IDLE_MIN}분 동안 아무 조작이 없으면 자동으로 로그아웃됩니다.</p>
+      <button class="btn" id="logout">로그아웃</button></div>
+    <div class="panel"><h2>비밀번호 바꾸기</h2>
+      <form class="stack" id="pwForm" novalidate>
+        <label class="f">새 비밀번호 (8자 이상)<input type="password" id="pw1" autocomplete="new-password" minlength="8" required></label>
+        <label class="f">새 비밀번호 한 번 더<input type="password" id="pw2" autocomplete="new-password" minlength="8" required></label>
+        <button class="btn primary">비밀번호 바꾸기</button><div id="pwMsg" role="status"></div>
+      </form></div>
+    <div class="panel"><h2>자료 보관</h2>
+      <ul class="small" style="margin:0;padding-left:1.1rem">
+        <li>받은 응답 ${S.rows.length}개${exp ? ` · 가장 빠른 자동 삭제 예정일 ${esc(ymd(exp))}` : ''}</li>
+        <li>보관 기간이 지난 응답은 서버가 매일 자동으로 지웁니다.</li>
+        <li>부모가 삭제코드로 직접 지운 응답은 목록에서 사라집니다.</li>
+        <li>이름·연락처는 받지 않습니다. 내려받은 파일은 작업 후 지우고 외부에 공유하지 마세요.</li>
+      </ul></div>
+    <div class="panel"><h2>이 화면에서 할 수 없는 일</h2>
+      <ul class="small" style="margin:0;padding-left:1.1rem">
+        <li><b>관리자 추가·삭제</b>: 보안상 서버 관리 권한이 필요합니다. 개발 담당에게 요청하세요.</li>
+        <li><b>비밀번호를 잊었을 때</b>: 다른 관리자나 개발 담당이 새 비밀번호를 정해 드립니다.</li>
+        <li><b>"서버에 연결하지 못했습니다"가 계속될 때</b>: 무료 서버가 1주일 동안 쓰이지 않아 일시정지됐을 수 있습니다. 개발 담당이 다시 켜야 합니다.</li>
+      </ul></div>
+  </div>`;
+}
+
+// ── 동작 연결 ──
 function bind() {
-  const on = (id, ev, fn) => { const el = $(id); if (el) el[ev] = fn; };
-  on('#fq', 'oninput', (e) => { S.q = e.target.value; clearTimeout(bind.t); bind.t = setTimeout(() => { draw(); const el = $('#fq'); el.focus(); el.setSelectionRange(el.value.length, el.value.length); }, 250); });
-  on('#fb', 'onchange', (e) => { S.birth = e.target.value; draw(); });
-  on('#fs', 'onchange', (e) => { S.style = e.target.value; draw(); });
-  on('#fi', 'onchange', (e) => { S.inst = e.target.value; draw(); });
-  on('#fclear', 'onclick', () => { S.q = S.birth = S.style = S.inst = ''; draw(); });
-  on('#reload', 'onclick', () => { S.msg = ''; load(); });
-  on('#csv', 'onclick', csv);
-  on('#del', 'onclick', delAsk);
-  document.querySelectorAll('tr[data-rid]').forEach((tr) => { tr.onclick = () => { S.sel = tr.dataset.rid; draw(); if (innerWidth < 760) $('#detail').scrollIntoView({ behavior: 'smooth' }); }; });
+  const on = (sel, ev, fn) => { const el = $(sel); if (el) el.addEventListener(ev, fn); };
+  on('#fq', 'input', (e) => { S.f.q = e.target.value; S.show = PAGE; clearTimeout(bind.t); bind.t = setTimeout(draw, 250); });
+  on('#fopen', 'click', () => { S.filtOpen = !S.filtOpen; draw(); });
+  on('#fclear', 'click', () => { S.f = { q: '', birth: '', obs: '', style: '', inst: '', from: '', to: '', sort: S.f.sort }; S.show = PAGE; draw(); });
+  for (const k of ['birth', 'obs', 'style', 'inst', 'from', 'to', 'sort']) on(`#f-${k}`, 'change', (e) => { S.f[k] = e.target.value; S.show = PAGE; draw(); });
+  on('#reload', 'click', () => load());
+  $$('tr[data-inst]').forEach((tr) => tr.addEventListener('click', () => { S.f.inst = tr.dataset.inst; S.tab = 'list'; S.sel = null; S.show = PAGE; drawTabs(); draw(); scrollTo({ top: 0 }); }));
+  on('#csvRank', 'click', () => csvRank());
+  $$('[data-rid]').forEach((el) => { const open = () => { S.sel = el.dataset.rid; draw(); if (innerWidth > 760) $('#detail')?.scrollTo({ top: 0 }); }; el.addEventListener('click', open); el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } }); });
+  $$('[data-pick]').forEach((cb) => cb.addEventListener('change', () => { cb.checked ? S.picked.add(cb.dataset.pick) : S.picked.delete(cb.dataset.pick); draw(); }));
+  on('#pickAll', 'change', (e) => { for (const r of filtered().slice(0, S.show)) e.target.checked ? S.picked.add(r.rid) : S.picked.delete(r.rid); draw(); });
+  on('#pickNone', 'click', () => { S.picked.clear(); draw(); });
+  on('#more', 'click', () => { S.show += PAGE; draw(); });
+  on('#csvAll', 'click', () => csv(filtered(), activeFilters() ? '조건' : '전체'));
+  on('#csvPicked', 'click', () => csv(S.rows.filter((r) => S.picked.has(r.rid)), '고른것'));
+  on('#delPicked', 'click', () => askDelete([...S.picked], '#bulkAsk'));
+  on('#back', 'click', () => { S.sel = null; draw(); });
+  on('#delOne', 'click', () => askDelete([S.sel], '#delAsk'));
+  on('#csvOne', 'click', () => csv(S.rows.filter((r) => r.rid === S.sel), S.sel));
+  on('#copyOne', 'click', () => copySummary(S.rows.find((r) => r.rid === S.sel)));
+  on('#logout', 'click', () => logout());
+  on('#pwForm', 'submit', changePw);
 }
-function delAsk() {
-  $('#delAsk').innerHTML = '되돌릴 수 없습니다. <button class="btn danger" id="delYes">정말 지우기</button>';
+function askDelete(rids, where) {
+  const box = $(where); if (!box || !rids.length) return;
+  box.innerHTML = `<div class="note warn small" role="alert">${rids.length === 1 ? `응답 ${esc(rids[0])}을(를)` : `고른 응답 ${rids.length}개를`} 지웁니다. 지우면 되돌릴 수 없습니다.
+    <div class="toolbar" style="margin-top:8px"><button class="btn danger" id="delYes">네, 지웁니다</button><button class="btn" id="delNo">그만두기</button></div></div>`;
+  $('#delNo').onclick = () => { box.innerHTML = ''; };
   $('#delYes').onclick = async () => {
-    const { data, error } = await sb.from('submissions').delete().eq('rid', S.sel).select('rid');
-    S.msg = error ? `지우지 못했습니다: ${error.message}` : data?.length ? `${S.sel} 지움` : '지워지지 않았습니다 (권한 확인)';
-    S.sel = null; await load();
+    $('#delYes').disabled = true; $('#delYes').textContent = '지우는 중…';
+    let done = 0;
+    try {
+      for (let i = 0; i < rids.length; i += 100) {
+        const { data, error } = await sb.from('submissions').delete().in('rid', rids.slice(i, i + 100)).select('rid');
+        if (error) throw error;
+        done += data?.length ?? 0;
+      }
+      for (const rid of rids) S.picked.delete(rid);
+      if (rids.includes(S.sel)) S.sel = null;
+      toast(done === rids.length ? `${done}개를 지웠습니다.` : done ? `${rids.length}개 중 ${done}개를 지웠습니다. 나머지는 이미 지워졌거나 권한이 없습니다.` : '지워지지 않았습니다. 이미 지워졌거나 권한이 없습니다.');
+    } catch (e) { toast(`지우지 못했습니다. ${koErr(e)}`); }
+    await load(true);
   };
 }
-function csv() {
-  const head = ['응답번호', '받은날', '출생연도', '관찰자', '1지망', '2지망', '3지망', '아이설문방향', '부모원하는방향', '필요지원', '고른지원', ...ITEMS.map((it) => `Q${it.n}`)];
-  const q = (v) => `"${String(v ?? '').replace(/"/g, '""').replace(/^[=+\-@]/, "'$&")}"`;
-  const lines = filtered().map((r) => [r.rid, fmt(r.created_at), r.birth_year, r.observer, r.plan[0]?.name, r.plan[1]?.name, r.plan[2]?.name, r.styles.map(styleLabel).join('/'), r.reco_styles.map(styleLabel).join('/'), r.needs.map((k) => SUPPORTS[k]?.name).join('/'), r.picks.map((k) => SUPPORTS[k]?.name).join('/'), ...ITEMS.map((it) => r.answers[it.n] ?? '')].map(q).join(','));
-  const blob = new Blob(['﻿' + [head.map(q).join(','), ...lines].join('\r\n')], { type: 'text/csv;charset=utf-8' });
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `설문응답_${new Date().toISOString().slice(0, 10)}.csv`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+async function changePw(e) {
+  e.preventDefault();
+  const a = $('#pw1').value, b = $('#pw2').value, msg = $('#pwMsg');
+  const say = (t, ok) => { msg.className = `note small ${ok ? 'ok' : 'warn'}`; msg.textContent = t; };
+  if (a.length < 8) return say('8자 이상으로 넣어 주세요.');
+  if (!/[A-Za-z]/.test(a) || !/\d/.test(a)) return say('영문과 숫자를 섞어 주세요.');
+  if (a !== b) return say('두 비밀번호가 다릅니다.');
+  try {
+    const { error } = await sb.auth.updateUser({ password: a });
+    if (error) return say(koErr(error));
+    $('#pw1').value = $('#pw2').value = ''; say('비밀번호를 바꿨습니다. 다음 로그인부터 새 비밀번호를 쓰세요.', true);
+  } catch (err) { say(koErr(err)); }
 }
+function summary(r) {
+  return [`응답번호 ${r.rid} (${fmt(r.created_at)} 받음)`, `${r.birth_year}년생 · ${r.observer} 관찰 · 답 ${Object.keys(r.answers).length}/24`,
+    `지원할 곳: ${r.plan.map((p, i) => `${i + 1}.${p.name}`).join(' ') || '없음'}`,
+    `교육 방향(설문): ${r.styles.map(styleLabel).join(', ') || '없음'} / 부모 희망: ${r.reco_styles.map(styleLabel).join(', ') || '없음'}`,
+    `잘하는 점: ${r.an.strength.join('; ') || '없음'}`, `편안한 조건: ${r.an.comfort.join('; ') || '없음'}`, `도움 필요: ${r.an.help.join('; ') || '없음'}`,
+    `필요한 지원: ${r.needs.map(supName).join(', ') || '없음'} / 부모가 고름: ${r.picks.map(supName).join(', ') || '없음'}`].join('\n');
+}
+async function copySummary(r) {
+  if (!r) return;
+  try { await navigator.clipboard.writeText(summary(r)); toast('요약을 복사했습니다.'); }
+  catch { toast('복사하지 못했습니다. 이 브라우저에서는 복사 권한이 막혀 있을 수 있습니다.'); }
+}
+// ── 내려받기 (엑셀에서 한글이 깨지지 않게 BOM, 수식으로 읽히지 않게 앞에 ' ) ──
+const csvq = (v) => `"${String(v ?? '').replace(/"/g, '""').replace(/^[=+\-@\t\r]/, "'$&")}"`;
+function saveCsv(head, lines, name) {
+  const blob = new Blob(['﻿' + [head.map(csvq).join(','), ...lines.map((l) => l.map(csvq).join(','))].join('\r\n')], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${name}_${ymd(new Date())}.csv`; document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  toast(`${lines.length}개를 내려받았습니다. 파일은 작업 후 지워 주세요.`);
+}
+function csv(rows, tag) {
+  if (!rows.length) return toast('내려받을 응답이 없습니다.');
+  const head = ['응답번호', '받은 날', '다시 보낸 날', '출생연도', '관찰자', '1지망', '2지망', '3지망', '교육 방향(설문)', '교육 방향(부모 희망)', '잘하는 점', '편안한 조건', '도움 필요', '필요한 지원(설문)', '부모가 고른 지원', '자동 삭제 예정일', ...ITEMS.map((it) => `${it.n}번 ${it.text}`)];
+  saveCsv(head, rows.map((r) => [r.rid, fmt(r.created_at), r.updated_at !== r.created_at ? fmt(r.updated_at) : '', r.birth_year, r.observer, r.plan[0]?.name, r.plan[1]?.name, r.plan[2]?.name,
+    r.styles.map(styleLabel).join(', '), r.reco_styles.map(styleLabel).join(', '), r.an.strength.join(' / '), r.an.comfort.join(' / '), r.an.help.join(' / '), r.needs.map(supName).join(', '), r.picks.map(supName).join(', '), ymd(r.expires_at),
+    ...ITEMS.map((it) => r.answers[it.n] ?? '')]), `설문응답_${tag}`);
+}
+function csvRank() {
+  const list = rankRows(filtered());
+  if (!list.length) return toast('내려받을 희망 순위가 없습니다.');
+  saveCsv(['순위', '기관', '1지망', '2지망', '3지망', '합계', '점수'], list.map((o, i) => [i + 1, o.name, ...o.c, o.t, o.score]), '희망순위');
+}
+addEventListener('keydown', (e) => { if (e.key === 'Escape' && S.sel && innerWidth <= 760) { S.sel = null; draw(); } });
 start();
 </script>
 </body>
