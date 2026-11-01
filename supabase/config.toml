@@ -1,0 +1,3 @@
+# 부모는 로그인하지 않으므로 JWT 확인을 끄고, 기능 안에서 검사·반복 제한·토큰 확인을 한다.
+[functions.plan]
+verify_jwt = false
