@@ -1,8 +1,8 @@
 // 설문 결과 받기 (Supabase Edge Function, 파일 하나로 완결 — 대시보드 편집기에 그대로 붙여넣어도 됨)
 // 하는 일: 내용 검사 → 같은 곳에서 너무 많이 보내면 막기 → 같은 내용 중복 막기 → 저장 → 응답번호·삭제코드 돌려주기
-// 비밀 키(SUPABASE_SERVICE_ROLE_KEY)는 Supabase가 서버에만 넣어 주는 값. 브라우저로 나가지 않음.
+// 서버 전용 비밀 키(SUPABASE_SECRET_KEYS / SUPABASE_SERVICE_ROLE_KEY)는 Supabase가 서버에만 넣어 주는 값. 브라우저로 나가지 않음.
 // 선택 설정(Secrets): ALLOWED_ORIGINS="https://내사이트.netlify.app" (쉼표로 여러 개), RATE_SALT=아무 긴 글자
-import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
+import { createClient } from 'npm:@supabase/supabase-js@2.99.3';
 
 const SCALE = ['거의 없음', '가끔', '자주', '대부분', '관찰 기회 없음'];
 const SUPPORT_KEYS = ['gradual_adapt', 'transition_notice', 'movement', 'choice_play', 'quiet_space', 'sensory', 'small_group', 'express_help', 'conflict', 'retry', 'presentation', 'hands_on'];
@@ -12,6 +12,11 @@ const LIMIT_PER_HOUR = 10;
 const ABC = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // 헷갈리는 0·O·1·I 제외 (32자)
 
 const env = (k: string) => Deno.env.get(k) ?? '';
+// 서버 전용 비밀 키: 새 방식(SUPABASE_SECRET_KEYS의 default) 우선, 없으면 예전 방식(SUPABASE_SERVICE_ROLE_KEY)
+function serverKey() {
+  try { const k = JSON.parse(env('SUPABASE_SECRET_KEYS') || '{}').default; if (k) return k; } catch { /* 예전 방식 */ }
+  return env('SUPABASE_SERVICE_ROLE_KEY');
+}
 const origins = env('ALLOWED_ORIGINS').split(',').map((s) => s.trim()).filter(Boolean);
 function cors(origin: string) {
   const allow = !origins.length ? '*' : origins.includes(origin) ? origin : origins[0];
@@ -63,12 +68,12 @@ Deno.serve(async (req) => {
   const row = validate(b);
   if (!row) return out(400, { error: 'invalid' }, origin);
 
-  const db = createClient(env('SUPABASE_URL'), env('SUPABASE_SERVICE_ROLE_KEY'), { auth: { persistSession: false } });
+  const db = createClient(env('SUPABASE_URL'), serverKey(), { auth: { persistSession: false } });
   await db.from('submissions').delete().lt('expires_at', new Date().toISOString()); // 보관 기간 지난 것 정리
 
   // 반복 제출 제한: 같은 접속 주소(해시)에서 1시간에 10번
   const ip = (req.headers.get('x-forwarded-for') ?? '').split(',')[0].trim() || 'unknown';
-  const ipHash = await sha((env('RATE_SALT') || env('SUPABASE_SERVICE_ROLE_KEY').slice(-24)) + ip);
+  const ipHash = await sha((env('RATE_SALT') || serverKey().slice(-24)) + ip);
   const { count } = await db.from('rate_log').select('id', { count: 'exact', head: true }).eq('ip_hash', ipHash).eq('kind', 'submit').gte('at', new Date(Date.now() - 3600e3).toISOString());
   if ((count ?? 0) >= LIMIT_PER_HOUR) return out(429, { error: 'rate' }, origin);
   await db.from('rate_log').insert({ ip_hash: ipHash, kind: 'submit' });
@@ -82,7 +87,7 @@ Deno.serve(async (req) => {
     const { data: ex } = await db.from('submissions').select('code_hash').eq('rid', b.rid).maybeSingle();
     if (!ex || ex.code_hash !== await sha(`${b.rid}:${b.code.toUpperCase()}`)) return out(403, { error: 'code' }, origin);
     const { error } = await db.from('submissions').update({ ...row, payload_hash, updated_at: now }).eq('rid', b.rid);
-    if (error) return out(500, { error: 'server' }, origin);
+    if (error) { console.error('update', error); return out(500, { error: 'server', detail: error.code }, origin); }
     return out(200, { rid: b.rid, updated: true }, origin);
   }
 
@@ -95,7 +100,7 @@ Deno.serve(async (req) => {
     const code = rand(5) + '-' + rand(5);
     const { error } = await db.from('submissions').insert({ ...row, rid, code_hash: await sha(`${rid}:${code}`), payload_hash });
     if (!error) return out(200, { rid, code }, origin);
-    if (error.code !== '23505') return out(500, { error: 'server' }, origin); // 23505 = 응답번호 우연히 겹침 → 다시
+    if (error.code !== '23505') { console.error('insert', error); return out(500, { error: 'server', detail: error.code }, origin); } // // 23505 = 응답번호 우연히 겹침 → 다시
   }
   return out(500, { error: 'server' }, origin);
 });
