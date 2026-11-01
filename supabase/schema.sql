@@ -60,6 +60,9 @@ revoke all on public.rate_log from authenticated;
 revoke insert, update, delete on public.admins from authenticated;
 grant select, delete on public.submissions to authenticated;
 grant select on public.admins to authenticated;
+-- 서버 기능(비밀 키 = service_role)이 쓰고 지울 수 있게. 새 프로젝트는 새 표에 권한을 자동으로 주지 않음
+grant select, insert, update, delete on public.submissions, public.rate_log, public.admins to service_role;
+grant usage, select on all sequences in schema public to service_role;
 
 drop policy if exists sub_admin_select on public.submissions;
 create policy sub_admin_select on public.submissions for select to authenticated using (public.is_admin());
